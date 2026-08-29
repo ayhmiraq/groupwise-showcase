@@ -45,14 +45,14 @@ const orderBy: Record<string, { column: string; ascending: boolean }> = {
 export async function listRows(
   supabase: SupabaseClient<Database>,
   table: AdminTable,
-): Promise<unknown[]> {
+): Promise<Record<string, unknown>[]> {
   const order = orderBy[table] ?? { column: "created_at", ascending: false };
   const { data, error } = await supabase
     .from(table)
     .select("*")
     .order(order.column, { ascending: order.ascending });
   if (error) throw new Error(error.message);
-  return data ?? [];
+  return (data ?? []) as Record<string, unknown>[];
 }
 
 export async function insertRow(

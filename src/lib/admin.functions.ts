@@ -111,7 +111,10 @@ export const adminUploadMedia = createServerFn({ method: "POST" })
     const path = `${new Date().getFullYear()}/${crypto.randomUUID()}.${ext}`;
     const { error } = await supabaseAdmin.storage
       .from("media")
-      .upload(path, data.file, { contentType: data.file.type || undefined, upsert: false });
+      .upload(path, data.file, {
+        ...(data.file.type ? { contentType: data.file.type } : {}),
+        upsert: false,
+      });
     if (error) throw new Error(error.message);
     return { url: `/api/public/media/${path}` };
   });
