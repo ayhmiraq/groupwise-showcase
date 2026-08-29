@@ -2,6 +2,16 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 
 import type { Database } from "@/integrations/supabase/types";
 
+export type JsonValue =
+  | string
+  | number
+  | boolean
+  | null
+  | JsonValue[]
+  | { [key: string]: JsonValue };
+
+export type AdminRow = Record<string, JsonValue>;
+
 export type AdminTable =
   | "site_settings"
   | "page_settings"
@@ -45,14 +55,14 @@ const orderBy: Record<string, { column: string; ascending: boolean }> = {
 export async function listRows(
   supabase: SupabaseClient<Database>,
   table: AdminTable,
-): Promise<Record<string, unknown>[]> {
+): Promise<AdminRow[]> {
   const order = orderBy[table] ?? { column: "created_at", ascending: false };
   const { data, error } = await supabase
     .from(table)
     .select("*")
     .order(order.column, { ascending: order.ascending });
   if (error) throw new Error(error.message);
-  return (data ?? []) as Record<string, unknown>[];
+  return (data ?? []) as AdminRow[];
 }
 
 export async function insertRow(
