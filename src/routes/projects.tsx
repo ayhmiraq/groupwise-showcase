@@ -84,7 +84,7 @@ function ProjectsPage() {
               <div className="p-6">
                 <div className="flex items-center justify-between gap-2 text-xs font-semibold text-primary-glow">
                   <span>{t(project.status)}</span>
-                  <span>{formatDate(project.event_date, lang)}</span>
+                  <span>{formatDate(project.start_date, lang)}</span>
                 </div>
                 <h2 className="mt-2 text-lg font-bold text-foreground">
                   {pick(project.title_ar, project.title_en)}
