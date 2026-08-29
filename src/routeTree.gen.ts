@@ -14,6 +14,7 @@ import { Route as ContactRouteImport } from './routes/contact'
 import { Route as JourneyRouteImport } from './routes/journey'
 import { Route as ProjectsRouteImport } from './routes/projects'
 import { Route as ServicesRouteImport } from './routes/services'
+import { Route as CompaniesSlugRouteImport } from './routes/companies.$slug'
 import { Route as StoreIndexRouteImport } from './routes/store.index'
 import { Route as StoreSlugRouteImport } from './routes/store.$slug'
 import { Route as ApiPublicMediaSplatRouteImport } from './routes/api/public/media/$'
@@ -43,6 +44,11 @@ const ServicesRoute = ServicesRouteImport.update({
   path: '/services',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CompaniesSlugRoute = CompaniesSlugRouteImport.update({
+  id: '/companies/$slug',
+  path: '/companies/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const StoreIndexRoute = StoreIndexRouteImport.update({
   id: '/store/',
   path: '/store/',
@@ -65,6 +71,7 @@ export interface FileRoutesByFullPath {
   '/journey': typeof JourneyRoute
   '/projects': typeof ProjectsRoute
   '/services': typeof ServicesRoute
+  '/companies/$slug': typeof CompaniesSlugRoute
   '/store/$slug': typeof StoreSlugRoute
   '/store/': typeof StoreIndexRoute
   '/api/public/media/$': typeof ApiPublicMediaSplatRoute
@@ -75,6 +82,7 @@ export interface FileRoutesByTo {
   '/journey': typeof JourneyRoute
   '/projects': typeof ProjectsRoute
   '/services': typeof ServicesRoute
+  '/companies/$slug': typeof CompaniesSlugRoute
   '/store/$slug': typeof StoreSlugRoute
   '/store': typeof StoreIndexRoute
   '/api/public/media/$': typeof ApiPublicMediaSplatRoute
@@ -86,6 +94,7 @@ export interface FileRoutesById {
   '/journey': typeof JourneyRoute
   '/projects': typeof ProjectsRoute
   '/services': typeof ServicesRoute
+  '/companies/$slug': typeof CompaniesSlugRoute
   '/store/$slug': typeof StoreSlugRoute
   '/store/': typeof StoreIndexRoute
   '/api/public/media/$': typeof ApiPublicMediaSplatRoute
@@ -98,6 +107,7 @@ export interface FileRouteTypes {
     | '/journey'
     | '/projects'
     | '/services'
+    | '/companies/$slug'
     | '/store/$slug'
     | '/store/'
     | '/api/public/media/$'
@@ -108,6 +118,7 @@ export interface FileRouteTypes {
     | '/journey'
     | '/projects'
     | '/services'
+    | '/companies/$slug'
     | '/store/$slug'
     | '/store'
     | '/api/public/media/$'
@@ -118,6 +129,7 @@ export interface FileRouteTypes {
     | '/journey'
     | '/projects'
     | '/services'
+    | '/companies/$slug'
     | '/store/$slug'
     | '/store/'
     | '/api/public/media/$'
@@ -129,6 +141,7 @@ export interface RootRouteChildren {
   JourneyRoute: typeof JourneyRoute
   ProjectsRoute: typeof ProjectsRoute
   ServicesRoute: typeof ServicesRoute
+  CompaniesSlugRoute: typeof CompaniesSlugRoute
   StoreSlugRoute: typeof StoreSlugRoute
   StoreIndexRoute: typeof StoreIndexRoute
   ApiPublicMediaSplatRoute: typeof ApiPublicMediaSplatRoute
@@ -171,6 +184,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ServicesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/companies/$slug': {
+      id: '/companies/$slug'
+      path: '/companies/$slug'
+      fullPath: '/companies/$slug'
+      preLoaderRoute: typeof CompaniesSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/store/': {
       id: '/store/'
       path: '/store'
@@ -201,6 +221,7 @@ const rootRouteChildren: RootRouteChildren = {
   JourneyRoute: JourneyRoute,
   ProjectsRoute: ProjectsRoute,
   ServicesRoute: ServicesRoute,
+  CompaniesSlugRoute: CompaniesSlugRoute,
   StoreSlugRoute: StoreSlugRoute,
   StoreIndexRoute: StoreIndexRoute,
   ApiPublicMediaSplatRoute: ApiPublicMediaSplatRoute,
