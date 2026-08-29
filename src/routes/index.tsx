@@ -37,7 +37,7 @@ export const Route = createFileRoute("/")({
 function HomePage() {
   const { pick, t, lang } = useLang();
   const page = usePageSettings("home");
-  const { companies, services, projects } = useSuspenseQuery(homeQuery).data;
+  const { companies } = useSuspenseQuery(homeQuery).data;
 
   return (
     <SiteLayout>
