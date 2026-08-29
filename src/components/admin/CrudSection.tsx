@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
@@ -136,6 +136,14 @@ export function CrudSection({ sectionKey }: { sectionKey: string }) {
   const rows = (rowsQuery.data ?? []) as Row[];
   const singleRow = config.singleRow ? (rows[0] ?? null) : null;
 
+  const hydrated = useRef<string | null>(null);
+  useEffect(() => {
+    if (!config.singleRow || !singleRow) return;
+    if (hydrated.current === config.key) return;
+    hydrated.current = config.key;
+    setForm(initialForm(config, singleRow));
+  }, [config, singleRow]);
+
   function startEdit(row: Row | null) {
     setEditing(row);
     setForm(initialForm(config, row ?? undefined));
@@ -238,11 +246,6 @@ export function CrudSection({ sectionKey }: { sectionKey: string }) {
         </div>
       )}
 
-      {false && (
-        <span />
-
-      )}
-
       {editorOpen && (
         <Card>
           <CardHeader>
@@ -275,13 +278,5 @@ export function CrudSection({ sectionKey }: { sectionKey: string }) {
         </Card>
       )}
     </div>
-  );
-}
-
-function SyncSingleRow({ onSync }: { onSync: () => void }) {
-  return (
-    <Button variant="secondary" size="sm" onClick={onSync}>
-      تحميل القيم الحالية
-    </Button>
   );
 }
