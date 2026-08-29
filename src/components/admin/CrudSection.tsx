@@ -238,8 +238,9 @@ export function CrudSection({ sectionKey }: { sectionKey: string }) {
         </div>
       )}
 
-      {config.singleRow && singleRow && form["group_name_ar"] === "" && rowsQuery.isSuccess && (
-        <SyncSingleRow onSync={() => setForm(initialForm(config, singleRow))} />
+      {false && (
+        <span />
+
       )}
 
       {editorOpen && (
