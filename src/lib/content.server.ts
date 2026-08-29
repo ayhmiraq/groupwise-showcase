@@ -144,9 +144,9 @@ export async function fetchProduct(slug: string) {
 
 export async function insertContactMessage(input: {
   name: string;
-  email?: string;
-  phone?: string;
-  subject?: string;
+  email?: string | undefined;
+  phone?: string | undefined;
+  subject?: string | undefined;
   message: string;
 }) {
   const supabase = publicClient();
@@ -162,12 +162,12 @@ export async function insertContactMessage(input: {
 }
 
 export async function insertInquiry(input: {
-  productId?: string | null;
+  productId?: string | null | undefined;
   name: string;
-  email?: string;
+  email?: string | undefined;
   phone: string;
   quantity: number;
-  message?: string;
+  message?: string | undefined;
 }) {
   const supabase = publicClient();
   const { error } = await supabase.from("inquiries").insert({
