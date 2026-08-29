@@ -100,53 +100,29 @@ function HomePage() {
         </div>
       </section>
 
-      <section className="border-y border-border/60 bg-surface/40 py-20">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-foreground">{t("services")}</h2>
-          <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {services.map((service) => (
-              <article key={service.id} className="card-elevated p-6">
-                <h3 className="text-lg font-bold text-foreground">
-                  {pick(service.title_ar, service.title_en)}
-                </h3>
-                <p className="mt-2 text-sm text-muted-foreground">
-                  {pick(service.description_ar, service.description_en)}
-                </p>
-              </article>
-            ))}
-          </div>
+      <section className="container mx-auto px-4 pb-20">
+        <div className="flex flex-wrap gap-3">
+          <Link
+            to="/services"
+            className="rounded-md border border-border px-4 py-2 text-sm font-semibold text-foreground transition-colors hover:border-primary-glow hover:text-primary-glow"
+          >
+            {t("services")}
+          </Link>
+          <Link
+            to="/projects"
+            className="rounded-md border border-border px-4 py-2 text-sm font-semibold text-foreground transition-colors hover:border-primary-glow hover:text-primary-glow"
+          >
+            {t("projects")}
+          </Link>
+          <Link
+            to="/journey"
+            className="rounded-md border border-border px-4 py-2 text-sm font-semibold text-foreground transition-colors hover:border-primary-glow hover:text-primary-glow"
+          >
+            {t("journey")}
+          </Link>
         </div>
       </section>
 
-      <section className="container mx-auto px-4 py-20">
-        <h2 className="text-3xl font-bold text-foreground">{t("projects")}</h2>
-        <div className="mt-8 grid gap-6 md:grid-cols-3">
-          {projects.map((project) => (
-            <article key={project.id} className="card-elevated overflow-hidden">
-              {project.image_url ? (
-                <img
-                  src={project.image_url}
-                  alt=""
-                  className="h-44 w-full object-cover"
-                  loading="lazy"
-                />
-              ) : null}
-              <div className="p-5">
-                <h3 className="font-bold text-foreground">
-                  {pick(project.title_ar, project.title_en)}
-                </h3>
-                <p className="mt-1 text-xs text-primary-glow">{t(project.status)}</p>
-              </div>
-            </article>
-          ))}
-        </div>
-        <Link
-          to="/projects"
-          className="mt-8 inline-block text-sm font-semibold text-primary-glow hover:underline"
-        >
-          {t("readMore")} →
-        </Link>
-      </section>
     </SiteLayout>
   );
 }
