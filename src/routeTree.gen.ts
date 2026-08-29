@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as JourneyRouteImport } from './routes/journey'
 import { Route as ProjectsRouteImport } from './routes/projects'
 import { Route as ServicesRouteImport } from './routes/services'
+import { Route as StoreIndexRouteImport } from './routes/store.index'
 import { Route as ApiPublicMediaSplatRouteImport } from './routes/api/public/media/$'
 
 const IndexRoute = IndexRouteImport.update({
@@ -35,6 +36,11 @@ const ServicesRoute = ServicesRouteImport.update({
   path: '/services',
   getParentRoute: () => rootRouteImport,
 } as any)
+const StoreIndexRoute = StoreIndexRouteImport.update({
+  id: '/store/',
+  path: '/store/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicMediaSplatRoute = ApiPublicMediaSplatRouteImport.update({
   id: '/api/public/media/$',
   path: '/api/public/media/$',
@@ -46,6 +52,7 @@ export interface FileRoutesByFullPath {
   '/journey': typeof JourneyRoute
   '/projects': typeof ProjectsRoute
   '/services': typeof ServicesRoute
+  '/store/': typeof StoreIndexRoute
   '/api/public/media/$': typeof ApiPublicMediaSplatRoute
 }
 export interface FileRoutesByTo {
@@ -53,6 +60,7 @@ export interface FileRoutesByTo {
   '/journey': typeof JourneyRoute
   '/projects': typeof ProjectsRoute
   '/services': typeof ServicesRoute
+  '/store': typeof StoreIndexRoute
   '/api/public/media/$': typeof ApiPublicMediaSplatRoute
 }
 export interface FileRoutesById {
@@ -61,20 +69,33 @@ export interface FileRoutesById {
   '/journey': typeof JourneyRoute
   '/projects': typeof ProjectsRoute
   '/services': typeof ServicesRoute
+  '/store/': typeof StoreIndexRoute
   '/api/public/media/$': typeof ApiPublicMediaSplatRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/journey' | '/projects' | '/services' | '/api/public/media/$'
+    | '/'
+    | '/journey'
+    | '/projects'
+    | '/services'
+    | '/store/'
+    | '/api/public/media/$'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/journey' | '/projects' | '/services' | '/api/public/media/$'
+  to:
+    | '/'
+    | '/journey'
+    | '/projects'
+    | '/services'
+    | '/store'
+    | '/api/public/media/$'
   id:
     | '__root__'
     | '/'
     | '/journey'
     | '/projects'
     | '/services'
+    | '/store/'
     | '/api/public/media/$'
   fileRoutesById: FileRoutesById
 }
@@ -83,6 +104,7 @@ export interface RootRouteChildren {
   JourneyRoute: typeof JourneyRoute
   ProjectsRoute: typeof ProjectsRoute
   ServicesRoute: typeof ServicesRoute
+  StoreIndexRoute: typeof StoreIndexRoute
   ApiPublicMediaSplatRoute: typeof ApiPublicMediaSplatRoute
 }
 
@@ -116,6 +138,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ServicesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/store/': {
+      id: '/store/'
+      path: '/store'
+      fullPath: '/store/'
+      preLoaderRoute: typeof StoreIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/media/$': {
       id: '/api/public/media/$'
       path: '/api/public/media/$'
@@ -131,6 +160,7 @@ const rootRouteChildren: RootRouteChildren = {
   JourneyRoute: JourneyRoute,
   ProjectsRoute: ProjectsRoute,
   ServicesRoute: ServicesRoute,
+  StoreIndexRoute: StoreIndexRoute,
   ApiPublicMediaSplatRoute: ApiPublicMediaSplatRoute,
 }
 export const routeTree = rootRouteImport
