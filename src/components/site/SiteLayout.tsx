@@ -15,7 +15,13 @@ import { useState } from "react";
 import type { ReactNode } from "react";
 
 import { Button } from "@/components/ui/button";
-import { useLang } from "@/lib/i18n";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { languages, useLang } from "@/lib/i18n";
 import { siteQuery } from "@/lib/queries";
 
 const navItems = [
@@ -37,7 +43,7 @@ export function usePageSettings(pageKey: string) {
 }
 
 function TopBar() {
-  const { lang, setLang, t, pick } = useLang();
+  const { lang, setLang, pick } = useLang();
   const { settings } = useSiteData();
 
   return (
@@ -88,14 +94,19 @@ function TopBar() {
               </a>
             ) : null}
           </div>
-          <button
-            type="button"
-            onClick={() => setLang(lang === "ar" ? "en" : "ar")}
-            className="flex items-center gap-1.5 rounded-md border border-border px-2 py-1 text-xs font-semibold text-foreground transition-colors hover:border-primary-glow hover:text-primary-glow"
-          >
-            <Languages className="size-3.5" />
-            {t("langSwitch")}
-          </button>
+          <DropdownMenu>
+            <DropdownMenuTrigger className="flex items-center gap-1.5 rounded-md border border-border px-2 py-1 text-xs font-semibold text-foreground transition-colors hover:border-primary-glow hover:text-primary-glow">
+              <Languages className="size-3.5" />
+              {languages.find((item) => item.code === lang)?.label}
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {languages.map((item) => (
+                <DropdownMenuItem key={item.code} onClick={() => setLang(item.code)}>
+                  {item.label}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
     </div>
@@ -172,65 +183,12 @@ function SiteHeader() {
   );
 }
 
-function SiteFooter() {
-  const { t, pick } = useLang();
-  const { settings } = useSiteData();
-
-  return (
-    <footer className="mt-24 border-t border-border/60 bg-surface/60">
-      <div className="container mx-auto grid gap-10 px-4 py-14 md:grid-cols-3">
-        <div>
-          <h3 className="text-lg font-bold text-foreground">
-            {pick(settings?.group_name_ar, settings?.group_name_en)}
-          </h3>
-          <p className="mt-3 text-sm text-muted-foreground">
-            {pick(settings?.footer_note_ar, settings?.footer_note_en)}
-          </p>
-        </div>
-        <div>
-          <h4 className="text-sm font-bold text-foreground">{t("quickLinks")}</h4>
-          <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
-            {navItems.map((item) => (
-              <li key={item.to}>
-                <Link to={item.to} className="hover:text-primary-glow">
-                  {t(item.key)}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div>
-          <h4 className="text-sm font-bold text-foreground">{t("contactInfo")}</h4>
-          <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
-            {settings?.phone ? (
-              <li dir="ltr" className="text-start">
-                {settings.phone}
-              </li>
-            ) : null}
-            {settings?.email ? (
-              <li dir="ltr" className="text-start">
-                {settings.email}
-              </li>
-            ) : null}
-            <li>{pick(settings?.address_ar, settings?.address_en)}</li>
-          </ul>
-        </div>
-      </div>
-      <div className="border-t border-border/60 py-4 text-center text-xs text-muted-foreground">
-        © {new Date().getFullYear()} {pick(settings?.group_name_ar, settings?.group_name_en)} —{" "}
-        {t("rights")}
-      </div>
-    </footer>
-  );
-}
-
 export function SiteLayout({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-screen bg-background">
       <TopBar />
       <SiteHeader />
-      <main>{children}</main>
-      <SiteFooter />
+      <main className="pb-16">{children}</main>
     </div>
   );
 }
