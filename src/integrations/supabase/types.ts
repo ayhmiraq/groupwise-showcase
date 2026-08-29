@@ -14,16 +14,595 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      companies: {
+        Row: {
+          created_at: string
+          description_ar: string | null
+          description_en: string | null
+          founded_date: string | null
+          id: string
+          image_url: string | null
+          name_ar: string
+          name_en: string
+          published: boolean
+          slug: string
+          sort_order: number
+          tagline_ar: string | null
+          tagline_en: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description_ar?: string | null
+          description_en?: string | null
+          founded_date?: string | null
+          id?: string
+          image_url?: string | null
+          name_ar: string
+          name_en: string
+          published?: boolean
+          slug: string
+          sort_order?: number
+          tagline_ar?: string | null
+          tagline_en?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description_ar?: string | null
+          description_en?: string | null
+          founded_date?: string | null
+          id?: string
+          image_url?: string | null
+          name_ar?: string
+          name_en?: string
+          published?: boolean
+          slug?: string
+          sort_order?: number
+          tagline_ar?: string | null
+          tagline_en?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      company_timeline: {
+        Row: {
+          company_id: string
+          created_at: string
+          description_ar: string | null
+          description_en: string | null
+          event_date: string
+          id: string
+          sort_order: number
+          title_ar: string
+          title_en: string
+        }
+        Insert: {
+          company_id: string
+          created_at?: string
+          description_ar?: string | null
+          description_en?: string | null
+          event_date: string
+          id?: string
+          sort_order?: number
+          title_ar: string
+          title_en: string
+        }
+        Update: {
+          company_id?: string
+          created_at?: string
+          description_ar?: string | null
+          description_en?: string | null
+          event_date?: string
+          id?: string
+          sort_order?: number
+          title_ar?: string
+          title_en?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "company_timeline_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      contact_messages: {
+        Row: {
+          created_at: string
+          email: string | null
+          id: string
+          message: string
+          name: string
+          phone: string | null
+          status: string
+          subject: string | null
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          id?: string
+          message: string
+          name: string
+          phone?: string | null
+          status?: string
+          subject?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          id?: string
+          message?: string
+          name?: string
+          phone?: string | null
+          status?: string
+          subject?: string | null
+        }
+        Relationships: []
+      }
+      inquiries: {
+        Row: {
+          created_at: string
+          email: string | null
+          id: string
+          message: string | null
+          name: string
+          phone: string
+          product_id: string | null
+          quantity: number
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          id?: string
+          message?: string | null
+          name: string
+          phone: string
+          product_id?: string | null
+          quantity?: number
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          id?: string
+          message?: string | null
+          name?: string
+          phone?: string
+          product_id?: string | null
+          quantity?: number
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "inquiries_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      journey_events: {
+        Row: {
+          created_at: string
+          description_ar: string | null
+          description_en: string | null
+          event_date: string
+          id: string
+          image_url: string | null
+          published: boolean
+          sort_order: number
+          title_ar: string
+          title_en: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description_ar?: string | null
+          description_en?: string | null
+          event_date: string
+          id?: string
+          image_url?: string | null
+          published?: boolean
+          sort_order?: number
+          title_ar: string
+          title_en: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description_ar?: string | null
+          description_en?: string | null
+          event_date?: string
+          id?: string
+          image_url?: string | null
+          published?: boolean
+          sort_order?: number
+          title_ar?: string
+          title_en?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      page_settings: {
+        Row: {
+          bg_type: string
+          bg_url: string | null
+          enabled: boolean
+          overlay: number
+          page_key: string
+          subtitle_ar: string
+          subtitle_en: string
+          title_ar: string
+          title_en: string
+          updated_at: string
+          youtube_id: string | null
+        }
+        Insert: {
+          bg_type?: string
+          bg_url?: string | null
+          enabled?: boolean
+          overlay?: number
+          page_key: string
+          subtitle_ar?: string
+          subtitle_en?: string
+          title_ar?: string
+          title_en?: string
+          updated_at?: string
+          youtube_id?: string | null
+        }
+        Update: {
+          bg_type?: string
+          bg_url?: string | null
+          enabled?: boolean
+          overlay?: number
+          page_key?: string
+          subtitle_ar?: string
+          subtitle_en?: string
+          title_ar?: string
+          title_en?: string
+          updated_at?: string
+          youtube_id?: string | null
+        }
+        Relationships: []
+      }
+      product_images: {
+        Row: {
+          created_at: string
+          id: string
+          image_url: string
+          product_id: string
+          sort_order: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          image_url: string
+          product_id: string
+          sort_order?: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          image_url?: string
+          product_id?: string
+          sort_order?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_images_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      products: {
+        Row: {
+          category_id: string | null
+          created_at: string
+          currency: string
+          description_ar: string | null
+          description_en: string | null
+          featured: boolean
+          id: string
+          image_url: string | null
+          in_stock: boolean
+          name_ar: string
+          name_en: string
+          price: number | null
+          published: boolean
+          slug: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          category_id?: string | null
+          created_at?: string
+          currency?: string
+          description_ar?: string | null
+          description_en?: string | null
+          featured?: boolean
+          id?: string
+          image_url?: string | null
+          in_stock?: boolean
+          name_ar: string
+          name_en: string
+          price?: number | null
+          published?: boolean
+          slug: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          category_id?: string | null
+          created_at?: string
+          currency?: string
+          description_ar?: string | null
+          description_en?: string | null
+          featured?: boolean
+          id?: string
+          image_url?: string | null
+          in_stock?: boolean
+          name_ar?: string
+          name_en?: string
+          price?: number | null
+          published?: boolean
+          slug?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "products_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "store_categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      projects: {
+        Row: {
+          company_id: string | null
+          created_at: string
+          description_ar: string | null
+          description_en: string | null
+          end_date: string | null
+          id: string
+          image_url: string | null
+          location_ar: string | null
+          location_en: string | null
+          published: boolean
+          slug: string
+          sort_order: number
+          start_date: string | null
+          status: string
+          title_ar: string
+          title_en: string
+          updated_at: string
+        }
+        Insert: {
+          company_id?: string | null
+          created_at?: string
+          description_ar?: string | null
+          description_en?: string | null
+          end_date?: string | null
+          id?: string
+          image_url?: string | null
+          location_ar?: string | null
+          location_en?: string | null
+          published?: boolean
+          slug: string
+          sort_order?: number
+          start_date?: string | null
+          status?: string
+          title_ar: string
+          title_en: string
+          updated_at?: string
+        }
+        Update: {
+          company_id?: string | null
+          created_at?: string
+          description_ar?: string | null
+          description_en?: string | null
+          end_date?: string | null
+          id?: string
+          image_url?: string | null
+          location_ar?: string | null
+          location_en?: string | null
+          published?: boolean
+          slug?: string
+          sort_order?: number
+          start_date?: string | null
+          status?: string
+          title_ar?: string
+          title_en?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "projects_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      services: {
+        Row: {
+          created_at: string
+          description_ar: string | null
+          description_en: string | null
+          icon: string | null
+          id: string
+          image_url: string | null
+          published: boolean
+          sort_order: number
+          title_ar: string
+          title_en: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description_ar?: string | null
+          description_en?: string | null
+          icon?: string | null
+          id?: string
+          image_url?: string | null
+          published?: boolean
+          sort_order?: number
+          title_ar: string
+          title_en: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description_ar?: string | null
+          description_en?: string | null
+          icon?: string | null
+          id?: string
+          image_url?: string | null
+          published?: boolean
+          sort_order?: number
+          title_ar?: string
+          title_en?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      site_settings: {
+        Row: {
+          address_ar: string | null
+          address_en: string | null
+          email: string | null
+          facebook: string | null
+          footer_note_ar: string | null
+          footer_note_en: string | null
+          group_name_ar: string
+          group_name_en: string
+          id: number
+          instagram: string | null
+          linkedin: string | null
+          logo_url: string | null
+          phone: string | null
+          topbar_text_ar: string | null
+          topbar_text_en: string | null
+          updated_at: string
+          whatsapp: string | null
+          youtube: string | null
+        }
+        Insert: {
+          address_ar?: string | null
+          address_en?: string | null
+          email?: string | null
+          facebook?: string | null
+          footer_note_ar?: string | null
+          footer_note_en?: string | null
+          group_name_ar?: string
+          group_name_en?: string
+          id?: number
+          instagram?: string | null
+          linkedin?: string | null
+          logo_url?: string | null
+          phone?: string | null
+          topbar_text_ar?: string | null
+          topbar_text_en?: string | null
+          updated_at?: string
+          whatsapp?: string | null
+          youtube?: string | null
+        }
+        Update: {
+          address_ar?: string | null
+          address_en?: string | null
+          email?: string | null
+          facebook?: string | null
+          footer_note_ar?: string | null
+          footer_note_en?: string | null
+          group_name_ar?: string
+          group_name_en?: string
+          id?: number
+          instagram?: string | null
+          linkedin?: string | null
+          logo_url?: string | null
+          phone?: string | null
+          topbar_text_ar?: string | null
+          topbar_text_en?: string | null
+          updated_at?: string
+          whatsapp?: string | null
+          youtube?: string | null
+        }
+        Relationships: []
+      }
+      store_categories: {
+        Row: {
+          created_at: string
+          id: string
+          name_ar: string
+          name_en: string
+          slug: string
+          sort_order: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name_ar: string
+          name_en: string
+          slug: string
+          sort_order?: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name_ar?: string
+          name_en?: string
+          slug?: string
+          sort_order?: number
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "editor" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +729,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "editor", "user"],
+    },
   },
 } as const
