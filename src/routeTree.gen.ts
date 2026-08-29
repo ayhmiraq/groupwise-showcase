@@ -10,9 +10,15 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as ContactRouteImport } from './routes/contact'
 import { Route as JourneyRouteImport } from './routes/journey'
 import { Route as ProjectsRouteImport } from './routes/projects'
 import { Route as ServicesRouteImport } from './routes/services'
+import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
+import { Route as CompaniesIndexRouteImport } from './routes/companies.index'
+import { Route as CompaniesSlugRouteImport } from './routes/companies.$slug'
 import { Route as StoreIndexRouteImport } from './routes/store.index'
 import { Route as StoreSlugRouteImport } from './routes/store.$slug'
 import { Route as ApiPublicMediaSplatRouteImport } from './routes/api/public/media/$'
@@ -20,6 +26,20 @@ import { Route as ApiPublicMediaSplatRouteImport } from './routes/api/public/med
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
   getParentRoute: () => rootRouteImport,
 } as any)
 const JourneyRoute = JourneyRouteImport.update({
@@ -35,6 +55,21 @@ const ProjectsRoute = ProjectsRouteImport.update({
 const ServicesRoute = ServicesRouteImport.update({
   id: '/services',
   path: '/services',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const CompaniesIndexRoute = CompaniesIndexRouteImport.update({
+  id: '/companies/',
+  path: '/companies/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CompaniesSlugRoute = CompaniesSlugRouteImport.update({
+  id: '/companies/$slug',
+  path: '/companies/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const StoreIndexRoute = StoreIndexRouteImport.update({
@@ -55,29 +90,45 @@ const ApiPublicMediaSplatRoute = ApiPublicMediaSplatRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/contact': typeof ContactRoute
   '/journey': typeof JourneyRoute
   '/projects': typeof ProjectsRoute
   '/services': typeof ServicesRoute
+  '/admin': typeof AuthenticatedAdminRoute
+  '/companies/$slug': typeof CompaniesSlugRoute
   '/store/$slug': typeof StoreSlugRoute
+  '/companies/': typeof CompaniesIndexRoute
   '/store/': typeof StoreIndexRoute
   '/api/public/media/$': typeof ApiPublicMediaSplatRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/contact': typeof ContactRoute
   '/journey': typeof JourneyRoute
   '/projects': typeof ProjectsRoute
   '/services': typeof ServicesRoute
+  '/admin': typeof AuthenticatedAdminRoute
+  '/companies/$slug': typeof CompaniesSlugRoute
   '/store/$slug': typeof StoreSlugRoute
+  '/companies': typeof CompaniesIndexRoute
   '/store': typeof StoreIndexRoute
   '/api/public/media/$': typeof ApiPublicMediaSplatRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/auth': typeof AuthRoute
+  '/contact': typeof ContactRoute
   '/journey': typeof JourneyRoute
   '/projects': typeof ProjectsRoute
   '/services': typeof ServicesRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRoute
+  '/companies/$slug': typeof CompaniesSlugRoute
   '/store/$slug': typeof StoreSlugRoute
+  '/companies/': typeof CompaniesIndexRoute
   '/store/': typeof StoreIndexRoute
   '/api/public/media/$': typeof ApiPublicMediaSplatRoute
 }
@@ -85,38 +136,59 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/auth'
+    | '/contact'
     | '/journey'
     | '/projects'
     | '/services'
+    | '/admin'
+    | '/companies/$slug'
     | '/store/$slug'
+    | '/companies/'
     | '/store/'
     | '/api/public/media/$'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/auth'
+    | '/contact'
     | '/journey'
     | '/projects'
     | '/services'
+    | '/admin'
+    | '/companies/$slug'
     | '/store/$slug'
+    | '/companies'
     | '/store'
     | '/api/public/media/$'
   id:
     | '__root__'
     | '/'
+    | '/_authenticated'
+    | '/auth'
+    | '/contact'
     | '/journey'
     | '/projects'
     | '/services'
+    | '/_authenticated/admin'
+    | '/companies/$slug'
     | '/store/$slug'
+    | '/companies/'
     | '/store/'
     | '/api/public/media/$'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AuthRoute: typeof AuthRoute
+  ContactRoute: typeof ContactRoute
   JourneyRoute: typeof JourneyRoute
   ProjectsRoute: typeof ProjectsRoute
   ServicesRoute: typeof ServicesRoute
+  CompaniesSlugRoute: typeof CompaniesSlugRoute
   StoreSlugRoute: typeof StoreSlugRoute
+  CompaniesIndexRoute: typeof CompaniesIndexRoute
   StoreIndexRoute: typeof StoreIndexRoute
   ApiPublicMediaSplatRoute: typeof ApiPublicMediaSplatRoute
 }
@@ -128,6 +200,27 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/journey': {
@@ -149,6 +242,27 @@ declare module '@tanstack/react-router' {
       path: '/services'
       fullPath: '/services'
       preLoaderRoute: typeof ServicesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/companies/': {
+      id: '/companies/'
+      path: '/companies'
+      fullPath: '/companies/'
+      preLoaderRoute: typeof CompaniesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/companies/$slug': {
+      id: '/companies/$slug'
+      path: '/companies/$slug'
+      fullPath: '/companies/$slug'
+      preLoaderRoute: typeof CompaniesSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/store/': {
@@ -175,12 +289,28 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAdminRoute: AuthenticatedAdminRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AuthRoute: AuthRoute,
+  ContactRoute: ContactRoute,
   JourneyRoute: JourneyRoute,
   ProjectsRoute: ProjectsRoute,
   ServicesRoute: ServicesRoute,
+  CompaniesSlugRoute: CompaniesSlugRoute,
   StoreSlugRoute: StoreSlugRoute,
+  CompaniesIndexRoute: CompaniesIndexRoute,
   StoreIndexRoute: StoreIndexRoute,
   ApiPublicMediaSplatRoute: ApiPublicMediaSplatRoute,
 }
