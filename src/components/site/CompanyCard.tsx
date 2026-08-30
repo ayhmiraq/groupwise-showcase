@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import type { ReactNode } from "react";
+import type { FC, ReactNode } from "react";
 
 type CompanyLike = {
   id: string;
@@ -65,10 +65,15 @@ export function CompanyCard({ company, title, tagline, dateLabel, actionLabel, c
   }
 
   if (isInternal) {
+    const AnyLink = Link as unknown as FC<{
+      to: string;
+      className?: string;
+      children?: ReactNode;
+    }>;
     return (
-      <Link to={url} className={shell}>
+      <AnyLink to={url} className={shell}>
         {body}
-      </Link>
+      </AnyLink>
     );
   }
 
