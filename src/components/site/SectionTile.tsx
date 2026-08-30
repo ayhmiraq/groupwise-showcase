@@ -12,13 +12,21 @@ type Props = {
 };
 
 /**
- * Wide rectangular, centered section tile. Optional background image comes from
- * the matching page settings, with the Aether effect layered above it. Text and
- * its colors sit on their own layer so they never change with the background.
+ * Wide rectangular, centered section tile. Its own background (image, uploaded
+ * video or YouTube video) is configured per page in the admin panel, with the
+ * Aether effect layered above it. Text and its colors sit on their own layer so
+ * they never change with the background.
  */
 export function SectionTile({ to, title, subtitle, page }: Props) {
-  const bgUrl = page?.bg_url;
-  const overlay = Math.min(Math.max(page?.overlay ?? 65, 0), 95) / 100;
+  const tileType = page?.tile_bg_type ?? "none";
+  const tileImage = tileType === "image" ? page?.tile_bg_url : null;
+  const tileVideo = tileType === "video" ? page?.tile_bg_url : null;
+  const tileYoutube = tileType === "youtube" ? page?.tile_youtube_id : null;
+  // Fallback to the page background image when no tile-specific media is set.
+  const fallbackImage = tileType === "none" ? page?.bg_url : null;
+  const hasMedia = Boolean(tileImage || tileVideo || tileYoutube || fallbackImage);
+  const overlay =
+    Math.min(Math.max(page?.tile_overlay ?? page?.overlay ?? 55, 0), 95) / 100;
   const fxOn = page?.fx_enabled ?? true;
 
   return (
@@ -27,13 +35,36 @@ export function SectionTile({ to, title, subtitle, page }: Props) {
       className="card-elevated group relative mx-auto block h-full w-full overflow-hidden rounded-xl border border-border bg-surface transition-colors hover:border-primary-glow"
     >
       <div className="absolute inset-0" aria-hidden="true">
-        {bgUrl ? (
-          <img src={bgUrl} alt="" className="h-full w-full object-cover" loading="lazy" />
+        {tileImage || fallbackImage ? (
+          <img
+            src={(tileImage || fallbackImage) as string}
+            alt=""
+            className="h-full w-full object-cover"
+            loading="lazy"
+          />
         ) : null}
-        <div
-          className="hero-overlay absolute inset-0"
-          style={{ opacity: bgUrl ? overlay : 1 }}
-        />
+        {tileVideo ? (
+          <video
+            src={tileVideo}
+            className="pointer-events-none h-full w-full object-cover"
+            autoPlay
+            muted
+            loop
+            playsInline
+            controls={false}
+            disablePictureInPicture
+          />
+        ) : null}
+        {tileYoutube ? (
+          <iframe
+            className="pointer-events-none absolute left-1/2 top-1/2 h-[300%] w-[300%] -translate-x-1/2 -translate-y-1/2 border-0"
+            src={`https://www.youtube.com/embed/${tileYoutube}?autoplay=1&mute=1&controls=0&loop=1&playlist=${tileYoutube}&modestbranding=1&playsinline=1&rel=0&showinfo=0`}
+            title=""
+            allow="autoplay; encrypted-media"
+            tabIndex={-1}
+          />
+        ) : null}
+        <div className="hero-overlay absolute inset-0" style={{ opacity: hasMedia ? overlay : 1 }} />
         {fxOn ? (
           <AetherField
             options={{

@@ -1,16 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import {
-  Facebook,
-  Instagram,
-  Languages,
-  Linkedin,
-  Mail,
-  MapPin,
-  Menu,
-  Phone,
-  Youtube,
-} from "lucide-react";
+import { Facebook, Languages, Mail, MapPin, Menu, Phone } from "lucide-react";
 import { useState } from "react";
 import type { ReactNode } from "react";
 
@@ -77,21 +67,6 @@ function TopBar() {
             {settings?.facebook ? (
               <a href={settings.facebook} aria-label="Facebook" target="_blank" rel="noreferrer">
                 <Facebook className="size-4 hover:text-primary-glow" />
-              </a>
-            ) : null}
-            {settings?.instagram ? (
-              <a href={settings.instagram} aria-label="Instagram" target="_blank" rel="noreferrer">
-                <Instagram className="size-4 hover:text-primary-glow" />
-              </a>
-            ) : null}
-            {settings?.linkedin ? (
-              <a href={settings.linkedin} aria-label="LinkedIn" target="_blank" rel="noreferrer">
-                <Linkedin className="size-4 hover:text-primary-glow" />
-              </a>
-            ) : null}
-            {settings?.youtube ? (
-              <a href={settings.youtube} aria-label="YouTube" target="_blank" rel="noreferrer">
-                <Youtube className="size-4 hover:text-primary-glow" />
               </a>
             ) : null}
           </div>
