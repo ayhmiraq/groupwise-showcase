@@ -38,8 +38,10 @@ export function SectionTile({ to, href, title, subtitle, page, imageUrl, meta }:
   const fxOn = page?.fx_enabled ?? true;
 
   const className =
-    "card-elevated group relative mx-auto block h-full w-full overflow-hidden rounded-xl border border-border bg-surface transition-colors hover:border-primary-glow"
-    >
+    "card-elevated group relative mx-auto block h-full w-full overflow-hidden rounded-xl border border-border bg-surface transition-colors hover:border-primary-glow";
+
+  const content = (
+    <>
       <div className="absolute inset-0" aria-hidden="true">
         {tileImage || fallbackImage ? (
           <img
