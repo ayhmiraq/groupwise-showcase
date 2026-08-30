@@ -50,6 +50,13 @@ export function MediaInput({
           {busy ? <Loader2 className="size-4 animate-spin" /> : <Upload className="size-4" />}
         </Button>
       </div>
+      {value ? (
+        /\.(mp4|webm|ogg)$/i.test(value) ? (
+          <video src={value} className="h-24 w-full rounded-md object-cover" muted playsInline />
+        ) : (
+          <img src={value} alt="" className="h-24 w-full rounded-md object-cover" />
+        )
+      ) : null}
       <input
         ref={inputRef}
         type="file"
