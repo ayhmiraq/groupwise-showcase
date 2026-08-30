@@ -41,16 +41,16 @@ function TopBar() {
   return (
     <div className="bg-background/90 text-sm backdrop-blur">
       <div className="container mx-auto flex items-center justify-between gap-4 px-4 py-1.5">
-        <div className="flex items-center gap-4 text-muted-foreground">
+        <div className="flex flex-col gap-0.5 text-muted-foreground">
           {settings?.phone ? (
             <a className="flex items-center gap-1.5 hover:text-primary-glow" href={`tel:${settings.phone}`}>
-              <Phone className="size-3.5" />
+              <Phone className="size-3.5 shrink-0" />
               <span dir="ltr">{settings.phone}</span>
             </a>
           ) : null}
           {settings?.email ? (
             <a className="flex items-center gap-1.5 hover:text-primary-glow" href={`mailto:${settings.email}`}>
-              <Mail className="size-3.5" />
+              <Mail className="size-3.5 shrink-0" />
               <span dir="ltr">{settings.email}</span>
             </a>
           ) : null}
