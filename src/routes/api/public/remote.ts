@@ -1,0 +1,74 @@
+import { createFileRoute } from "@tanstack/react-router";
+
+const ALLOWED_PREFIXES = ["image/", "video/", "audio/"];
+
+export const Route = createFileRoute("/api/public/remote")({
+  server: {
+    handlers: {
+      GET: async ({ request }) => {
+        const target = new URL(request.url).searchParams.get("url");
+        if (!target) return new Response("Missing url", { status: 400 });
+
+        let parsed: URL;
+        try {
+          parsed = new URL(target);
+        } catch {
+          return new Response("Invalid url", { status: 400 });
+        }
+        if (parsed.protocol !== "http:" && parsed.protocol !== "https:") {
+          return new Response("Invalid protocol", { status: 400 });
+        }
+        // Block internal network targets (SSRF protection).
+        const host = parsed.hostname.toLowerCase();
+        if (
+          host === "localhost" ||
+          host === "0.0.0.0" ||
+          host.endsWith(".local") ||
+          /^127\./.test(host) ||
+          /^10\./.test(host) ||
+          /^192\.168\./.test(host) ||
+          /^169\.254\./.test(host) ||
+          /^172\.(1[6-9]|2\d|3[01])\./.test(host)
+        ) {
+          return new Response("Forbidden host", { status: 403 });
+        }
+
+        let upstream: Response;
+        try {
+          upstream = await fetch(parsed.toString(), {
+            headers: {
+              // Some hosts reject requests without a browser-like UA.
+              "user-agent": "Mozilla/5.0 (compatible; LovableMediaProxy/1.0)",
+              accept: "image/*,video/*,*/*;q=0.8",
+              ...(request.headers.get("range") ? { range: request.headers.get("range")! } : {}),
+            },
+            redirect: "follow",
+          });
+        } catch {
+          return new Response("Upstream fetch failed", { status: 502 });
+        }
+
+        if (!upstream.ok && upstream.status !== 206) {
+          return new Response("Upstream error", { status: 502 });
+        }
+
+        const contentType = upstream.headers.get("content-type") ?? "application/octet-stream";
+        if (!ALLOWED_PREFIXES.some((p) => contentType.toLowerCase().startsWith(p))) {
+          return new Response("Unsupported content type", { status: 415 });
+        }
+
+        const headers = new Headers({
+          "content-type": contentType,
+          "cache-control": "public, max-age=86400",
+        });
+        const length = upstream.headers.get("content-length");
+        if (length) headers.set("content-length", length);
+        const range = upstream.headers.get("content-range");
+        if (range) headers.set("content-range", range);
+        headers.set("accept-ranges", upstream.headers.get("accept-ranges") ?? "bytes");
+
+        return new Response(upstream.body, { status: upstream.status, headers });
+      },
+    },
+  },
+});

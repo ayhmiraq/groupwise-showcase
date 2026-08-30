@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import { Loader2, Upload } from "lucide-react";
 
 import { adminUploadMedia } from "@/lib/admin.functions";
+import { mediaUrl } from "@/lib/media-url";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -52,9 +53,9 @@ export function MediaInput({
       </div>
       {value ? (
         /\.(mp4|webm|ogg)$/i.test(value) ? (
-          <video src={value} className="h-24 w-full rounded-md object-cover" muted playsInline />
+          <video src={mediaUrl(value)} className="h-24 w-full rounded-md object-cover" muted playsInline />
         ) : (
-          <img src={value} alt="" className="h-24 w-full rounded-md object-cover" />
+          <img src={mediaUrl(value)} alt="" className="h-24 w-full rounded-md object-cover" />
         )
       ) : null}
       <input
@@ -69,9 +70,9 @@ export function MediaInput({
         }}
       />
       {value && /\.(mp4|webm|mov)$/i.test(value) ? (
-        <video src={value} className="h-24 rounded-md border" muted playsInline />
+        <video src={mediaUrl(value)} className="h-24 rounded-md border" muted playsInline />
       ) : value ? (
-        <img src={value} alt="" className="h-24 rounded-md border object-cover" />
+        <img src={mediaUrl(value)} alt="" className="h-24 rounded-md border object-cover" />
       ) : null}
     </div>
   );

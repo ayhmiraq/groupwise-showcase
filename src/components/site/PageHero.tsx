@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 
 import type { PageSettings } from "@/lib/content.server";
+import { mediaUrl } from "@/lib/media-url";
 import { AetherField } from "./AetherField";
 
 type Props = {
@@ -34,7 +35,7 @@ export function PageHero({ page, title, subtitle, compact = false, children }: P
       >
         {bgType === "image" && page?.bg_url ? (
           <img
-            src={page.bg_url}
+            src={mediaUrl(page.bg_url)}
             alt=""
             aria-hidden="true"
             className="h-full w-full object-cover"
@@ -45,7 +46,7 @@ export function PageHero({ page, title, subtitle, compact = false, children }: P
         {bgType === "video" && page?.bg_url ? (
           <video
             className="bg-video pointer-events-none absolute inset-0 h-full w-full object-cover"
-            src={page.bg_url}
+            src={mediaUrl(page.bg_url)}
             autoPlay
             muted
             loop

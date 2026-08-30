@@ -21,6 +21,7 @@ import { Route as CompaniesIndexRouteImport } from './routes/companies.index'
 import { Route as CompaniesSlugRouteImport } from './routes/companies.$slug'
 import { Route as StoreIndexRouteImport } from './routes/store.index'
 import { Route as StoreSlugRouteImport } from './routes/store.$slug'
+import { Route as ApiPublicRemoteRouteImport } from './routes/api/public/remote'
 import { Route as ApiPublicMediaSplatRouteImport } from './routes/api/public/media/$'
 
 const IndexRoute = IndexRouteImport.update({
@@ -82,6 +83,11 @@ const StoreSlugRoute = StoreSlugRouteImport.update({
   path: '/store/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicRemoteRoute = ApiPublicRemoteRouteImport.update({
+  id: '/api/public/remote',
+  path: '/api/public/remote',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicMediaSplatRoute = ApiPublicMediaSplatRouteImport.update({
   id: '/api/public/media/$',
   path: '/api/public/media/$',
@@ -100,6 +106,7 @@ export interface FileRoutesByFullPath {
   '/store/$slug': typeof StoreSlugRoute
   '/companies/': typeof CompaniesIndexRoute
   '/store/': typeof StoreIndexRoute
+  '/api/public/remote': typeof ApiPublicRemoteRoute
   '/api/public/media/$': typeof ApiPublicMediaSplatRoute
 }
 export interface FileRoutesByTo {
@@ -114,6 +121,7 @@ export interface FileRoutesByTo {
   '/store/$slug': typeof StoreSlugRoute
   '/companies': typeof CompaniesIndexRoute
   '/store': typeof StoreIndexRoute
+  '/api/public/remote': typeof ApiPublicRemoteRoute
   '/api/public/media/$': typeof ApiPublicMediaSplatRoute
 }
 export interface FileRoutesById {
@@ -130,6 +138,7 @@ export interface FileRoutesById {
   '/store/$slug': typeof StoreSlugRoute
   '/companies/': typeof CompaniesIndexRoute
   '/store/': typeof StoreIndexRoute
+  '/api/public/remote': typeof ApiPublicRemoteRoute
   '/api/public/media/$': typeof ApiPublicMediaSplatRoute
 }
 export interface FileRouteTypes {
@@ -146,6 +155,7 @@ export interface FileRouteTypes {
     | '/store/$slug'
     | '/companies/'
     | '/store/'
+    | '/api/public/remote'
     | '/api/public/media/$'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -160,6 +170,7 @@ export interface FileRouteTypes {
     | '/store/$slug'
     | '/companies'
     | '/store'
+    | '/api/public/remote'
     | '/api/public/media/$'
   id:
     | '__root__'
@@ -175,6 +186,7 @@ export interface FileRouteTypes {
     | '/store/$slug'
     | '/companies/'
     | '/store/'
+    | '/api/public/remote'
     | '/api/public/media/$'
   fileRoutesById: FileRoutesById
 }
@@ -190,6 +202,7 @@ export interface RootRouteChildren {
   StoreSlugRoute: typeof StoreSlugRoute
   CompaniesIndexRoute: typeof CompaniesIndexRoute
   StoreIndexRoute: typeof StoreIndexRoute
+  ApiPublicRemoteRoute: typeof ApiPublicRemoteRoute
   ApiPublicMediaSplatRoute: typeof ApiPublicMediaSplatRoute
 }
 
@@ -279,6 +292,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StoreSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/remote': {
+      id: '/api/public/remote'
+      path: '/api/public/remote'
+      fullPath: '/api/public/remote'
+      preLoaderRoute: typeof ApiPublicRemoteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/media/$': {
       id: '/api/public/media/$'
       path: '/api/public/media/$'
@@ -312,6 +332,7 @@ const rootRouteChildren: RootRouteChildren = {
   StoreSlugRoute: StoreSlugRoute,
   CompaniesIndexRoute: CompaniesIndexRoute,
   StoreIndexRoute: StoreIndexRoute,
+  ApiPublicRemoteRoute: ApiPublicRemoteRoute,
   ApiPublicMediaSplatRoute: ApiPublicMediaSplatRoute,
 }
 export const routeTree = rootRouteImport

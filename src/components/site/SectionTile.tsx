@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
 
 import type { PageSettings } from "@/lib/content.server";
+import { mediaUrl } from "@/lib/media-url";
 import { AetherField } from "./AetherField";
 
 type Props = {
@@ -37,7 +38,7 @@ export function SectionTile({ to, title, subtitle, page }: Props) {
       <div className="absolute inset-0" aria-hidden="true">
         {tileImage || fallbackImage ? (
           <img
-            src={(tileImage || fallbackImage) as string}
+            src={mediaUrl((tileImage || fallbackImage) as string)}
             alt=""
             className="h-full w-full object-cover"
             loading="lazy"
@@ -45,7 +46,7 @@ export function SectionTile({ to, title, subtitle, page }: Props) {
         ) : null}
         {tileVideo ? (
           <video
-            src={tileVideo}
+            src={mediaUrl(tileVideo)}
             className="pointer-events-none h-full w-full object-cover"
             autoPlay
             muted
