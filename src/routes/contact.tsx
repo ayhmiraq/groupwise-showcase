@@ -12,29 +12,23 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { submitContactMessage } from "@/lib/content.functions";
+import { buildMeta, headSource } from "@/lib/head";
 import { useLang } from "@/lib/i18n";
 import { siteQuery } from "@/lib/queries";
 
 export const Route = createFileRoute("/contact")({
   loader: async ({ context }) => {
-    await context.queryClient.ensureQueryData(siteQuery);
+    const site = await context.queryClient.ensureQueryData(siteQuery);
+    return headSource(site, "contact");
   },
-  head: () => ({
-    meta: [
-      { title: "التواصل معنا | Contact — Ufuq Group" },
-      {
-        name: "description",
-        content:
-          "تواصل مع مجموعة الشركات عبر الهاتف أو البريد الإلكتروني أو نموذج الرسائل. Reach the group by phone, email or the contact form.",
-      },
-      { property: "og:title", content: "التواصل معنا | Contact — Ufuq Group" },
-      {
-        property: "og:description",
-        content: "أرسل استفسارك وسيتواصل معك فريق المجموعة في أقرب وقت.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
+  head: ({ loaderData }) => ({
+    meta: buildMeta({
+      source: loaderData,
+      fallbackName: "مجموعة الشركات",
+      fallbackTitle: "التواصل معنا",
+      fallbackDescription:
+        "تواصل مع مجموعة الشركات عبر الهاتف أو البريد الإلكتروني أو نموذج الرسائل.",
+    }),
   }),
   component: ContactPage,
 });
