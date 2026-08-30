@@ -26,7 +26,10 @@ export function PageHero({ page, title, subtitle, compact = false, children }: P
       className={`relative isolate overflow-hidden ${compact ? "py-20" : "py-28 md:py-36"}`}
       aria-labelledby="page-hero-title"
     >
-      <div className="absolute inset-0 -z-20 bg-background">
+      <div
+        className={`${isMedia ? "fixed" : "absolute"} inset-0 -z-20 overflow-hidden bg-background`}
+        aria-hidden="true"
+      >
         {bgType === "image" && page?.bg_url ? (
           <img
             src={page.bg_url}
@@ -39,12 +42,16 @@ export function PageHero({ page, title, subtitle, compact = false, children }: P
 
         {bgType === "video" && page?.bg_url ? (
           <video
-            className="h-full w-full object-cover"
+            className="bg-video pointer-events-none absolute inset-0 h-full w-full object-cover"
             src={page.bg_url}
             autoPlay
             muted
             loop
             playsInline
+            controls={false}
+            disablePictureInPicture
+            controlsList="nodownload noplaybackrate noremoteplayback"
+            tabIndex={-1}
             aria-hidden="true"
           />
         ) : null}
