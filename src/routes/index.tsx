@@ -60,7 +60,7 @@ function HomePage() {
         </Link>
       </PageHero>
 
-      <section className="container mx-auto flex flex-col items-center gap-6 px-4 py-20">
+      <section className="container mx-auto grid grid-cols-1 gap-6 px-4 py-20 sm:grid-cols-2 lg:grid-cols-3">
         <SectionTile
           to="/services"
           title={t("services")}

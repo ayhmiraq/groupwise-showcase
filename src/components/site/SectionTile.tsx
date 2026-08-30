@@ -24,7 +24,7 @@ export function SectionTile({ to, title, subtitle, page }: Props) {
   return (
     <Link
       to={to}
-      className="card-elevated group relative mx-auto block w-full max-w-4xl overflow-hidden rounded-xl border border-border bg-surface transition-colors hover:border-primary-glow"
+      className="card-elevated group relative mx-auto block h-full w-full overflow-hidden rounded-xl border border-border bg-surface transition-colors hover:border-primary-glow"
     >
       <div className="absolute inset-0" aria-hidden="true">
         {bgUrl ? (
@@ -48,12 +48,12 @@ export function SectionTile({ to, title, subtitle, page }: Props) {
         ) : null}
       </div>
 
-      <div className="relative flex min-h-36 flex-col items-center justify-center px-6 py-10 text-center">
-        <h2 className="text-2xl font-bold text-foreground md:text-3xl">{title}</h2>
+      <div className="relative flex min-h-44 flex-col items-center justify-center px-5 py-8 text-center">
+        <h2 className="text-xl font-bold text-foreground md:text-2xl">{title}</h2>
         {subtitle ? (
-          <p className="mt-2 max-w-xl text-sm text-muted-foreground md:text-base">{subtitle}</p>
+          <p className="mt-2 max-w-xs text-xs text-muted-foreground md:text-sm">{subtitle}</p>
         ) : null}
-        <span className="mt-4 inline-flex size-9 items-center justify-center rounded-full border border-primary-glow/40 text-primary-glow">
+        <span className="mt-4 inline-flex size-8 items-center justify-center rounded-full border border-primary-glow/40 text-primary-glow">
           <ArrowLeft className="size-4 ltr:rotate-180" />
         </span>
       </div>
