@@ -17,7 +17,7 @@ type Props = {
  * its colors sit on their own layer so they never change with the background.
  */
 export function SectionTile({ to, title, subtitle, page }: Props) {
-  const bgUrl = page?.bg_url && page.bg_type === "image" ? page.bg_url : page?.bg_url;
+  const bgUrl = page?.bg_url;
   const overlay = Math.min(Math.max(page?.overlay ?? 65, 0), 95) / 100;
   const fxOn = page?.fx_enabled ?? true;
 
@@ -53,9 +53,8 @@ export function SectionTile({ to, title, subtitle, page }: Props) {
         {subtitle ? (
           <p className="mt-2 max-w-xl text-sm text-muted-foreground md:text-base">{subtitle}</p>
         ) : null}
-        <span className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-primary-glow">
-          {title}
-          <ArrowLeft className="size-4 transition-transform ltr:rotate-180 group-hover:-translate-x-1 rtl:group-hover:-translate-x-1" />
+        <span className="mt-4 inline-flex size-9 items-center justify-center rounded-full border border-primary-glow/40 text-primary-glow">
+          <ArrowLeft className="size-4 ltr:rotate-180" />
         </span>
       </div>
     </Link>
