@@ -155,6 +155,12 @@ export function CrudSection({ sectionKey }: { sectionKey: string }) {
 
   const save = useMutation({
     mutationFn: async () => {
+      const missing = config.fields.filter(
+        (f) => f.required && !String(form[f.name] ?? "").trim(),
+      );
+      if (missing.length > 0) {
+        throw new Error(`حقول مطلوبة فارغة: ${missing.map((f) => f.label).join("، ")}`);
+      }
       const values = toPayload(config, form);
       const target = config.singleRow ? singleRow : editing;
       if (target) {
@@ -178,7 +184,8 @@ export function CrudSection({ sectionKey }: { sectionKey: string }) {
       void qc.invalidateQueries();
       broadcastContentUpdate();
     },
-    onError: () => toast.error("فشل الحفظ، تحقق من الحقول المطلوبة"),
+    onError: (err) =>
+      toast.error(err instanceof Error && err.message ? `فشل الحفظ: ${err.message}` : "فشل الحفظ"),
   });
 
   const destroy = useMutation({
