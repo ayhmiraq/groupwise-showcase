@@ -1,3 +1,4 @@
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
 
@@ -5,12 +6,15 @@ import { PageHero } from "@/components/site/PageHero";
 import { SectionTile } from "@/components/site/SectionTile";
 import { SiteLayout, usePageSettings, useSiteData } from "@/components/site/SiteLayout";
 import { buildMeta, headSource } from "@/lib/head";
-import { useLang } from "@/lib/i18n";
-import { siteQuery } from "@/lib/queries";
+import { formatDate, useLang } from "@/lib/i18n";
+import { companiesQuery, siteQuery } from "@/lib/queries";
 
 export const Route = createFileRoute("/")({
   loader: async ({ context }) => {
-    const site = await context.queryClient.ensureQueryData(siteQuery);
+    const [site] = await Promise.all([
+      context.queryClient.ensureQueryData(siteQuery),
+      context.queryClient.ensureQueryData(companiesQuery),
+    ]);
     return headSource(site, "home");
   },
   head: ({ loaderData }) => ({
@@ -26,12 +30,10 @@ export const Route = createFileRoute("/")({
 });
 
 function HomePage() {
-  const { pick, t } = useLang();
+  const { pick, t, lang } = useLang();
   const { settings } = useSiteData();
   const page = usePageSettings("home");
-  const servicesPage = usePageSettings("services");
-  const projectsPage = usePageSettings("projects");
-  const journeyPage = usePageSettings("journey");
+  const companies = useSuspenseQuery(companiesQuery).data;
 
   return (
     <SiteLayout>
@@ -56,24 +58,28 @@ function HomePage() {
       </PageHero>
 
       <section className="container mx-auto grid grid-cols-1 gap-6 px-4 py-20 sm:grid-cols-2 lg:grid-cols-3">
-        <SectionTile
-          to="/services"
-          title={pick(servicesPage?.title_ar, servicesPage?.title_en) || t("services")}
-          subtitle={pick(servicesPage?.subtitle_ar, servicesPage?.subtitle_en)}
-          page={servicesPage}
-        />
-        <SectionTile
-          to="/projects"
-          title={pick(projectsPage?.title_ar, projectsPage?.title_en) || t("projects")}
-          subtitle={pick(projectsPage?.subtitle_ar, projectsPage?.subtitle_en)}
-          page={projectsPage}
-        />
-        <SectionTile
-          to="/journey"
-          title={pick(journeyPage?.title_ar, journeyPage?.title_en) || t("journey")}
-          subtitle={pick(journeyPage?.subtitle_ar, journeyPage?.subtitle_en)}
-          page={journeyPage}
-        />
+        {companies.map((company) => {
+          const url = company.link_url?.trim() || "";
+          const isExternal = company.link_type === "external" && /^https?:\/\//i.test(url);
+          const isInternal = company.link_type === "internal" && url.startsWith("/");
+          return (
+            <SectionTile
+              key={company.id}
+              {...(isExternal
+                ? { href: url }
+                : { to: isInternal ? url : `/companies/${company.slug}` })}
+              title={pick(company.name_ar, company.name_en)}
+              subtitle={pick(company.tagline_ar, company.tagline_en)}
+              imageUrl={company.image_url}
+              meta={
+                company.founded_date
+                  ? `${t("founded")}: ${formatDate(company.founded_date, lang)}`
+                  : undefined
+              }
+              page={page}
+            />
+          );
+        })}
       </section>
 
     </SiteLayout>
