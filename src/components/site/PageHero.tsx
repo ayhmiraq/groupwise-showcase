@@ -72,7 +72,7 @@ export function PageHero({ page, title, subtitle, compact = false, children }: P
       </div>
 
       <div
-        className="hero-overlay absolute inset-0 -z-10"
+        className={`hero-overlay ${isMedia ? "fixed" : "absolute"} inset-0 -z-10`}
         style={{ opacity: bgType === "color" || bgType === "aether" ? 1 : overlay }}
         aria-hidden="true"
       />
