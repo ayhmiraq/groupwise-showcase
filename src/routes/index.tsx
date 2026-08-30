@@ -2,6 +2,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
 
+import { CompanyCard } from "@/components/site/CompanyCard";
 import { PageHero } from "@/components/site/PageHero";
 import { SiteLayout, usePageSettings } from "@/components/site/SiteLayout";
 import { formatDate, useLang } from "@/lib/i18n";
@@ -64,38 +65,20 @@ function HomePage() {
       <section className="container mx-auto px-4 py-20">
         <h2 className="text-3xl font-bold text-foreground">{t("ourCompanies")}</h2>
         <p className="mt-2 text-muted-foreground">{t("companiesIntro")}</p>
-        <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-8 grid gap-6 lg:grid-cols-2">
           {companies.map((company) => (
-            <article key={company.id} className="card-elevated overflow-hidden">
-              {company.image_url ? (
-                <img
-                  src={company.image_url}
-                  alt={pick(company.name_ar, company.name_en)}
-                  className="h-44 w-full object-cover"
-                  loading="lazy"
-                />
-              ) : null}
-              <div className="p-5">
-                <h3 className="text-lg font-bold text-foreground">
-                  {pick(company.name_ar, company.name_en)}
-                </h3>
-                <p className="mt-1 text-sm text-primary-glow">
-                  {pick(company.tagline_ar, company.tagline_en)}
-                </p>
-                {company.founded_date ? (
-                  <p className="mt-2 text-xs text-muted-foreground">
-                    {t("founded")}: {formatDate(company.founded_date, lang)}
-                  </p>
-                ) : null}
-                <Link
-                  to="/companies/$slug"
-                  params={{ slug: company.slug }}
-                  className="mt-4 inline-block text-sm font-semibold text-primary-glow hover:underline"
-                >
-                  {t("viewDetails")} →
-                </Link>
-              </div>
-            </article>
+            <CompanyCard
+              key={company.id}
+              company={company}
+              title={pick(company.name_ar, company.name_en)}
+              tagline={pick(company.tagline_ar, company.tagline_en)}
+              dateLabel={
+                company.founded_date
+                  ? `${t("founded")}: ${formatDate(company.founded_date, lang)}`
+                  : undefined
+              }
+              actionLabel={t("viewDetails")}
+            />
           ))}
         </div>
       </section>

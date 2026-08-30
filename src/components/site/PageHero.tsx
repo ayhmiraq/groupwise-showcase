@@ -24,7 +24,7 @@ export function PageHero({ page, title, subtitle, compact = false, children }: P
 
   return (
     <section
-      className={`relative isolate overflow-hidden ${compact ? "py-20" : "py-28 md:py-36"}`}
+      className={`relative overflow-hidden ${compact ? "py-20" : "py-28 md:py-36"}`}
       aria-labelledby="page-hero-title"
     >
       <div
@@ -93,7 +93,7 @@ export function PageHero({ page, title, subtitle, compact = false, children }: P
       ) : null}
 
       <div className="container mx-auto px-4">
-        <div className="max-w-3xl">
+        <div className="mx-auto flex max-w-3xl flex-col items-center text-center">
           <span className="inline-flex items-center gap-2 rounded-full border border-primary-glow/40 bg-surface/60 px-4 py-1 text-xs font-semibold text-primary-glow backdrop-blur">
             {new Date().getFullYear()}
           </span>
@@ -106,7 +106,9 @@ export function PageHero({ page, title, subtitle, compact = false, children }: P
           {subtitle ? (
             <p className="mt-5 max-w-2xl text-lg text-muted-foreground md:text-xl">{subtitle}</p>
           ) : null}
-          {children ? <div className="mt-8 flex flex-wrap gap-3">{children}</div> : null}
+          {children ? (
+            <div className="mt-8 flex flex-wrap justify-center gap-3">{children}</div>
+          ) : null}
         </div>
       </div>
     </section>

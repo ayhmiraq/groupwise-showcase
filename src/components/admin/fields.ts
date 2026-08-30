@@ -109,6 +109,16 @@ export const sections: SectionConfig[] = [
       ...bilingual("description", "التفاصيل", "textarea"),
       { name: "image_url", label: "الصورة", type: "media" },
       { name: "founded_date", label: "تاريخ التأسيس", type: "date" },
+      {
+        name: "link_type",
+        label: "نوع الرابط",
+        type: "select",
+        options: [
+          { value: "internal", label: "صفحة داخل الموقع" },
+          { value: "external", label: "رابط خارجي" },
+        ],
+      },
+      { name: "link_url", label: "الرابط (داخلي مثل /services أو خارجي https://)", type: "text" },
       { name: "sort_order", label: "الترتيب", type: "number" },
       { name: "published", label: "منشور", type: "boolean" },
     ],
