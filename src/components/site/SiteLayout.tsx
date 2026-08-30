@@ -100,15 +100,21 @@ function SiteHeader() {
       <div className="container mx-auto flex items-center justify-between gap-4 px-4 py-3">
         <Link to="/" className="flex items-center gap-3">
           {settings?.logo_url ? (
-            <img src={mediaUrl(settings.logo_url)} alt="" className="size-10 rounded-md object-cover" />
+            <img
+              src={mediaUrl(settings.logo_url)}
+              alt={pick(settings?.group_name_ar, settings?.group_name_en) ?? "logo"}
+              className="h-12 w-auto max-w-44 rounded-md object-contain drop-shadow-sm"
+            />
           ) : (
-            <span className="grid size-10 place-items-center rounded-md bg-primary text-lg font-bold text-primary-foreground">
-              ⌂
-            </span>
+            <>
+              <span className="grid size-10 place-items-center rounded-md bg-primary text-lg font-bold text-primary-foreground">
+                ⌂
+              </span>
+              <span className="text-lg font-bold text-foreground">
+                {pick(settings?.group_name_ar, settings?.group_name_en)}
+              </span>
+            </>
           )}
-          <span className="text-lg font-bold text-foreground">
-            {pick(settings?.group_name_ar, settings?.group_name_en)}
-          </span>
         </Link>
 
         <nav className="hidden items-center gap-1 lg:flex">
