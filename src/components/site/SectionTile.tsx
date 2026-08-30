@@ -24,7 +24,7 @@ export function SectionTile({ to, title, subtitle, page }: Props) {
   return (
     <Link
       to={to}
-      className="card-elevated group relative mx-auto block w-full max-w-4xl overflow-hidden rounded-xl border border-border bg-surface transition-colors hover:border-primary-glow"
+      className="card-elevated group relative mx-auto block h-full w-full overflow-hidden rounded-xl border border-border bg-surface transition-colors hover:border-primary-glow"
     >
       <div className="absolute inset-0" aria-hidden="true">
         {bgUrl ? (
