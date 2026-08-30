@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { Loader2, Pencil, Plus, Trash2 } from "lucide-react";
 
 import { adminDelete, adminInsert, adminList, adminUpdate } from "@/lib/admin.functions";
+import { broadcastContentUpdate } from "@/lib/content-sync";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -171,7 +172,9 @@ export function CrudSection({ sectionKey }: { sectionKey: string }) {
       toast.success("تم الحفظ");
       setOpen(false);
       setEditing(null);
-      void qc.invalidateQueries({ queryKey: ["admin-rows", config.table] });
+      hydrated.current = null;
+      void qc.invalidateQueries();
+      broadcastContentUpdate();
     },
     onError: () => toast.error("فشل الحفظ، تحقق من الحقول المطلوبة"),
   });
@@ -187,7 +190,8 @@ export function CrudSection({ sectionKey }: { sectionKey: string }) {
       }),
     onSuccess: () => {
       toast.success("تم الحذف");
-      void qc.invalidateQueries({ queryKey: ["admin-rows", config.table] });
+      void qc.invalidateQueries();
+      broadcastContentUpdate();
     },
     onError: () => toast.error("فشل الحذف"),
   });

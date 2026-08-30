@@ -15,7 +15,7 @@ import {
 export const siteQuery = queryOptions({
   queryKey: ["site"],
   queryFn: () => getSiteData(),
-  staleTime: 30_000,
+  staleTime: 0,
 });
 
 export const homeQuery = queryOptions({

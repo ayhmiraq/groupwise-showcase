@@ -21,6 +21,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useContentSync } from "@/lib/content-sync";
 import { languages, useLang } from "@/lib/i18n";
 import { siteQuery } from "@/lib/queries";
 
@@ -184,6 +185,7 @@ function SiteHeader() {
 }
 
 export function SiteLayout({ children }: { children: ReactNode }) {
+  useContentSync();
   return (
     <div className="min-h-screen bg-background">
       <TopBar />
