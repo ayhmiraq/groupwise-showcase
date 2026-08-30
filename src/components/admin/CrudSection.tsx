@@ -41,7 +41,8 @@ function toPayload(config: SectionConfig, form: Record<string, unknown>) {
     const raw = form[f.name];
     if (f.type === "boolean") out[f.name] = Boolean(raw);
     else if (f.type === "number") out[f.name] = raw === "" ? null : Number(raw);
-    else out[f.name] = raw === "" ? null : raw;
+    else if (raw === "") out[f.name] = f.required ? "" : null;
+    else out[f.name] = raw;
   }
   return out;
 }
@@ -154,6 +155,12 @@ export function CrudSection({ sectionKey }: { sectionKey: string }) {
 
   const save = useMutation({
     mutationFn: async () => {
+      const missing = config.fields.filter(
+        (f) => f.required && !String(form[f.name] ?? "").trim(),
+      );
+      if (missing.length > 0) {
+        throw new Error(`حقول مطلوبة فارغة: ${missing.map((f) => f.label).join("، ")}`);
+      }
       const values = toPayload(config, form);
       const target = config.singleRow ? singleRow : editing;
       if (target) {
@@ -177,7 +184,8 @@ export function CrudSection({ sectionKey }: { sectionKey: string }) {
       void qc.invalidateQueries();
       broadcastContentUpdate();
     },
-    onError: () => toast.error("فشل الحفظ، تحقق من الحقول المطلوبة"),
+    onError: (err) =>
+      toast.error(err instanceof Error && err.message ? `فشل الحفظ: ${err.message}` : "فشل الحفظ"),
   });
 
   const destroy = useMutation({
