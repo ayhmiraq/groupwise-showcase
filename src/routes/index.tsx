@@ -58,19 +58,19 @@ function HomePage() {
       <section className="container mx-auto grid grid-cols-1 gap-6 px-4 py-20 sm:grid-cols-2 lg:grid-cols-3">
         <SectionTile
           to="/services"
-          title={t("services")}
+          title={pick(servicesPage?.title_ar, servicesPage?.title_en) || t("services")}
           subtitle={pick(servicesPage?.subtitle_ar, servicesPage?.subtitle_en)}
           page={servicesPage}
         />
         <SectionTile
           to="/projects"
-          title={t("projects")}
+          title={pick(projectsPage?.title_ar, projectsPage?.title_en) || t("projects")}
           subtitle={pick(projectsPage?.subtitle_ar, projectsPage?.subtitle_en)}
           page={projectsPage}
         />
         <SectionTile
           to="/journey"
-          title={t("journey")}
+          title={pick(journeyPage?.title_ar, journeyPage?.title_en) || t("journey")}
           subtitle={pick(journeyPage?.subtitle_ar, journeyPage?.subtitle_en)}
           page={journeyPage}
         />
