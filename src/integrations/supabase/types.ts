@@ -22,6 +22,8 @@ export type Database = {
           founded_date: string | null
           id: string
           image_url: string | null
+          link_type: string
+          link_url: string | null
           name_ar: string
           name_en: string
           published: boolean
@@ -38,6 +40,8 @@ export type Database = {
           founded_date?: string | null
           id?: string
           image_url?: string | null
+          link_type?: string
+          link_url?: string | null
           name_ar: string
           name_en: string
           published?: boolean
@@ -54,6 +58,8 @@ export type Database = {
           founded_date?: string | null
           id?: string
           image_url?: string | null
+          link_type?: string
+          link_url?: string | null
           name_ar?: string
           name_en?: string
           published?: boolean
