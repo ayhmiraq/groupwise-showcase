@@ -79,7 +79,10 @@ export function PageHero({ page, title, subtitle, compact = false, children }: P
       />
 
       {fxOn ? (
-        <div className="absolute inset-0 -z-[9]" aria-hidden="true">
+        <div
+          className={`${bgType === "aether" ? "fixed" : "absolute"} inset-0 -z-[9]`}
+          aria-hidden="true"
+        >
           <AetherField
             options={{
               density: page?.fx_density ?? 140,
