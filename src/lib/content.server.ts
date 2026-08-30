@@ -30,6 +30,10 @@ export type PageSettings = {
   fx_glow?: number;
   fx_grid?: boolean;
   fx_scan?: boolean;
+  tile_bg_type?: string;
+  tile_bg_url?: string | null;
+  tile_youtube_id?: string | null;
+  tile_overlay?: number;
 };
 
 export async function fetchSiteData() {
