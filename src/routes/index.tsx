@@ -1,19 +1,14 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
 
-import { CompanyCard } from "@/components/site/CompanyCard";
 import { PageHero } from "@/components/site/PageHero";
 import { SiteLayout, usePageSettings } from "@/components/site/SiteLayout";
-import { formatDate, useLang } from "@/lib/i18n";
-import { homeQuery, siteQuery } from "@/lib/queries";
+import { useLang } from "@/lib/i18n";
+import { siteQuery } from "@/lib/queries";
 
 export const Route = createFileRoute("/")({
   loader: async ({ context }) => {
-    await Promise.all([
-      context.queryClient.ensureQueryData(siteQuery),
-      context.queryClient.ensureQueryData(homeQuery),
-    ]);
+    await context.queryClient.ensureQueryData(siteQuery);
   },
   head: () => ({
     meta: [
@@ -36,9 +31,8 @@ export const Route = createFileRoute("/")({
 });
 
 function HomePage() {
-  const { pick, t, lang } = useLang();
+  const { pick, t } = useLang();
   const page = usePageSettings("home");
-  const { companies } = useSuspenseQuery(homeQuery).data;
 
   return (
     <SiteLayout>
@@ -62,26 +56,7 @@ function HomePage() {
         </Link>
       </PageHero>
 
-      <section className="container mx-auto px-4 py-20">
-        <h2 className="text-3xl font-bold text-foreground">{t("ourCompanies")}</h2>
-        <p className="mt-2 text-muted-foreground">{t("companiesIntro")}</p>
-        <div className="mt-8 grid gap-6 lg:grid-cols-2">
-          {companies.map((company) => (
-            <CompanyCard
-              key={company.id}
-              company={company}
-              title={pick(company.name_ar, company.name_en)}
-              tagline={pick(company.tagline_ar, company.tagline_en)}
-              dateLabel={
-                company.founded_date
-                  ? `${t("founded")}: ${formatDate(company.founded_date, lang)}`
-                  : undefined
-              }
-              actionLabel={t("viewDetails")}
-            />
-          ))}
-        </div>
-      </section>
+      <section className="container mx-auto px-4 py-20" />
 
       <section className="container mx-auto px-4 pb-20">
         <div className="flex flex-wrap gap-3">
