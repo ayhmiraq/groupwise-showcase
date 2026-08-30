@@ -188,8 +188,10 @@ export function SiteLayout({ children }: { children: ReactNode }) {
   useContentSync();
   return (
     <div className="min-h-screen bg-background">
-      <TopBar />
-      <SiteHeader />
+      <div className="sticky top-0 z-50">
+        <TopBar />
+        <SiteHeader />
+      </div>
       <main className="relative z-0 pb-16">{children}</main>
     </div>
   );
