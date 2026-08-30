@@ -1,0 +1,2 @@
+ALTER TABLE public.page_settings DROP CONSTRAINT IF EXISTS page_settings_bg_type_check;
+ALTER TABLE public.page_settings ADD CONSTRAINT page_settings_bg_type_check CHECK (bg_type IN ('color', 'image', 'video', 'youtube', 'aether'));
