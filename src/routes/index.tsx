@@ -56,9 +56,7 @@ function HomePage() {
         </Link>
       </PageHero>
 
-      <section className="container mx-auto px-4 py-20" />
-
-      <section className="container mx-auto px-4 pb-20">
+      <section className="container mx-auto px-4 py-20">
         <div className="flex flex-wrap gap-3">
           <Link
             to="/services"
