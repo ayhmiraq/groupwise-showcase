@@ -3,32 +3,26 @@ import { createFileRoute } from "@tanstack/react-router";
 
 import { PageHero } from "@/components/site/PageHero";
 import { SiteLayout, usePageSettings } from "@/components/site/SiteLayout";
+import { buildMeta, headSource } from "@/lib/head";
 import { formatDate, useLang } from "@/lib/i18n";
 import { journeyQuery, siteQuery } from "@/lib/queries";
 
 export const Route = createFileRoute("/journey")({
   loader: async ({ context }) => {
-    await Promise.all([
+    const [site] = await Promise.all([
       context.queryClient.ensureQueryData(siteQuery),
       context.queryClient.ensureQueryData(journeyQuery),
     ]);
+    return headSource(site, "journey");
   },
-  head: () => ({
-    meta: [
-      { title: "مسيرتنا | Our Journey — Ufuq Group" },
-      {
-        name: "description",
-        content:
-          "محطات مفصلية في مسيرة المجموعة من التأسيس حتى اليوم. Key milestones in the group's history, year by year.",
-      },
-      { property: "og:title", content: "مسيرتنا | Our Journey — Ufuq Group" },
-      {
-        property: "og:description",
-        content: "تسلسل زمني لأهم محطات نمو المجموعة وتوسعها.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
+  head: ({ loaderData }) => ({
+    meta: buildMeta({
+      source: loaderData,
+      fallbackName: "مجموعة الشركات",
+      fallbackTitle: "مسيرتنا",
+      fallbackDescription:
+        "محطات مفصلية في مسيرة المجموعة من التأسيس حتى اليوم.",
+    }),
   }),
   component: JourneyPage,
 });

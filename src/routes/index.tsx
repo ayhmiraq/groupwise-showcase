@@ -4,29 +4,23 @@ import { ArrowLeft } from "lucide-react";
 import { PageHero } from "@/components/site/PageHero";
 import { SectionTile } from "@/components/site/SectionTile";
 import { SiteLayout, usePageSettings } from "@/components/site/SiteLayout";
+import { buildMeta, headSource } from "@/lib/head";
 import { useLang } from "@/lib/i18n";
 import { siteQuery } from "@/lib/queries";
 
 export const Route = createFileRoute("/")({
   loader: async ({ context }) => {
-    await context.queryClient.ensureQueryData(siteQuery);
+    const site = await context.queryClient.ensureQueryData(siteQuery);
+    return headSource(site, "home");
   },
-  head: () => ({
-    meta: [
-      { title: "مجموعة شركات أفق | Ufuq Group of Companies" },
-      {
-        name: "description",
-        content:
-          "مجموعة شركات متكاملة في الهندسة والطاقة والتقنية واللوجستيات، مع متجر ومشاريع ومسيرة موثقة. An integrated group of companies across engineering, energy, technology and logistics.",
-      },
-      { property: "og:title", content: "مجموعة شركات أفق | Ufuq Group of Companies" },
-      {
-        property: "og:description",
-        content: "شركات المجموعة، خدماتها، مشاريعها ومتجرها في مكان واحد.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
+  head: ({ loaderData }) => ({
+    meta: buildMeta({
+      source: loaderData,
+      fallbackName: "مجموعة الشركات",
+      fallbackTitle: "الرئيسية",
+      fallbackDescription:
+        "مجموعة شركات متكاملة في الهندسة والطاقة والتقنية واللوجستيات، مع متجر ومشاريع ومسيرة موثقة.",
+    }),
   }),
   component: HomePage,
 });

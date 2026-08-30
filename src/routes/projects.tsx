@@ -4,32 +4,26 @@ import { useState } from "react";
 
 import { PageHero } from "@/components/site/PageHero";
 import { SiteLayout, usePageSettings } from "@/components/site/SiteLayout";
+import { buildMeta, headSource } from "@/lib/head";
 import { formatDate, useLang } from "@/lib/i18n";
 import { projectsQuery, siteQuery } from "@/lib/queries";
 
 export const Route = createFileRoute("/projects")({
   loader: async ({ context }) => {
-    await Promise.all([
+    const [site] = await Promise.all([
       context.queryClient.ensureQueryData(siteQuery),
       context.queryClient.ensureQueryData(projectsQuery),
     ]);
+    return headSource(site, "projects");
   },
-  head: () => ({
-    meta: [
-      { title: "المشاريع | Projects — Ufuq Group" },
-      {
-        name: "description",
-        content:
-          "مشاريع المجموعة المنجزة وقيد التنفيذ والمخططة عبر قطاعات متعددة. Completed, ongoing and planned projects across the group.",
-      },
-      { property: "og:title", content: "المشاريع | Projects — Ufuq Group" },
-      {
-        property: "og:description",
-        content: "استعرض مشاريع المجموعة بحسب الحالة والموقع والشركة المنفذة.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
+  head: ({ loaderData }) => ({
+    meta: buildMeta({
+      source: loaderData,
+      fallbackName: "مجموعة الشركات",
+      fallbackTitle: "المشاريع",
+      fallbackDescription:
+        "مشاريع المجموعة المنجزة وقيد التنفيذ والمخططة عبر قطاعات متعددة.",
+    }),
   }),
   component: ProjectsPage,
 });

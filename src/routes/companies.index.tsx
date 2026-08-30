@@ -4,32 +4,26 @@ import { createFileRoute } from "@tanstack/react-router";
 import { CompanyCard } from "@/components/site/CompanyCard";
 import { PageHero } from "@/components/site/PageHero";
 import { SiteLayout, usePageSettings } from "@/components/site/SiteLayout";
+import { buildMeta, headSource } from "@/lib/head";
 import { formatDate, useLang } from "@/lib/i18n";
 import { companiesQuery, siteQuery } from "@/lib/queries";
 
 export const Route = createFileRoute("/companies/")({
   loader: async ({ context }) => {
-    await Promise.all([
+    const [site] = await Promise.all([
       context.queryClient.ensureQueryData(siteQuery),
       context.queryClient.ensureQueryData(companiesQuery),
     ]);
+    return headSource(site, "companies");
   },
-  head: () => ({
-    meta: [
-      { title: "شركاتنا | Our Companies — Ufuq Group" },
-      {
-        name: "description",
-        content:
-          "الشركات التابعة للمجموعة مع نبذة وتسلسل زمني لكل شركة. The companies within the group, each with its own story and timeline.",
-      },
-      { property: "og:title", content: "شركاتنا | Our Companies — Ufuq Group" },
-      {
-        property: "og:description",
-        content: "تعرّف على شركات المجموعة وتخصص كل شركة وتاريخ تأسيسها.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
+  head: ({ loaderData }) => ({
+    meta: buildMeta({
+      source: loaderData,
+      fallbackName: "مجموعة الشركات",
+      fallbackTitle: "شركاتنا",
+      fallbackDescription:
+        "الشركات التابعة للمجموعة مع نبذة وتسلسل زمني لكل شركة.",
+    }),
   }),
   component: CompaniesPage,
 });

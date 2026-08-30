@@ -4,32 +4,26 @@ import { useState } from "react";
 
 import { PageHero } from "@/components/site/PageHero";
 import { SiteLayout, usePageSettings } from "@/components/site/SiteLayout";
+import { buildMeta, headSource } from "@/lib/head";
 import { formatPrice, useLang } from "@/lib/i18n";
 import { siteQuery, storeQuery } from "@/lib/queries";
 
 export const Route = createFileRoute("/store/")({
   loader: async ({ context }) => {
-    await Promise.all([
+    const [site] = await Promise.all([
       context.queryClient.ensureQueryData(siteQuery),
       context.queryClient.ensureQueryData(storeQuery),
     ]);
+    return headSource(site, "store");
   },
-  head: () => ({
-    meta: [
-      { title: "المتجر | Store — Ufuq Group" },
-      {
-        name: "description",
-        content:
-          "كتالوج منتجات المجموعة مع إمكانية طلب استفسار وعرض سعر. Browse the group's product catalogue and request a quote.",
-      },
-      { property: "og:title", content: "المتجر | Store — Ufuq Group" },
-      {
-        property: "og:description",
-        content: "منتجات وحلول المجموعة مصنفة بحسب الأقسام مع طلب عرض سعر.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
+  head: ({ loaderData }) => ({
+    meta: buildMeta({
+      source: loaderData,
+      fallbackName: "مجموعة الشركات",
+      fallbackTitle: "المتجر",
+      fallbackDescription:
+        "كتالوج منتجات المجموعة مع إمكانية طلب استفسار وعرض سعر.",
+    }),
   }),
   component: StorePage,
 });

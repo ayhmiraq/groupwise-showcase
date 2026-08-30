@@ -3,32 +3,26 @@ import { createFileRoute } from "@tanstack/react-router";
 
 import { PageHero } from "@/components/site/PageHero";
 import { SiteLayout, usePageSettings } from "@/components/site/SiteLayout";
+import { buildMeta, headSource } from "@/lib/head";
 import { useLang } from "@/lib/i18n";
 import { servicesQuery, siteQuery } from "@/lib/queries";
 
 export const Route = createFileRoute("/services")({
   loader: async ({ context }) => {
-    await Promise.all([
+    const [site] = await Promise.all([
       context.queryClient.ensureQueryData(siteQuery),
       context.queryClient.ensureQueryData(servicesQuery),
     ]);
+    return headSource(site, "services");
   },
-  head: () => ({
-    meta: [
-      { title: "خدماتنا | Our Services — Ufuq Group" },
-      {
-        name: "description",
-        content:
-          "خدمات المجموعة في المقاولات والطاقة والتقنية والخدمات اللوجستية. Explore the engineering, energy, technology and logistics services of the group.",
-      },
-      { property: "og:title", content: "خدماتنا | Our Services — Ufuq Group" },
-      {
-        property: "og:description",
-        content: "خدمات متكاملة من شركات المجموعة في الهندسة والطاقة والتقنية واللوجستيات.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
+  head: ({ loaderData }) => ({
+    meta: buildMeta({
+      source: loaderData,
+      fallbackName: "مجموعة الشركات",
+      fallbackTitle: "خدماتنا",
+      fallbackDescription:
+        "خدمات المجموعة في المقاولات والطاقة والتقنية والخدمات اللوجستية.",
+    }),
   }),
   component: ServicesPage,
 });
