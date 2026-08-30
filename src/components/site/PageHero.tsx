@@ -20,6 +20,7 @@ export function PageHero({ page, title, subtitle, compact = false, children }: P
   const bgType = page?.enabled === false ? "color" : (page?.bg_type ?? "color");
   const overlay = Math.min(Math.max(page?.overlay ?? 65, 0), 95) / 100;
   const fxOn = page?.enabled !== false && (page?.fx_enabled ?? bgType === "aether");
+  const isMedia = bgType === "image" || bgType === "video" || bgType === "youtube";
 
   return (
     <section
