@@ -152,15 +152,37 @@
   box-shadow: var(--shadow-elevated);
 }
 
-/* Background videos: never show native playback controls */
+/* Background videos: never show native playback controls or overlay play buttons */
+.bg-video {
+  -webkit-appearance: none;
+  appearance: none;
+}
 .bg-video::-webkit-media-controls,
 .bg-video::-webkit-media-controls-panel,
 .bg-video::-webkit-media-controls-start-playback-button,
 .bg-video::-webkit-media-controls-play-button,
 .bg-video::-webkit-media-controls-overlay-play-button,
-.bg-video::-webkit-media-controls-enclosure {
+.bg-video::-webkit-media-controls-enclosure,
+.bg-video::-webkit-media-controls-overlay-enclosure,
+.bg-video::-webkit-media-controls-timeline,
+.bg-video::-webkit-media-controls-current-time-display,
+.bg-video::-webkit-media-controls-time-remaining-display,
+.bg-video::-webkit-media-controls-fullscreen-button,
+.bg-video::-webkit-media-controls-volume-slider,
+.bg-video::-webkit-media-controls-mute-button,
+.bg-video::-internal-media-controls-overlay-play-button {
   display: none !important;
   opacity: 0 !important;
+  pointer-events: none !important;
   -webkit-appearance: none;
   appearance: none;
+}
+/* Firefox */
+.bg-video::-moz-media-controls,
+.bg-video::-moz-media-controls-panel {
+  display: none !important;
+  opacity: 0 !important;
+}
+.bg-video::-moz-aria-busy {
+  display: none !important;
 }
