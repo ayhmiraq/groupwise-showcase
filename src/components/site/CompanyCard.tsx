@@ -1,3 +1,4 @@
+import { mediaUrl } from "@/lib/media-url";
 import { Link } from "@tanstack/react-router";
 import type { FC, ReactNode } from "react";
 
@@ -33,7 +34,7 @@ export function CompanyCard({ company, title, tagline, dateLabel, actionLabel, c
     <div className="grid grid-cols-[minmax(0,1fr)] gap-0 sm:grid-cols-[14rem_minmax(0,1fr)]">
       {company.image_url ? (
         <img
-          src={company.image_url}
+          src={mediaUrl(company.image_url)}
           alt={title}
           className="h-44 w-full object-cover sm:h-full"
           loading="lazy"

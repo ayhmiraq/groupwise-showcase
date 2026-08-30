@@ -1,3 +1,4 @@
+import { mediaUrl } from "@/lib/media-url";
 import { Link } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Facebook, Languages, Mail, MapPin, Menu, Phone } from "lucide-react";
@@ -99,7 +100,7 @@ function SiteHeader() {
       <div className="container mx-auto flex items-center justify-between gap-4 px-4 py-3">
         <Link to="/" className="flex items-center gap-3">
           {settings?.logo_url ? (
-            <img src={settings.logo_url} alt="" className="size-10 rounded-md object-cover" />
+            <img src={mediaUrl(settings.logo_url)} alt="" className="size-10 rounded-md object-cover" />
           ) : (
             <span className="grid size-10 place-items-center rounded-md bg-primary text-lg font-bold text-primary-foreground">
               ⌂
