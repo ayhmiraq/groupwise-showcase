@@ -6,10 +6,17 @@ import { mediaUrl } from "@/lib/media-url";
 import { AetherField } from "./AetherField";
 
 type Props = {
-  to: string;
+  /** Internal route (used when `href` is not provided). */
+  to?: string;
+  /** External URL; takes precedence over `to`. */
+  href?: string;
   title: string;
   subtitle?: string;
   page?: PageSettings | undefined;
+  /** Direct background image (e.g. a company image), overrides page media. */
+  imageUrl?: string | null | undefined;
+  /** Extra line under the subtitle (e.g. founding date). */
+  meta?: string | undefined;
 };
 
 /**
@@ -18,22 +25,20 @@ type Props = {
  * Aether effect layered above it. Text and its colors sit on their own layer so
  * they never change with the background.
  */
-export function SectionTile({ to, title, subtitle, page }: Props) {
+export function SectionTile({ to, href, title, subtitle, page, imageUrl, meta }: Props) {
   const tileType = page?.tile_bg_type ?? "none";
-  const tileImage = tileType === "image" ? page?.tile_bg_url : null;
-  const tileVideo = tileType === "video" ? page?.tile_bg_url : null;
-  const tileYoutube = tileType === "youtube" ? page?.tile_youtube_id : null;
+  const tileImage = imageUrl || (tileType === "image" ? page?.tile_bg_url : null);
+  const tileVideo = imageUrl ? null : tileType === "video" ? page?.tile_bg_url : null;
+  const tileYoutube = imageUrl ? null : tileType === "youtube" ? page?.tile_youtube_id : null;
   // Fallback to the page background image when no tile-specific media is set.
-  const fallbackImage = tileType === "none" ? page?.bg_url : null;
+  const fallbackImage = imageUrl ? null : tileType === "none" ? page?.bg_url : null;
   const hasMedia = Boolean(tileImage || tileVideo || tileYoutube || fallbackImage);
   const overlay =
     Math.min(Math.max(page?.tile_overlay ?? page?.overlay ?? 55, 0), 95) / 100;
   const fxOn = page?.fx_enabled ?? true;
 
-  return (
-    <Link
-      to={to}
-      className="card-elevated group relative mx-auto block h-full w-full overflow-hidden rounded-xl border border-border bg-surface transition-colors hover:border-primary-glow"
+  const className =
+    "card-elevated group relative mx-auto block h-full w-full overflow-hidden rounded-xl border border-border bg-surface transition-colors hover:border-primary-glow"
     >
       <div className="absolute inset-0" aria-hidden="true">
         {tileImage || fallbackImage ? (
@@ -85,10 +90,25 @@ export function SectionTile({ to, title, subtitle, page }: Props) {
         {subtitle ? (
           <p className="mt-2 max-w-xs text-xs text-muted-foreground md:text-sm">{subtitle}</p>
         ) : null}
+        {meta ? <p className="mt-1 text-[11px] text-muted-foreground/80">{meta}</p> : null}
         <span className="mt-4 inline-flex size-8 items-center justify-center rounded-full border border-primary-glow/40 text-primary-glow">
           <ArrowLeft className="size-4 ltr:rotate-180" />
         </span>
       </div>
+    </>
+  );
+
+  if (href) {
+    return (
+      <a href={href} target="_blank" rel="noreferrer noopener" className={className}>
+        {content}
+      </a>
+    );
+  }
+
+  return (
+    <Link to={to ?? "/"} className={className}>
+      {content}
     </Link>
   );
 }
