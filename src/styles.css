@@ -151,3 +151,16 @@
 @utility card-elevated {
   box-shadow: var(--shadow-elevated);
 }
+
+/* Background videos: never show native playback controls */
+.bg-video::-webkit-media-controls,
+.bg-video::-webkit-media-controls-panel,
+.bg-video::-webkit-media-controls-start-playback-button,
+.bg-video::-webkit-media-controls-play-button,
+.bg-video::-webkit-media-controls-overlay-play-button,
+.bg-video::-webkit-media-controls-enclosure {
+  display: none !important;
+  opacity: 0 !important;
+  -webkit-appearance: none;
+  appearance: none;
+}
