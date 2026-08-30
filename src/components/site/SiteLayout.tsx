@@ -48,7 +48,7 @@ function TopBar() {
   const { settings } = useSiteData();
 
   return (
-    <div className="border-b border-border/60 bg-surface/80 text-sm backdrop-blur">
+    <div className="bg-background/90 text-sm backdrop-blur">
       <div className="container mx-auto flex items-center justify-between gap-4 px-4 py-1.5">
         <div className="flex items-center gap-4 text-muted-foreground">
           {settings?.phone ? (
@@ -120,7 +120,7 @@ function SiteHeader() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border/60 bg-background/85 backdrop-blur">
+    <header className="border-b border-border/60 bg-background/90 backdrop-blur">
       <div className="container mx-auto flex items-center justify-between gap-4 px-4 py-3">
         <Link to="/" className="flex items-center gap-3">
           {settings?.logo_url ? (
@@ -188,8 +188,10 @@ export function SiteLayout({ children }: { children: ReactNode }) {
   useContentSync();
   return (
     <div className="min-h-screen bg-background">
-      <TopBar />
-      <SiteHeader />
+      <div className="sticky top-0 z-50">
+        <TopBar />
+        <SiteHeader />
+      </div>
       <main className="relative z-0 pb-16">{children}</main>
     </div>
   );
