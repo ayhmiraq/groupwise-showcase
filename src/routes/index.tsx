@@ -3,7 +3,7 @@ import { ArrowLeft } from "lucide-react";
 
 import { PageHero } from "@/components/site/PageHero";
 import { SectionTile } from "@/components/site/SectionTile";
-import { SiteLayout, usePageSettings } from "@/components/site/SiteLayout";
+import { SiteLayout, usePageSettings, useSiteData } from "@/components/site/SiteLayout";
 import { buildMeta, headSource } from "@/lib/head";
 import { useLang } from "@/lib/i18n";
 import { siteQuery } from "@/lib/queries";
@@ -27,6 +27,7 @@ export const Route = createFileRoute("/")({
 
 function HomePage() {
   const { pick, t } = useLang();
+  const { settings } = useSiteData();
   const page = usePageSettings("home");
   const servicesPage = usePageSettings("services");
   const projectsPage = usePageSettings("projects");
@@ -36,7 +37,7 @@ function HomePage() {
     <SiteLayout>
       <PageHero
         page={page}
-        title={pick(page?.title_ar, page?.title_en) || "مجموعة شركات أفق"}
+        title={pick(page?.title_ar, page?.title_en) || pick(settings?.group_name_ar, settings?.group_name_en)}
         subtitle={pick(page?.subtitle_ar, page?.subtitle_en) || t("companiesIntro")}
       >
         <Link
