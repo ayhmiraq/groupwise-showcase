@@ -47,7 +47,8 @@ export const sections: SectionConfig[] = [
     titleField: "group_name_ar",
     singleRow: true,
     fields: [
-      ...bilingual("group_name", "اسم المجموعة"),
+      { name: "group_name_ar", label: "اسم المجموعة (عربي)", type: "text", required: true },
+      { name: "group_name_en", label: "اسم المجموعة (English)", type: "text", required: true },
       { name: "logo_url", label: "الشعار", type: "media" },
       ...bilingual("topbar_text", "نص الشريط العلوي"),
       { name: "phone", label: "الهاتف", type: "text" },

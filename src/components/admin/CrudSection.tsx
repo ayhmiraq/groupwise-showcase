@@ -41,7 +41,8 @@ function toPayload(config: SectionConfig, form: Record<string, unknown>) {
     const raw = form[f.name];
     if (f.type === "boolean") out[f.name] = Boolean(raw);
     else if (f.type === "number") out[f.name] = raw === "" ? null : Number(raw);
-    else out[f.name] = raw === "" ? null : raw;
+    else if (raw === "") out[f.name] = f.required ? "" : null;
+    else out[f.name] = raw;
   }
   return out;
 }
