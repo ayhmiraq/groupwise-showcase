@@ -65,9 +65,24 @@ export function PageHero({ page, title, subtitle, compact = false, children }: P
 
       <div
         className="hero-overlay absolute inset-0 -z-10"
-        style={{ opacity: bgType === "color" ? 1 : overlay }}
+        style={{ opacity: bgType === "color" || bgType === "aether" ? 1 : overlay }}
         aria-hidden="true"
       />
+
+      {fxOn ? (
+        <div className="absolute inset-0 -z-[9]" aria-hidden="true">
+          <AetherField
+            options={{
+              density: page?.fx_density ?? 140,
+              speed: page?.fx_speed ?? 40,
+              hue: page?.fx_hue ?? 225,
+              glow: page?.fx_glow ?? 60,
+              grid: page?.fx_grid ?? true,
+              scan: page?.fx_scan ?? true,
+            }}
+          />
+        </div>
+      ) : null}
 
       <div className="container mx-auto px-4">
         <div className="max-w-3xl">
