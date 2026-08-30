@@ -1,16 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import {
-  Facebook,
-  Instagram,
-  Languages,
-  Linkedin,
-  Mail,
-  MapPin,
-  Menu,
-  Phone,
-  Youtube,
-} from "lucide-react";
+import { Facebook, Languages, Mail, MapPin, Menu, Phone } from "lucide-react";
 import { useState } from "react";
 import type { ReactNode } from "react";
 
