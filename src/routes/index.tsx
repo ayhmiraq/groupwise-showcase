@@ -2,6 +2,7 @@ import { Link, createFileRoute } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
 
 import { PageHero } from "@/components/site/PageHero";
+import { SectionTile } from "@/components/site/SectionTile";
 import { SiteLayout, usePageSettings } from "@/components/site/SiteLayout";
 import { useLang } from "@/lib/i18n";
 import { siteQuery } from "@/lib/queries";
@@ -33,6 +34,9 @@ export const Route = createFileRoute("/")({
 function HomePage() {
   const { pick, t } = useLang();
   const page = usePageSettings("home");
+  const servicesPage = usePageSettings("services");
+  const projectsPage = usePageSettings("projects");
+  const journeyPage = usePageSettings("journey");
 
   return (
     <SiteLayout>
