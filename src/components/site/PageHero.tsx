@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 
 import type { PageSettings } from "@/lib/content.server";
+import { AetherField } from "./AetherField";
 
 type Props = {
   page: PageSettings | undefined;
@@ -18,6 +19,7 @@ type Props = {
 export function PageHero({ page, title, subtitle, compact = false, children }: Props) {
   const bgType = page?.enabled === false ? "color" : (page?.bg_type ?? "color");
   const overlay = Math.min(Math.max(page?.overlay ?? 65, 0), 95) / 100;
+  const fxOn = page?.enabled !== false && (page?.fx_enabled ?? bgType === "aether");
 
   return (
     <section
@@ -63,9 +65,24 @@ export function PageHero({ page, title, subtitle, compact = false, children }: P
 
       <div
         className="hero-overlay absolute inset-0 -z-10"
-        style={{ opacity: bgType === "color" ? 1 : overlay }}
+        style={{ opacity: bgType === "color" || bgType === "aether" ? 1 : overlay }}
         aria-hidden="true"
       />
+
+      {fxOn ? (
+        <div className="absolute inset-0 -z-[9]" aria-hidden="true">
+          <AetherField
+            options={{
+              density: page?.fx_density ?? 140,
+              speed: page?.fx_speed ?? 40,
+              hue: page?.fx_hue ?? 225,
+              glow: page?.fx_glow ?? 60,
+              grid: page?.fx_grid ?? true,
+              scan: page?.fx_scan ?? true,
+            }}
+          />
+        </div>
+      ) : null}
 
       <div className="container mx-auto px-4">
         <div className="max-w-3xl">

@@ -23,6 +23,13 @@ export type PageSettings = {
   youtube_id: string | null;
   overlay: number;
   enabled: boolean;
+  fx_enabled?: boolean;
+  fx_density?: number;
+  fx_speed?: number;
+  fx_hue?: number;
+  fx_glow?: number;
+  fx_grid?: boolean;
+  fx_scan?: boolean;
 };
 
 export async function fetchSiteData() {
