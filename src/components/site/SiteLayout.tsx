@@ -79,21 +79,6 @@ function TopBar() {
                 <Facebook className="size-4 hover:text-primary-glow" />
               </a>
             ) : null}
-            {settings?.instagram ? (
-              <a href={settings.instagram} aria-label="Instagram" target="_blank" rel="noreferrer">
-                <Instagram className="size-4 hover:text-primary-glow" />
-              </a>
-            ) : null}
-            {settings?.linkedin ? (
-              <a href={settings.linkedin} aria-label="LinkedIn" target="_blank" rel="noreferrer">
-                <Linkedin className="size-4 hover:text-primary-glow" />
-              </a>
-            ) : null}
-            {settings?.youtube ? (
-              <a href={settings.youtube} aria-label="YouTube" target="_blank" rel="noreferrer">
-                <Youtube className="size-4 hover:text-primary-glow" />
-              </a>
-            ) : null}
           </div>
           <DropdownMenu>
             <DropdownMenuTrigger className="flex items-center gap-1.5 rounded-md border border-border px-2 py-1 text-xs font-semibold text-foreground transition-colors hover:border-primary-glow hover:text-primary-glow">
