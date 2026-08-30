@@ -20,6 +20,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { MediaInput } from "./MediaInput";
+import { TileBackground, tilePageKeyBySection } from "./TileBackground";
 import { sections, type Field, type SectionConfig } from "./fields";
 
 type Row = Record<string, unknown>;
