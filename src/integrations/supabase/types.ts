@@ -233,6 +233,13 @@ export type Database = {
           bg_type: string
           bg_url: string | null
           enabled: boolean
+          fx_density: number
+          fx_enabled: boolean
+          fx_glow: number
+          fx_grid: boolean
+          fx_hue: number
+          fx_scan: boolean
+          fx_speed: number
           overlay: number
           page_key: string
           subtitle_ar: string
@@ -246,6 +253,13 @@ export type Database = {
           bg_type?: string
           bg_url?: string | null
           enabled?: boolean
+          fx_density?: number
+          fx_enabled?: boolean
+          fx_glow?: number
+          fx_grid?: boolean
+          fx_hue?: number
+          fx_scan?: boolean
+          fx_speed?: number
           overlay?: number
           page_key: string
           subtitle_ar?: string
@@ -259,6 +273,13 @@ export type Database = {
           bg_type?: string
           bg_url?: string | null
           enabled?: boolean
+          fx_density?: number
+          fx_enabled?: boolean
+          fx_glow?: number
+          fx_grid?: boolean
+          fx_hue?: number
+          fx_scan?: boolean
+          fx_speed?: number
           overlay?: number
           page_key?: string
           subtitle_ar?: string
