@@ -250,6 +250,10 @@ export type Database = {
           page_key: string
           subtitle_ar: string
           subtitle_en: string
+          tile_bg_type: string
+          tile_bg_url: string | null
+          tile_overlay: number
+          tile_youtube_id: string | null
           title_ar: string
           title_en: string
           updated_at: string
@@ -270,6 +274,10 @@ export type Database = {
           page_key: string
           subtitle_ar?: string
           subtitle_en?: string
+          tile_bg_type?: string
+          tile_bg_url?: string | null
+          tile_overlay?: number
+          tile_youtube_id?: string | null
           title_ar?: string
           title_en?: string
           updated_at?: string
@@ -290,6 +298,10 @@ export type Database = {
           page_key?: string
           subtitle_ar?: string
           subtitle_en?: string
+          tile_bg_type?: string
+          tile_bg_url?: string | null
+          tile_overlay?: number
+          tile_youtube_id?: string | null
           title_ar?: string
           title_en?: string
           updated_at?: string
