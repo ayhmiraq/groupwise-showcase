@@ -13,8 +13,8 @@ type CompanyLike = {
 type Props = {
   company: CompanyLike;
   title: string;
-  tagline?: string;
-  dateLabel?: string;
+  tagline?: string | undefined;
+  dateLabel?: string | undefined;
   actionLabel: string;
   children?: ReactNode;
 };
