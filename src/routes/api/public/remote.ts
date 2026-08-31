@@ -59,7 +59,9 @@ export const Route = createFileRoute("/api/public/remote")({
 
         const headers = new Headers({
           "content-type": contentType,
-          "cache-control": "public, max-age=86400",
+          // Long-lived caching so media keeps showing when the network drops.
+          "cache-control": "public, max-age=604800, stale-while-revalidate=86400, stale-if-error=2592000",
+
         });
         const length = upstream.headers.get("content-length");
         if (length) headers.set("content-length", length);

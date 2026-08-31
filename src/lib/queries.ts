@@ -11,51 +11,52 @@ import {
   getSiteData,
   getStore,
 } from "./content.functions";
+import { withOfflineCache } from "./offline-cache";
 
 export const siteQuery = queryOptions({
   queryKey: ["site"],
-  queryFn: () => getSiteData(),
+  queryFn: withOfflineCache("site", () => getSiteData()),
   staleTime: 0,
 });
 
 export const homeQuery = queryOptions({
   queryKey: ["home"],
-  queryFn: () => getHomeData(),
+  queryFn: withOfflineCache("home", () => getHomeData()),
 });
 
 export const companiesQuery = queryOptions({
   queryKey: ["companies"],
-  queryFn: () => getCompanies(),
+  queryFn: withOfflineCache("companies", () => getCompanies()),
 });
 
 export const companyQuery = (slug: string) =>
   queryOptions({
     queryKey: ["company", slug],
-    queryFn: () => getCompany({ data: { slug } }),
+    queryFn: withOfflineCache(`company:${slug}`, () => getCompany({ data: { slug } })),
   });
 
 export const servicesQuery = queryOptions({
   queryKey: ["services"],
-  queryFn: () => getServices(),
+  queryFn: withOfflineCache("services", () => getServices()),
 });
 
 export const journeyQuery = queryOptions({
   queryKey: ["journey"],
-  queryFn: () => getJourney(),
+  queryFn: withOfflineCache("journey", () => getJourney()),
 });
 
 export const projectsQuery = queryOptions({
   queryKey: ["projects"],
-  queryFn: () => getProjects(),
+  queryFn: withOfflineCache("projects", () => getProjects()),
 });
 
 export const storeQuery = queryOptions({
   queryKey: ["store"],
-  queryFn: () => getStore(),
+  queryFn: withOfflineCache("store", () => getStore()),
 });
 
 export const productQuery = (slug: string) =>
   queryOptions({
     queryKey: ["product", slug],
-    queryFn: () => getProduct({ data: { slug } }),
+    queryFn: withOfflineCache(`product:${slug}`, () => getProduct({ data: { slug } })),
   });
