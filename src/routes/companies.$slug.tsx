@@ -60,6 +60,9 @@ function CompanyPage() {
     timeline_title_ar?: string;
     timeline_title_en?: string;
     opening_date?: string | null;
+    page_image_url?: string | null;
+    page_layout?: string | null;
+    timeline_style?: string | null;
   };
 
   const page: PageSettings = {
