@@ -27,7 +27,7 @@ export function PageHero({ page, title, subtitle, compact = false, children }: P
   const [mediaFailed, setMediaFailed] = useState(false);
   const rawType = page?.enabled === false ? "color" : (page?.bg_type ?? "color");
   const heavy = rawType === "video" || rawType === "youtube";
-  const poster = page?.poster_url || page?.tile_bg_url || null;
+  const poster = page?.tile_bg_url || null;
   // Fall back to a still image (or plain background) on slow networks or when
   // the media fails to load.
   const bgType =
