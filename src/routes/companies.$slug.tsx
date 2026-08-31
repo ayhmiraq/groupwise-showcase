@@ -2,7 +2,9 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { Link, createFileRoute, notFound } from "@tanstack/react-router";
 
 import { PageHero } from "@/components/site/PageHero";
+import { Reveal } from "@/components/site/Reveal";
 import { SiteLayout } from "@/components/site/SiteLayout";
+import { mediaUrl } from "@/lib/media-url";
 import type { PageSettings } from "@/lib/content.server";
 import { formatDate, useLang } from "@/lib/i18n";
 import { companyQuery, siteQuery } from "@/lib/queries";
