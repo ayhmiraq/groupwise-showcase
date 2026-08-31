@@ -41,7 +41,7 @@ function CompaniesPage() {
         title={pick(page?.title_ar, page?.title_en) || t("ourCompanies")}
         subtitle={pick(page?.subtitle_ar, page?.subtitle_en) || t("companiesIntro")}
       />
-      <section className="container mx-auto grid gap-6 px-4 py-16 lg:grid-cols-2">
+      <section className="container mx-auto grid gap-4 px-4 py-10 sm:gap-6 sm:py-16 lg:grid-cols-2">
         {companies.map((company) => (
           <CompanyCard
             key={company.id}
