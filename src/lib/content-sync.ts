@@ -2,6 +2,9 @@ import { useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "@tanstack/react-router";
 
+import { pruneCache } from "./offline-cache";
+
+
 const KEY = "content-updated-at";
 const EVENT = "content-updated";
 
