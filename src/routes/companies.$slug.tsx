@@ -1,9 +1,12 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Link, createFileRoute, notFound } from "@tanstack/react-router";
 
+import { PageHero } from "@/components/site/PageHero";
 import { SiteLayout } from "@/components/site/SiteLayout";
+import type { PageSettings } from "@/lib/content.server";
 import { formatDate, useLang } from "@/lib/i18n";
 import { companyQuery, siteQuery } from "@/lib/queries";
+
 
 export const Route = createFileRoute("/companies/$slug")({
   loader: async ({ context, params }) => {
