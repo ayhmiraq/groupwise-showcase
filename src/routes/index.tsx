@@ -71,6 +71,10 @@ function HomePage() {
               title={pick(company.name_ar, company.name_en)}
               subtitle={pick(company.tagline_ar, company.tagline_en)}
               imageUrl={company.image_url}
+              tileBgType={company.tile_bg_type}
+              tileBgUrl={company.tile_bg_url}
+              tileYoutubeId={company.tile_youtube_id}
+              tileOverlay={company.tile_overlay}
               meta={
                 company.founded_date
                   ? `${t("founded")}: ${formatDate(company.founded_date, lang)}`
@@ -78,6 +82,7 @@ function HomePage() {
               }
               page={page}
             />
+
           );
         })}
       </section>

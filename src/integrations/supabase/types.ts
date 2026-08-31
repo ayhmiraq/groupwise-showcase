@@ -31,6 +31,10 @@ export type Database = {
           sort_order: number
           tagline_ar: string | null
           tagline_en: string | null
+          tile_bg_type: string
+          tile_bg_url: string | null
+          tile_overlay: number | null
+          tile_youtube_id: string | null
           updated_at: string
         }
         Insert: {
@@ -49,6 +53,10 @@ export type Database = {
           sort_order?: number
           tagline_ar?: string | null
           tagline_en?: string | null
+          tile_bg_type?: string
+          tile_bg_url?: string | null
+          tile_overlay?: number | null
+          tile_youtube_id?: string | null
           updated_at?: string
         }
         Update: {
@@ -67,6 +75,10 @@ export type Database = {
           sort_order?: number
           tagline_ar?: string | null
           tagline_en?: string | null
+          tile_bg_type?: string
+          tile_bg_url?: string | null
+          tile_overlay?: number | null
+          tile_youtube_id?: string | null
           updated_at?: string
         }
         Relationships: []
