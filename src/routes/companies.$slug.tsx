@@ -90,6 +90,9 @@ function CompanyPage() {
     c.page_content_en || company.description_en,
   );
   const timelineTitle = pick(c.timeline_title_ar, c.timeline_title_en) || t("timeline");
+  const pageImage = c.page_image_url || "";
+  const layout = c.page_layout || "classic";
+  const timelineStyle = c.timeline_style || "line";
 
   return (
     <SiteLayout>
