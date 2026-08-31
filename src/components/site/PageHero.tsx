@@ -1,7 +1,8 @@
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 
 import type { PageSettings } from "@/lib/content.server";
 import { mediaUrl } from "@/lib/media-url";
+import { useLowBandwidth } from "@/lib/network";
 import { AetherField } from "./AetherField";
 
 type Props = {
@@ -16,13 +17,27 @@ type Props = {
  * Renders the customizable page background (color / image / uploaded video /
  * YouTube video). Text always sits on its own layer above an overlay so its
  * color and readability never change with the background.
+ *
+ * On slow mobile connections (or when data saving is on) heavy video
+ * backgrounds are skipped and a lightweight poster image / plain background is
+ * used instead, so the page never stays blank while a video buffers.
  */
 export function PageHero({ page, title, subtitle, compact = false, children }: Props) {
-  const bgType = page?.enabled === false ? "color" : (page?.bg_type ?? "color");
+  const lowBandwidth = useLowBandwidth();
+  const [mediaFailed, setMediaFailed] = useState(false);
+  const rawType = page?.enabled === false ? "color" : (page?.bg_type ?? "color");
+  const heavy = rawType === "video" || rawType === "youtube";
+  const poster = page?.poster_url || page?.tile_bg_url || null;
+  // Fall back to a still image (or plain background) on slow networks or when
+  // the media fails to load.
+  const bgType =
+    heavy && (lowBandwidth || mediaFailed) ? (poster ? "image" : "color") : rawType;
+  const imageSrc = bgType === "image" ? (rawType === "image" ? page?.bg_url : poster) : null;
   const overlay = Math.min(Math.max(page?.overlay ?? 65, 0), 95) / 100;
   const fxOn = page?.enabled !== false && (bgType === "aether" || page?.fx_enabled === true);
   const isMedia =
     bgType === "image" || bgType === "video" || bgType === "youtube" || bgType === "aether";
+
 
   return (
     <section
