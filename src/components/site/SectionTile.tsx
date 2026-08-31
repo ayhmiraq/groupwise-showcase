@@ -1,9 +1,12 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 
 import type { PageSettings } from "@/lib/content.server";
 import { mediaUrl } from "@/lib/media-url";
+import { useLowBandwidth } from "@/lib/network";
 import { AetherField } from "./AetherField";
+
 
 type Props = {
   /** Internal route (used when `href` is not provided). */
