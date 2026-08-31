@@ -26,6 +26,17 @@ export type Database = {
           link_url: string | null
           name_ar: string
           name_en: string
+          opening_date: string | null
+          page_bg_type: string
+          page_bg_url: string | null
+          page_content_ar: string
+          page_content_en: string
+          page_overlay: number
+          page_subtitle_ar: string
+          page_subtitle_en: string
+          page_title_ar: string
+          page_title_en: string
+          page_youtube_id: string | null
           published: boolean
           slug: string
           sort_order: number
@@ -35,6 +46,8 @@ export type Database = {
           tile_bg_url: string | null
           tile_overlay: number | null
           tile_youtube_id: string | null
+          timeline_title_ar: string
+          timeline_title_en: string
           updated_at: string
         }
         Insert: {
@@ -48,6 +61,17 @@ export type Database = {
           link_url?: string | null
           name_ar: string
           name_en: string
+          opening_date?: string | null
+          page_bg_type?: string
+          page_bg_url?: string | null
+          page_content_ar?: string
+          page_content_en?: string
+          page_overlay?: number
+          page_subtitle_ar?: string
+          page_subtitle_en?: string
+          page_title_ar?: string
+          page_title_en?: string
+          page_youtube_id?: string | null
           published?: boolean
           slug: string
           sort_order?: number
@@ -57,6 +81,8 @@ export type Database = {
           tile_bg_url?: string | null
           tile_overlay?: number | null
           tile_youtube_id?: string | null
+          timeline_title_ar?: string
+          timeline_title_en?: string
           updated_at?: string
         }
         Update: {
@@ -70,6 +96,17 @@ export type Database = {
           link_url?: string | null
           name_ar?: string
           name_en?: string
+          opening_date?: string | null
+          page_bg_type?: string
+          page_bg_url?: string | null
+          page_content_ar?: string
+          page_content_en?: string
+          page_overlay?: number
+          page_subtitle_ar?: string
+          page_subtitle_en?: string
+          page_title_ar?: string
+          page_title_en?: string
+          page_youtube_id?: string | null
           published?: boolean
           slug?: string
           sort_order?: number
@@ -79,6 +116,8 @@ export type Database = {
           tile_bg_url?: string | null
           tile_overlay?: number | null
           tile_youtube_id?: string | null
+          timeline_title_ar?: string
+          timeline_title_en?: string
           updated_at?: string
         }
         Relationships: []
