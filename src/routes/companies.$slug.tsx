@@ -94,8 +94,8 @@ function CompanyPage() {
         </Link>
       </PageHero>
 
-      <section className="container mx-auto px-4 py-14">
-        <div className="flex flex-wrap gap-6 text-sm">
+      <section className="container mx-auto px-4 py-10 sm:py-14">
+        <div className="flex flex-col gap-2 text-sm sm:flex-row sm:flex-wrap sm:gap-6">
           {company.founded_date ? (
             <p className="text-primary-glow">
               {t("founded")}: {formatDate(company.founded_date, lang)}
@@ -108,13 +108,15 @@ function CompanyPage() {
           ) : null}
         </div>
 
-        <p className="mt-6 max-w-3xl whitespace-pre-line leading-relaxed text-muted-foreground">
+        <p className="mt-6 max-w-3xl whitespace-pre-line break-words text-[15px] leading-relaxed text-muted-foreground sm:text-base">
           {details}
         </p>
 
-        <h2 className="mt-14 text-2xl font-bold text-foreground">{timelineTitle}</h2>
+        <h2 className="mt-10 text-xl font-bold text-foreground sm:mt-14 sm:text-2xl">
+          {timelineTitle}
+        </h2>
 
-        <ol className="mt-6 space-y-8 border-s border-border/70 ps-6">
+        <ol className="mt-6 space-y-6 border-s border-border/70 ps-5 sm:space-y-8 sm:ps-6">
           {timeline.map((event) => (
             <li key={event.id} className="relative">
               <span className="absolute -start-[1.9rem] top-1.5 size-3 rounded-full bg-primary-glow" />
