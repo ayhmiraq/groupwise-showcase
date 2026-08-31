@@ -48,13 +48,14 @@ export function PageHero({ page, title, subtitle, compact = false, children }: P
         className={`${isMedia ? "fixed" : "absolute"} inset-0 -z-20 overflow-hidden bg-background`}
         aria-hidden="true"
       >
-        {bgType === "image" && page?.bg_url ? (
+        {bgType === "image" && imageSrc ? (
           <img
-            src={mediaUrl(page.bg_url)}
+            src={mediaUrl(imageSrc)}
             alt=""
             aria-hidden="true"
             className="h-full w-full object-cover"
             loading="eager"
+            onError={() => setMediaFailed(true)}
           />
         ) : null}
 
@@ -62,17 +63,22 @@ export function PageHero({ page, title, subtitle, compact = false, children }: P
           <video
             className="bg-video pointer-events-none absolute inset-0 h-full w-full object-cover"
             src={mediaUrl(page.bg_url)}
+            {...(poster ? { poster: mediaUrl(poster) } : {})}
             autoPlay
             muted
             loop
             playsInline
+            preload="metadata"
             controls={false}
             disablePictureInPicture
             controlsList="nodownload noplaybackrate noremoteplayback"
             tabIndex={-1}
             aria-hidden="true"
+            onError={() => setMediaFailed(true)}
+            onStalled={() => setMediaFailed(true)}
           />
         ) : null}
+
 
         {bgType === "youtube" && page?.youtube_id ? (
           <div className="pointer-events-none absolute inset-0 overflow-hidden">
