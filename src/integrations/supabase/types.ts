@@ -245,6 +245,8 @@ export type Database = {
       }
       journey_events: {
         Row: {
+          caption_ar: string | null
+          caption_en: string | null
           created_at: string
           description_ar: string | null
           description_en: string | null
@@ -258,6 +260,8 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          caption_ar?: string | null
+          caption_en?: string | null
           created_at?: string
           description_ar?: string | null
           description_en?: string | null
@@ -271,6 +275,8 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          caption_ar?: string | null
+          caption_en?: string | null
           created_at?: string
           description_ar?: string | null
           description_en?: string | null
