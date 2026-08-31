@@ -150,8 +150,28 @@ export const sections: SectionConfig[] = [
       { name: "tile_overlay", label: "شفافية طبقة المستطيل (0-95)", type: "number" },
       { name: "sort_order", label: "الترتيب", type: "number" },
 
+      {
+        name: "page_bg_type",
+        label: "خلفية الصفحة الداخلية للشركة",
+        type: "select",
+        options: [
+          { value: "color", label: "لون" },
+          { value: "image", label: "صورة" },
+          { value: "video", label: "فيديو مرفوع" },
+          { value: "youtube", label: "فيديو يوتيوب" },
+        ],
+      },
+      { name: "page_bg_url", label: "صورة/فيديو خلفية الصفحة", type: "media" },
+      { name: "page_youtube_id", label: "معرّف يوتيوب لخلفية الصفحة", type: "text" },
+      { name: "page_overlay", label: "شفافية طبقة الصفحة (0-95)", type: "number" },
+      ...bilingual("page_title", "عنوان الصفحة الداخلية"),
+      ...bilingual("page_subtitle", "العنوان الفرعي للصفحة", "textarea"),
+      ...bilingual("page_content", "نصوص وتفاصيل الصفحة", "textarea"),
+      ...bilingual("timeline_title", "عنوان قسم التسلسل الزمني"),
+      { name: "opening_date", label: "تاريخ الافتتاح", type: "date" },
+
       { name: "published", label: "منشور", type: "boolean" },
-    ],
+
   },
   {
     key: "timeline",
