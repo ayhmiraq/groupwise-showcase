@@ -168,6 +168,27 @@ export const sections: SectionConfig[] = [
       ...bilingual("page_subtitle", "العنوان الفرعي للصفحة", "textarea"),
       ...bilingual("page_content", "نصوص وتفاصيل الصفحة", "textarea"),
       ...bilingual("timeline_title", "عنوان قسم التسلسل الزمني"),
+      { name: "page_image_url", label: "صورة داخل الصفحة (بجانب النصوص)", type: "media" },
+      {
+        name: "page_layout",
+        label: "تنسيق الصفحة الداخلية",
+        type: "select",
+        options: [
+          { value: "classic", label: "كلاسيكي (نصوص بعرض كامل)" },
+          { value: "split", label: "مقسوم (صورة بجانب النصوص)" },
+          { value: "magazine", label: "مجلة (صورة عريضة أعلى النصوص)" },
+        ],
+      },
+      {
+        name: "timeline_style",
+        label: "نمط عرض التسلسل الزمني",
+        type: "select",
+        options: [
+          { value: "line", label: "خط زمني رأسي" },
+          { value: "cards", label: "بطاقات" },
+          { value: "alternating", label: "متعاقب (يمين/يسار)" },
+        ],
+      },
       { name: "opening_date", label: "تاريخ الافتتاح", type: "date" },
 
       { name: "published", label: "منشور", type: "boolean" },
@@ -185,6 +206,7 @@ export const sections: SectionConfig[] = [
       { name: "event_date", label: "التاريخ", type: "date", required: true },
       ...bilingual("title", "العنوان"),
       ...bilingual("description", "التفاصيل", "textarea"),
+      { name: "image_url", label: "صورة الحدث", type: "media" },
       { name: "sort_order", label: "الترتيب", type: "number" },
     ],
   },

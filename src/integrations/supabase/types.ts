@@ -31,6 +31,8 @@ export type Database = {
           page_bg_url: string | null
           page_content_ar: string
           page_content_en: string
+          page_image_url: string | null
+          page_layout: string | null
           page_overlay: number
           page_subtitle_ar: string
           page_subtitle_en: string
@@ -46,6 +48,7 @@ export type Database = {
           tile_bg_url: string | null
           tile_overlay: number | null
           tile_youtube_id: string | null
+          timeline_style: string | null
           timeline_title_ar: string
           timeline_title_en: string
           updated_at: string
@@ -66,6 +69,8 @@ export type Database = {
           page_bg_url?: string | null
           page_content_ar?: string
           page_content_en?: string
+          page_image_url?: string | null
+          page_layout?: string | null
           page_overlay?: number
           page_subtitle_ar?: string
           page_subtitle_en?: string
@@ -81,6 +86,7 @@ export type Database = {
           tile_bg_url?: string | null
           tile_overlay?: number | null
           tile_youtube_id?: string | null
+          timeline_style?: string | null
           timeline_title_ar?: string
           timeline_title_en?: string
           updated_at?: string
@@ -101,6 +107,8 @@ export type Database = {
           page_bg_url?: string | null
           page_content_ar?: string
           page_content_en?: string
+          page_image_url?: string | null
+          page_layout?: string | null
           page_overlay?: number
           page_subtitle_ar?: string
           page_subtitle_en?: string
@@ -116,6 +124,7 @@ export type Database = {
           tile_bg_url?: string | null
           tile_overlay?: number | null
           tile_youtube_id?: string | null
+          timeline_style?: string | null
           timeline_title_ar?: string
           timeline_title_en?: string
           updated_at?: string
@@ -130,6 +139,7 @@ export type Database = {
           description_en: string | null
           event_date: string
           id: string
+          image_url: string | null
           sort_order: number
           title_ar: string
           title_en: string
@@ -141,6 +151,7 @@ export type Database = {
           description_en?: string | null
           event_date: string
           id?: string
+          image_url?: string | null
           sort_order?: number
           title_ar: string
           title_en: string
@@ -152,6 +163,7 @@ export type Database = {
           description_en?: string | null
           event_date?: string
           id?: string
+          image_url?: string | null
           sort_order?: number
           title_ar?: string
           title_en?: string
