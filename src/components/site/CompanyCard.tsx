@@ -36,15 +36,15 @@ export function CompanyCard({ company, title, tagline, dateLabel, actionLabel, c
         <img
           src={mediaUrl(company.image_url)}
           alt={title}
-          className="h-44 w-full object-cover sm:h-full"
+          className="aspect-[16/9] w-full object-cover sm:aspect-auto sm:h-full"
           loading="lazy"
         />
       ) : (
-        <div className="h-44 w-full bg-surface sm:h-full" aria-hidden="true" />
+        <div className="aspect-[16/9] w-full bg-surface sm:aspect-auto sm:h-full" aria-hidden="true" />
       )}
-      <div className="min-w-0 p-6">
-        <h3 className="text-xl font-bold text-foreground">{title}</h3>
-        {tagline ? <p className="mt-1 text-sm text-primary-glow">{tagline}</p> : null}
+      <div className="min-w-0 p-4 sm:p-6">
+        <h3 className="text-lg font-bold leading-snug text-foreground sm:text-xl">{title}</h3>
+        {tagline ? <p className="mt-1 text-sm leading-relaxed text-primary-glow">{tagline}</p> : null}
         {children}
         {dateLabel ? <p className="mt-3 text-xs text-muted-foreground">{dateLabel}</p> : null}
         <span className="mt-4 inline-flex items-center text-sm font-semibold text-primary-glow group-hover:underline">

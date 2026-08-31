@@ -94,8 +94,8 @@ function CompanyPage() {
         </Link>
       </PageHero>
 
-      <section className="container mx-auto px-4 py-14">
-        <div className="flex flex-wrap gap-6 text-sm">
+      <section className="container mx-auto px-4 py-10 sm:py-14">
+        <div className="flex flex-col gap-2 text-sm sm:flex-row sm:flex-wrap sm:gap-6">
           {company.founded_date ? (
             <p className="text-primary-glow">
               {t("founded")}: {formatDate(company.founded_date, lang)}
@@ -108,23 +108,25 @@ function CompanyPage() {
           ) : null}
         </div>
 
-        <p className="mt-6 max-w-3xl whitespace-pre-line leading-relaxed text-muted-foreground">
+        <p className="mt-6 max-w-3xl whitespace-pre-line break-words text-[15px] leading-relaxed text-muted-foreground sm:text-base">
           {details}
         </p>
 
-        <h2 className="mt-14 text-2xl font-bold text-foreground">{timelineTitle}</h2>
+        <h2 className="mt-10 text-xl font-bold text-foreground sm:mt-14 sm:text-2xl">
+          {timelineTitle}
+        </h2>
 
-        <ol className="mt-6 space-y-8 border-s border-border/70 ps-6">
+        <ol className="mt-6 space-y-6 border-s border-border/70 ps-5 sm:space-y-8 sm:ps-6">
           {timeline.map((event) => (
             <li key={event.id} className="relative">
-              <span className="absolute -start-[1.9rem] top-1.5 size-3 rounded-full bg-primary-glow" />
-              <p className="text-sm font-semibold text-primary-glow">
+               <span className="absolute -start-[1.65rem] top-1.5 size-3 rounded-full bg-primary-glow sm:-start-[1.9rem]" />
+              <p className="text-xs font-semibold text-primary-glow sm:text-sm">
                 {formatDate(event.event_date, lang)}
               </p>
-              <h3 className="mt-1 text-lg font-bold text-foreground">
+              <h3 className="mt-1 text-base font-bold leading-snug text-foreground sm:text-lg">
                 {pick(event.title_ar, event.title_en)}
               </h3>
-              <p className="mt-1 max-w-3xl text-sm text-muted-foreground">
+              <p className="mt-1 max-w-3xl break-words text-sm leading-relaxed text-muted-foreground">
                 {pick(event.description_ar, event.description_en)}
               </p>
             </li>
@@ -136,19 +138,21 @@ function CompanyPage() {
 
         {projects.length > 0 ? (
           <>
-            <h2 className="mt-14 text-2xl font-bold text-foreground">{t("projects")}</h2>
-            <div className="mt-6 grid gap-6 md:grid-cols-3">
+            <h2 className="mt-10 text-xl font-bold text-foreground sm:mt-14 sm:text-2xl">
+              {t("projects")}
+            </h2>
+            <div className="mt-6 grid gap-4 sm:grid-cols-2 sm:gap-6 md:grid-cols-3">
               {projects.map((project) => (
                 <article key={project.id} className="card-elevated overflow-hidden">
                   {project.image_url ? (
                     <img
                       src={project.image_url}
-                      alt=""
-                      className="h-40 w-full object-cover"
+                      alt={pick(project.title_ar, project.title_en)}
+                      className="aspect-[16/9] w-full object-cover"
                       loading="lazy"
                     />
                   ) : null}
-                  <div className="p-5">
+                  <div className="min-w-0 p-4 sm:p-5">
                     <h3 className="font-bold text-foreground">
                       {pick(project.title_ar, project.title_en)}
                     </h3>
