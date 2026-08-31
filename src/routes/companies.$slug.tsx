@@ -43,39 +43,74 @@ function CompanyPage() {
   if (!data) return null;
   const { company, timeline, projects } = data;
 
+  const c = company as typeof company & {
+    page_bg_type?: string;
+    page_bg_url?: string | null;
+    page_youtube_id?: string | null;
+    page_overlay?: number;
+    page_title_ar?: string;
+    page_title_en?: string;
+    page_subtitle_ar?: string;
+    page_subtitle_en?: string;
+    page_content_ar?: string;
+    page_content_en?: string;
+    timeline_title_ar?: string;
+    timeline_title_en?: string;
+    opening_date?: string | null;
+  };
+
+  const page: PageSettings = {
+    page_key: `company-${company.slug}`,
+    title_ar: "",
+    title_en: "",
+    subtitle_ar: "",
+    subtitle_en: "",
+    bg_type: c.page_bg_type || "color",
+    bg_url: c.page_bg_url ?? company.image_url ?? null,
+    youtube_id: c.page_youtube_id ?? null,
+    overlay: c.page_overlay ?? 65,
+    enabled: true,
+  };
+
+  const heroTitle = pick(c.page_title_ar || company.name_ar, c.page_title_en || company.name_en);
+  const heroSubtitle = pick(
+    c.page_subtitle_ar || company.tagline_ar,
+    c.page_subtitle_en || company.tagline_en,
+  );
+  const details = pick(
+    c.page_content_ar || company.description_ar,
+    c.page_content_en || company.description_en,
+  );
+  const timelineTitle = pick(c.timeline_title_ar, c.timeline_title_en) || t("timeline");
+
   return (
     <SiteLayout>
-      <section className="relative isolate overflow-hidden py-20">
-        <div className="absolute inset-0 -z-20 bg-background">
-          {company.image_url ? (
-            <img src={company.image_url} alt="" className="h-full w-full object-cover" />
-          ) : null}
-        </div>
-        <div className="hero-overlay absolute inset-0 -z-10" style={{ opacity: 0.72 }} />
-        <div className="container mx-auto px-4">
-          <Link to="/companies" className="text-sm text-primary-glow hover:underline">
-            ← {t("companies")}
-          </Link>
-          <h1 className="mt-4 text-4xl font-bold text-foreground">
-            {pick(company.name_ar, company.name_en)}
-          </h1>
-          <p className="mt-3 max-w-2xl text-lg text-muted-foreground">
-            {pick(company.tagline_ar, company.tagline_en)}
-          </p>
+      <PageHero page={page} title={heroTitle} subtitle={heroSubtitle}>
+        <Link to="/companies" className="text-sm text-primary-glow hover:underline">
+          ← {t("companies")}
+        </Link>
+      </PageHero>
+
+      <section className="container mx-auto px-4 py-14">
+        <div className="flex flex-wrap gap-6 text-sm">
           {company.founded_date ? (
-            <p className="mt-2 text-sm text-primary-glow">
+            <p className="text-primary-glow">
               {t("founded")}: {formatDate(company.founded_date, lang)}
             </p>
           ) : null}
+          {c.opening_date ? (
+            <p className="text-primary-glow">
+              {pick("تاريخ الافتتاح", "Opening date")}: {formatDate(c.opening_date, lang)}
+            </p>
+          ) : null}
         </div>
-      </section>
 
-      <section className="container mx-auto px-4 py-14">
-        <p className="max-w-3xl leading-relaxed text-muted-foreground">
-          {pick(company.description_ar, company.description_en)}
+        <p className="mt-6 max-w-3xl whitespace-pre-line leading-relaxed text-muted-foreground">
+          {details}
         </p>
 
-        <h2 className="mt-14 text-2xl font-bold text-foreground">{t("timeline")}</h2>
+        <h2 className="mt-14 text-2xl font-bold text-foreground">{timelineTitle}</h2>
+
         <ol className="mt-6 space-y-8 border-s border-border/70 ps-6">
           {timeline.map((event) => (
             <li key={event.id} className="relative">
