@@ -109,6 +109,20 @@ function SiteHeader() {
   const { settings } = useSiteData();
   const [open, setOpen] = useState(false);
 
+  useEffect(() => {
+    if (!open) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = previous;
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
+
   return (
     <header className="border-b border-border/60 bg-background/90 backdrop-blur">
       <div className="container mx-auto flex items-center justify-between gap-4 px-4 py-3">
