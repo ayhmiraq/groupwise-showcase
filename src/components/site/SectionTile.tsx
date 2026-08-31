@@ -17,25 +17,57 @@ type Props = {
   imageUrl?: string | null | undefined;
   /** Extra line under the subtitle (e.g. founding date). */
   meta?: string | undefined;
+  /** Per-item background override: none | image | video | youtube */
+  tileBgType?: string | null | undefined;
+  tileBgUrl?: string | null | undefined;
+  tileYoutubeId?: string | null | undefined;
+  tileOverlay?: number | null | undefined;
 };
 
 /**
  * Wide rectangular, centered section tile. Its own background (image, uploaded
- * video or YouTube video) is configured per page in the admin panel, with the
- * Aether effect layered above it. Text and its colors sit on their own layer so
- * they never change with the background.
+ * video, animated image or YouTube video) is configured per item (company) or
+ * per page in the admin panel, with the Aether effect layered above it. Text and
+ * its colors sit on their own layer so they never change with the background.
  */
-export function SectionTile({ to, href, title, subtitle, page, imageUrl, meta }: Props) {
-  const tileType = page?.tile_bg_type ?? "none";
-  const tileImage = imageUrl || (tileType === "image" ? page?.tile_bg_url : null);
-  const tileVideo = imageUrl ? null : tileType === "video" ? page?.tile_bg_url : null;
-  const tileYoutube = imageUrl ? null : tileType === "youtube" ? page?.tile_youtube_id : null;
+export function SectionTile({
+  to,
+  href,
+  title,
+  subtitle,
+  page,
+  imageUrl,
+  meta,
+  tileBgType,
+  tileBgUrl,
+  tileYoutubeId,
+  tileOverlay,
+}: Props) {
+  const ownType = tileBgType && tileBgType !== "none" ? tileBgType : null;
+  const tileType = ownType ?? page?.tile_bg_type ?? "none";
+
+  // Per-item media wins; then page-level tile media; then the company image.
+  const tileImage =
+    ownType === "image" ? tileBgUrl : ownType ? null : imageUrl || (tileType === "image" ? page?.tile_bg_url : null);
+  const tileVideo =
+    ownType === "video" ? tileBgUrl : ownType ? null : imageUrl ? null : tileType === "video" ? page?.tile_bg_url : null;
+  const tileYoutube =
+    ownType === "youtube"
+      ? tileYoutubeId
+      : ownType
+        ? null
+        : imageUrl
+          ? null
+          : tileType === "youtube"
+            ? page?.tile_youtube_id
+            : null;
   // Fallback to the page background image when no tile-specific media is set.
-  const fallbackImage = imageUrl ? null : tileType === "none" ? page?.bg_url : null;
+  const fallbackImage = ownType || imageUrl ? null : tileType === "none" ? page?.bg_url : null;
   const hasMedia = Boolean(tileImage || tileVideo || tileYoutube || fallbackImage);
   const overlay =
-    Math.min(Math.max(page?.tile_overlay ?? page?.overlay ?? 55, 0), 95) / 100;
+    Math.min(Math.max(tileOverlay ?? page?.tile_overlay ?? page?.overlay ?? 55, 0), 95) / 100;
   const fxOn = page?.fx_enabled ?? true;
+
 
   const className =
     "card-elevated group relative mx-auto block h-full w-full overflow-hidden rounded-xl border border-border bg-surface transition-colors hover:border-primary-glow";
