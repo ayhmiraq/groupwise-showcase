@@ -31,12 +31,12 @@ import { languages, useLang } from "@/lib/i18n";
 import { siteQuery } from "@/lib/queries";
 
 const navItems = [
-  { to: "/", key: "home" },
-  { to: "/services", key: "services" },
-  { to: "/journey", key: "journey" },
-  { to: "/projects", key: "projects" },
-  { to: "/store", key: "store" },
-  { to: "/contact", key: "contact" },
+  { to: "/", key: "home", icon: Home },
+  { to: "/services", key: "services", icon: Wrench },
+  { to: "/journey", key: "journey", icon: Milestone },
+  { to: "/projects", key: "projects", icon: HardHat },
+  { to: "/store", key: "store", icon: ShoppingBag },
+  { to: "/contact", key: "contact", icon: PhoneCall },
 ] as const;
 
 export function useSiteData() {
