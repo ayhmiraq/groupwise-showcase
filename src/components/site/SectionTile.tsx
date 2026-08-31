@@ -1,9 +1,12 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 
 import type { PageSettings } from "@/lib/content.server";
 import { mediaUrl } from "@/lib/media-url";
+import { useLowBandwidth } from "@/lib/network";
 import { AetherField } from "./AetherField";
+
 
 type Props = {
   /** Internal route (used when `href` is not provided). */
@@ -63,7 +66,40 @@ export function SectionTile({
             : null;
   // Fallback to the page background image when no tile-specific media is set.
   const fallbackImage = ownType || imageUrl ? null : tileType === "none" ? page?.bg_url : null;
-  const hasMedia = Boolean(tileImage || tileVideo || tileYoutube || fallbackImage);
+  const lowBandwidth = useLowBandwidth();
+  const [heavyFailed, setHeavyFailed] = useState(false);
+  const [inView, setInView] = useState(false);
+  const mediaRef = useRef<HTMLDivElement | null>(null);
+
+  // Only load videos when the tile is actually visible, and skip them entirely
+  // on slow / data-saving connections (a still image is used instead).
+  useEffect(() => {
+    const node = mediaRef.current;
+    if (!node || typeof IntersectionObserver === "undefined") {
+      setInView(true);
+      return;
+    }
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          setInView(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "200px" },
+    );
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
+
+  const allowHeavy = inView && !lowBandwidth && !heavyFailed;
+  const showVideo = Boolean(tileVideo) && allowHeavy;
+  const showYoutube = Boolean(tileYoutube) && allowHeavy;
+  const stillImage =
+    tileImage ||
+    fallbackImage ||
+    (!showVideo && !showYoutube ? imageUrl || page?.tile_bg_url || page?.bg_url : null);
+  const hasMedia = Boolean(stillImage || showVideo || showYoutube);
   const overlay =
     Math.min(Math.max(tileOverlay ?? page?.tile_overlay ?? page?.overlay ?? 55, 0), 95) / 100;
   const fxOn = page?.fx_enabled ?? true;
@@ -74,36 +110,43 @@ export function SectionTile({
 
   const content = (
     <>
-      <div className="absolute inset-0" aria-hidden="true">
-        {tileImage || fallbackImage ? (
+      <div className="absolute inset-0" ref={mediaRef} aria-hidden="true">
+        {stillImage ? (
           <img
-            src={mediaUrl((tileImage || fallbackImage) as string)}
+            src={mediaUrl(stillImage)}
             alt=""
-            className="h-full w-full object-cover"
+            className="absolute inset-0 h-full w-full object-cover"
             loading="lazy"
+            decoding="async"
           />
         ) : null}
-        {tileVideo ? (
+        {showVideo && tileVideo ? (
           <video
             src={mediaUrl(tileVideo)}
-            className="pointer-events-none h-full w-full object-cover"
+            className="pointer-events-none absolute inset-0 h-full w-full object-cover"
+            {...(stillImage ? { poster: mediaUrl(stillImage) } : {})}
             autoPlay
             muted
             loop
             playsInline
+            preload="metadata"
             controls={false}
             disablePictureInPicture
+            onError={() => setHeavyFailed(true)}
+            onStalled={() => setHeavyFailed(true)}
           />
         ) : null}
-        {tileYoutube ? (
+        {showYoutube && tileYoutube ? (
           <iframe
             className="pointer-events-none absolute left-1/2 top-1/2 h-[300%] w-[300%] -translate-x-1/2 -translate-y-1/2 border-0"
             src={`https://www.youtube.com/embed/${tileYoutube}?autoplay=1&mute=1&controls=0&loop=1&playlist=${tileYoutube}&modestbranding=1&playsinline=1&rel=0&showinfo=0`}
             title=""
             allow="autoplay; encrypted-media"
+            loading="lazy"
             tabIndex={-1}
           />
         ) : null}
+
         <div className="hero-overlay absolute inset-0" style={{ opacity: hasMedia ? overlay : 1 }} />
         {fxOn ? (
           <AetherField

@@ -1,7 +1,8 @@
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 
 import type { PageSettings } from "@/lib/content.server";
 import { mediaUrl } from "@/lib/media-url";
+import { useLowBandwidth } from "@/lib/network";
 import { AetherField } from "./AetherField";
 
 type Props = {
@@ -16,13 +17,27 @@ type Props = {
  * Renders the customizable page background (color / image / uploaded video /
  * YouTube video). Text always sits on its own layer above an overlay so its
  * color and readability never change with the background.
+ *
+ * On slow mobile connections (or when data saving is on) heavy video
+ * backgrounds are skipped and a lightweight poster image / plain background is
+ * used instead, so the page never stays blank while a video buffers.
  */
 export function PageHero({ page, title, subtitle, compact = false, children }: Props) {
-  const bgType = page?.enabled === false ? "color" : (page?.bg_type ?? "color");
+  const lowBandwidth = useLowBandwidth();
+  const [mediaFailed, setMediaFailed] = useState(false);
+  const rawType = page?.enabled === false ? "color" : (page?.bg_type ?? "color");
+  const heavy = rawType === "video" || rawType === "youtube";
+  const poster = page?.tile_bg_url || null;
+  // Fall back to a still image (or plain background) on slow networks or when
+  // the media fails to load.
+  const bgType =
+    heavy && (lowBandwidth || mediaFailed) ? (poster ? "image" : "color") : rawType;
+  const imageSrc = bgType === "image" ? (rawType === "image" ? page?.bg_url : poster) : null;
   const overlay = Math.min(Math.max(page?.overlay ?? 65, 0), 95) / 100;
   const fxOn = page?.enabled !== false && (bgType === "aether" || page?.fx_enabled === true);
   const isMedia =
     bgType === "image" || bgType === "video" || bgType === "youtube" || bgType === "aether";
+
 
   return (
     <section
@@ -33,13 +48,14 @@ export function PageHero({ page, title, subtitle, compact = false, children }: P
         className={`${isMedia ? "fixed" : "absolute"} inset-0 -z-20 overflow-hidden bg-background`}
         aria-hidden="true"
       >
-        {bgType === "image" && page?.bg_url ? (
+        {bgType === "image" && imageSrc ? (
           <img
-            src={mediaUrl(page.bg_url)}
+            src={mediaUrl(imageSrc)}
             alt=""
             aria-hidden="true"
             className="h-full w-full object-cover"
             loading="eager"
+            onError={() => setMediaFailed(true)}
           />
         ) : null}
 
@@ -47,17 +63,22 @@ export function PageHero({ page, title, subtitle, compact = false, children }: P
           <video
             className="bg-video pointer-events-none absolute inset-0 h-full w-full object-cover"
             src={mediaUrl(page.bg_url)}
+            {...(poster ? { poster: mediaUrl(poster) } : {})}
             autoPlay
             muted
             loop
             playsInline
+            preload="metadata"
             controls={false}
             disablePictureInPicture
             controlsList="nodownload noplaybackrate noremoteplayback"
             tabIndex={-1}
             aria-hidden="true"
+            onError={() => setMediaFailed(true)}
+            onStalled={() => setMediaFailed(true)}
           />
         ) : null}
+
 
         {bgType === "youtube" && page?.youtube_id ? (
           <div className="pointer-events-none absolute inset-0 overflow-hidden">
@@ -68,6 +89,8 @@ export function PageHero({ page, title, subtitle, compact = false, children }: P
               className="absolute left-1/2 top-1/2 h-[130%] w-[130%] -translate-x-1/2 -translate-y-1/2 border-0"
               src={`https://www.youtube.com/embed/${page.youtube_id}?autoplay=1&mute=1&controls=0&loop=1&playlist=${page.youtube_id}&modestbranding=1&showinfo=0&rel=0&playsinline=1&disablekb=1`}
               allow="autoplay; encrypted-media"
+              loading="lazy"
+
             />
           </div>
         ) : null}
