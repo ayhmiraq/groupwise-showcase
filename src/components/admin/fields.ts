@@ -171,8 +171,9 @@ export const sections: SectionConfig[] = [
       { name: "opening_date", label: "تاريخ الافتتاح", type: "date" },
 
       { name: "published", label: "منشور", type: "boolean" },
-
+    ],
   },
+
   {
     key: "timeline",
     label: "التسلسل الزمني للشركات",
