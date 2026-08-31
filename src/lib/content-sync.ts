@@ -29,8 +29,11 @@ export function useContentSync() {
   const router = useRouter();
 
   useEffect(() => {
+    pruneCache();
     let last = 0;
     const refresh = () => {
+      // Offline: keep showing the cached snapshot instead of refetching.
+      if (typeof navigator !== "undefined" && !navigator.onLine) return;
       const now = Date.now();
       if (now - last < 300) return;
       last = now;
@@ -49,12 +52,15 @@ export function useContentSync() {
     window.addEventListener("storage", onStorage);
     window.addEventListener(EVENT, onCustom);
     window.addEventListener("focus", onCustom);
+    window.addEventListener("online", onCustom);
     document.addEventListener("visibilitychange", onVisible);
     return () => {
       window.removeEventListener("storage", onStorage);
       window.removeEventListener(EVENT, onCustom);
       window.removeEventListener("focus", onCustom);
+      window.removeEventListener("online", onCustom);
       document.removeEventListener("visibilitychange", onVisible);
     };
+
   }, [qc, router]);
 }
