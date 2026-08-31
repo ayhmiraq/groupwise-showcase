@@ -105,7 +105,7 @@ function TopBar() {
 }
 
 function SiteHeader() {
-  const { t, pick } = useLang();
+  const { t, pick, lang, setLang } = useLang();
   const { settings } = useSiteData();
   const [open, setOpen] = useState(false);
 
