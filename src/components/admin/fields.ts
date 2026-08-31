@@ -134,7 +134,22 @@ export const sections: SectionConfig[] = [
         ],
       },
       { name: "link_url", label: "الرابط (داخلي مثل /services أو خارجي https://)", type: "text" },
+      {
+        name: "tile_bg_type",
+        label: "خلفية مستطيل الشركة في الواجهة",
+        type: "select",
+        options: [
+          { value: "none", label: "بدون (استخدام صورة الشركة)" },
+          { value: "image", label: "صورة (تدعم GIF/WebP المتحركة)" },
+          { value: "video", label: "فيديو مرفوع أو رابط مباشر" },
+          { value: "youtube", label: "فيديو يوتيوب" },
+        ],
+      },
+      { name: "tile_bg_url", label: "صورة/فيديو خلفية المستطيل", type: "media" },
+      { name: "tile_youtube_id", label: "معرّف يوتيوب لخلفية المستطيل", type: "text" },
+      { name: "tile_overlay", label: "شفافية طبقة المستطيل (0-95)", type: "number" },
       { name: "sort_order", label: "الترتيب", type: "number" },
+
       { name: "published", label: "منشور", type: "boolean" },
     ],
   },
