@@ -122,6 +122,7 @@ function SiteHeader() {
             <Link
               key={item.to}
               to={item.to}
+              preload="viewport"
               activeOptions={{ exact: item.to === "/" }}
               activeProps={{ className: "bg-secondary text-primary-glow" }}
               className="rounded-md px-3 py-2 text-sm font-semibold text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
@@ -153,6 +154,7 @@ function SiteHeader() {
               key={item.to}
               to={item.to}
               onClick={() => setOpen(false)}
+              preload="viewport"
               activeOptions={{ exact: item.to === "/" }}
               activeProps={{ className: "text-primary-glow" }}
               className="block rounded-md px-3 py-2 text-sm font-semibold text-muted-foreground"
