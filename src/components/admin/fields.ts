@@ -209,10 +209,11 @@ export const sections: SectionConfig[] = [
     keyColumn: "id",
     titleField: "title_ar",
     fields: [
-      { name: "event_date", label: "التاريخ", type: "date", required: true },
+      { name: "event_date", label: "تاريخ التأسيس/الحدث", type: "date", required: true },
       ...bilingual("title", "العنوان"),
+      ...bilingual("caption", "وصف قصير تحت التاريخ"),
+      { name: "image_url", label: "صورة تظهر تحت التاريخ", type: "media" },
       ...bilingual("description", "التفاصيل", "textarea"),
-      { name: "image_url", label: "الصورة", type: "media" },
       { name: "sort_order", label: "الترتيب", type: "number" },
       { name: "published", label: "منشور", type: "boolean" },
     ],
