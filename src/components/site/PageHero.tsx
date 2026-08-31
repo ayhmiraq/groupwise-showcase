@@ -89,6 +89,8 @@ export function PageHero({ page, title, subtitle, compact = false, children }: P
               className="absolute left-1/2 top-1/2 h-[130%] w-[130%] -translate-x-1/2 -translate-y-1/2 border-0"
               src={`https://www.youtube.com/embed/${page.youtube_id}?autoplay=1&mute=1&controls=0&loop=1&playlist=${page.youtube_id}&modestbranding=1&showinfo=0&rel=0&playsinline=1&disablekb=1`}
               allow="autoplay; encrypted-media"
+              loading="lazy"
+
             />
           </div>
         ) : null}
