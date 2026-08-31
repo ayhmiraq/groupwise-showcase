@@ -1,8 +1,22 @@
 import { mediaUrl } from "@/lib/media-url";
 import { Link } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { Facebook, Languages, Mail, MapPin, Menu, Phone } from "lucide-react";
-import { useState } from "react";
+import {
+  Facebook,
+  HardHat,
+  Home,
+  Languages,
+  Mail,
+  MapPin,
+  Menu,
+  Milestone,
+  Phone,
+  PhoneCall,
+  ShoppingBag,
+  Wrench,
+  X,
+} from "lucide-react";
+import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
 
 import { Button } from "@/components/ui/button";
