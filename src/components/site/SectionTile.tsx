@@ -116,7 +116,7 @@ export function SectionTile({
 
   const content = (
     <>
-      <div className="absolute inset-0" ref={mediaRef} aria-hidden="true">
+      <div className="absolute inset-0" ref={mediaRef} aria-hidden="true" data-dbg={`${String(inView)}|${String(tileVideo)}|${String(lowBandwidth)}|${String(heavyFailed)}`}>
         {stillImage ? (
           <img
             src={mediaUrl(stillImage)}
