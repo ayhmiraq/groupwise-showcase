@@ -105,20 +105,36 @@ const nullableColumns = new Set([
   "updated_at",
 ]);
 
+// Numeric columns that are NOT NULL with defaults: an empty value must be
+// omitted entirely so the column default / existing value is kept.
+function isNumericColumn(key: string): boolean {
+  return /(_order|overlay|price|quantity)$/.test(key) || /^fx_(density|speed|hue|glow)$/.test(key);
+}
+
+// Columns that are never text: an empty string must become null, not ''.
+function isNonTextColumn(key: string): boolean {
+  return /(_at|_date|_id|_url)$/.test(key) || isNumericColumn(key);
+}
+
 function sanitizeValues(values: Record<string, unknown>): Record<string, unknown> {
   const out: Record<string, unknown> = {};
   for (const [key, value] of Object.entries(values)) {
-    if (value === null && !nullableColumns.has(key)) {
+    const empty = value === "" || value === null || value === undefined;
+    if (empty && isNumericColumn(key)) {
+      continue; // let the column default / current value stand
+    }
+    if (value === null && !nullableColumns.has(key) && !isNonTextColumn(key)) {
       out[key] = "";
     } else if (value === "") {
-      // empty string on nullable non-text columns (dates, numbers, uuids) breaks inserts
-      out[key] = nullableColumns.has(key) ? null : value;
+      // empty string on non-text columns (dates, numbers, uuids) breaks inserts
+      out[key] = nullableColumns.has(key) || isNonTextColumn(key) ? null : value;
     } else {
       out[key] = value;
     }
   }
   return out;
 }
+
 
 export async function insertRow(
   supabase: SupabaseClient<Database>,
