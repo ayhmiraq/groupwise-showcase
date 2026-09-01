@@ -73,22 +73,26 @@ function StorePage() {
           ))}
         </div>
 
-        <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {visible.map((product) => (
-            <article key={product.id} className="card-elevated overflow-hidden">
+            <article key={product.id} className="card-elevated group overflow-hidden">
               {product.image_url ? (
-                <img
-                  src={product.image_url}
-                  alt={pick(product.name_ar, product.name_en)}
-                  className="h-52 w-full object-cover"
-                  loading="lazy"
-                />
-              ) : null}
+                <div className="aspect-[3/4] w-full overflow-hidden bg-muted">
+                  <img
+                    src={product.image_url}
+                    alt={pick(product.name_ar, product.name_en)}
+                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    loading="lazy"
+                  />
+                </div>
+              ) : (
+                <div className="aspect-[3/4] w-full bg-muted" />
+              )}
               <div className="p-5">
-                <h2 className="text-lg font-bold text-foreground">
+                <h2 className="line-clamp-1 text-lg font-bold text-foreground">
                   {pick(product.name_ar, product.name_en)}
                 </h2>
-                <p className="mt-2 line-clamp-3 text-sm text-muted-foreground">
+                <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">
                   {pick(product.description_ar, product.description_en)}
                 </p>
                 <div className="mt-4 flex items-center justify-between gap-2">
