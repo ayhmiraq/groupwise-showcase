@@ -92,14 +92,20 @@ export function SectionTile({
     return () => observer.disconnect();
   }, []);
 
-  const allowHeavy = inView && !lowBandwidth && !heavyFailed;
+  const isImage = (u?: string | null) => Boolean(u) && !/\.(mp4|webm|ogv|mov|m4v)(\?|#|$)/i.test(u!);
+
+  // Poster / still candidates must be real images (never a video file URL).
+  const posterCandidate =
+    [tileImage, fallbackImage, imageUrl, page?.tile_bg_url, page?.bg_url].find((u) => isImage(u)) ?? null;
+
+  // Heavy media is skipped on slow links only when we actually have a still
+  // image to show instead — otherwise the tile would render empty.
+  const allowHeavy = inView && !heavyFailed && (!lowBandwidth || !posterCandidate);
   const showVideo = Boolean(tileVideo) && allowHeavy;
   const showYoutube = Boolean(tileYoutube) && allowHeavy;
-  const stillImage =
-    tileImage ||
-    fallbackImage ||
-    (!showVideo && !showYoutube ? imageUrl || page?.tile_bg_url || page?.bg_url : null);
+  const stillImage = posterCandidate;
   const hasMedia = Boolean(stillImage || showVideo || showYoutube);
+
   const overlay =
     Math.min(Math.max(tileOverlay ?? page?.tile_overlay ?? page?.overlay ?? 55, 0), 95) / 100;
   const fxOn = page?.fx_enabled ?? true;
