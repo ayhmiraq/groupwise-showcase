@@ -135,11 +135,10 @@ export function SectionTile({
             muted
             loop
             playsInline
-            preload="metadata"
+            preload="auto"
             controls={false}
             disablePictureInPicture
             onError={() => setHeavyFailed(true)}
-            onStalled={() => setHeavyFailed(true)}
           />
         ) : null}
         {showYoutube && tileYoutube ? (
