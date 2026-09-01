@@ -119,7 +119,7 @@ export function SectionTile({
 
   const content = (
     <>
-      <div className="absolute inset-0" ref={mediaRef} aria-hidden="true" data-dbg={`${String(inView)}|${String(tileVideo)}|${String(lowBandwidth)}|${String(heavyFailed)}`}>
+      <div className="absolute inset-0" ref={mediaRef} aria-hidden="true">
         {stillImage ? (
           <img
             src={mediaUrl(stillImage)}
@@ -144,10 +144,10 @@ export function SectionTile({
             onError={() => setHeavyFailed(true)}
           />
         ) : null}
-        {showYoutube && tileYoutube ? (
+        {showYoutube && youtubeSource ? (
           <iframe
             className="pointer-events-none absolute left-1/2 top-1/2 h-[300%] w-[300%] -translate-x-1/2 -translate-y-1/2 border-0"
-            src={`https://www.youtube.com/embed/${tileYoutube}?autoplay=1&mute=1&controls=0&loop=1&playlist=${tileYoutube}&modestbranding=1&playsinline=1&rel=0&showinfo=0`}
+            src={`https://www.youtube.com/embed/${youtubeSource}?autoplay=1&mute=1&controls=0&loop=1&playlist=${youtubeSource}&modestbranding=1&playsinline=1&rel=0&showinfo=0`}
             title=""
             allow="autoplay; encrypted-media"
             loading="lazy"
