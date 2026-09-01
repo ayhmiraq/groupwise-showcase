@@ -105,20 +105,31 @@ const nullableColumns = new Set([
   "updated_at",
 ]);
 
+// Columns that are never text: an empty string must become null (or be dropped)
+// instead of being sent to Postgres as ''.
+function isNonTextColumn(key: string): boolean {
+  return (
+    /(_at|_date|_id|_order|_url)$/.test(key) ||
+    /^(id|overlay|tile_overlay|page_overlay|price|quantity|sort_order)$/.test(key) ||
+    /^fx_/.test(key)
+  );
+}
+
 function sanitizeValues(values: Record<string, unknown>): Record<string, unknown> {
   const out: Record<string, unknown> = {};
   for (const [key, value] of Object.entries(values)) {
-    if (value === null && !nullableColumns.has(key)) {
+    if (value === null && !nullableColumns.has(key) && !isNonTextColumn(key)) {
       out[key] = "";
     } else if (value === "") {
-      // empty string on nullable non-text columns (dates, numbers, uuids) breaks inserts
-      out[key] = nullableColumns.has(key) ? null : value;
+      // empty string on non-text columns (dates, numbers, uuids) breaks inserts
+      out[key] = nullableColumns.has(key) || isNonTextColumn(key) ? null : value;
     } else {
       out[key] = value;
     }
   }
   return out;
 }
+
 
 export async function insertRow(
   supabase: SupabaseClient<Database>,
