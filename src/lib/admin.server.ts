@@ -65,12 +65,67 @@ export async function listRows(
   return (data ?? []) as AdminRow[];
 }
 
+// Columns that are genuinely nullable in the schema; every other null becomes ""
+// so NOT NULL text columns with a '' default never receive an explicit null.
+const nullableColumns = new Set([
+  "image_url",
+  "bg_url",
+  "youtube_id",
+  "tile_bg_url",
+  "tile_youtube_id",
+  "page_bg_url",
+  "page_youtube_id",
+  "page_image_url",
+  "link_url",
+  "logo_url",
+  "founded_date",
+  "opening_date",
+  "start_date",
+  "end_date",
+  "event_date",
+  "price",
+  "category_id",
+  "company_id",
+  "product_id",
+  "phone",
+  "email",
+  "topbar_text_ar",
+  "topbar_text_en",
+  "address_ar",
+  "address_en",
+  "whatsapp",
+  "facebook",
+  "instagram",
+  "linkedin",
+  "youtube",
+  "footer_note_ar",
+  "footer_note_en",
+  "caption_ar",
+  "caption_en",
+  "updated_at",
+]);
+
+function sanitizeValues(values: Record<string, unknown>): Record<string, unknown> {
+  const out: Record<string, unknown> = {};
+  for (const [key, value] of Object.entries(values)) {
+    if (value === null && !nullableColumns.has(key)) {
+      out[key] = "";
+    } else if (value === "") {
+      // empty string on nullable non-text columns (dates, numbers, uuids) breaks inserts
+      out[key] = nullableColumns.has(key) ? null : value;
+    } else {
+      out[key] = value;
+    }
+  }
+  return out;
+}
+
 export async function insertRow(
   supabase: SupabaseClient<Database>,
   table: AdminTable,
   values: Record<string, unknown>,
 ) {
-  const { error } = await supabase.from(table).insert(values as never);
+  const { error } = await supabase.from(table).insert(sanitizeValues(values) as never);
   if (error) throw new Error(error.message);
   return { ok: true };
 }
@@ -84,7 +139,7 @@ export async function updateRow(
 ) {
   const { error } = await supabase
     .from(table)
-    .update(values as never)
+    .update(sanitizeValues(values) as never)
     .eq(keyColumn, keyValue as never);
   if (error) throw new Error(error.message);
   return { ok: true };
