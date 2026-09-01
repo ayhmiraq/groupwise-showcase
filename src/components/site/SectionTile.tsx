@@ -100,11 +100,14 @@ export function SectionTile({
 
   // Heavy media is skipped on slow links only when we actually have a still
   // image to show instead — otherwise the tile would render empty.
-  const allowHeavy = inView && !heavyFailed && (!lowBandwidth || !posterCandidate);
-  const showVideo = Boolean(tileVideo) && allowHeavy;
-  const showYoutube = Boolean(tileYoutube) && allowHeavy;
+  const allowHeavy = inView && (!lowBandwidth || !posterCandidate);
+  const showVideo = Boolean(tileVideo) && allowHeavy && !heavyFailed;
+  // If the uploaded video cannot play, fall back to a YouTube background when one is set.
+  const youtubeSource = tileYoutube ?? (heavyFailed ? tileYoutubeId : null);
+  const showYoutube = Boolean(youtubeSource) && allowHeavy && !showVideo;
   const stillImage = posterCandidate;
   const hasMedia = Boolean(stillImage || showVideo || showYoutube);
+
 
   const overlay =
     Math.min(Math.max(tileOverlay ?? page?.tile_overlay ?? page?.overlay ?? 55, 0), 95) / 100;
