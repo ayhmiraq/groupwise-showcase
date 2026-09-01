@@ -139,7 +139,7 @@ export async function updateRow(
 ) {
   const { error } = await supabase
     .from(table)
-    .update(values as never)
+    .update(sanitizeValues(values) as never)
     .eq(keyColumn, keyValue as never);
   if (error) throw new Error(error.message);
   return { ok: true };
