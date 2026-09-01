@@ -105,28 +105,10 @@ const nullableColumns = new Set([
   "updated_at",
 ]);
 
-// integer/numeric columns: "" is invalid — omit the key so DB defaults apply
-const numericColumns = new Set([
-  "sort_order",
-  "overlay",
-  "page_overlay",
-  "tile_overlay",
-  "fx_density",
-  "fx_speed",
-  "fx_hue",
-  "fx_glow",
-  "quantity",
-  "price",
-  "id",
-]);
-
 function sanitizeValues(values: Record<string, unknown>): Record<string, unknown> {
   const out: Record<string, unknown> = {};
   for (const [key, value] of Object.entries(values)) {
-    if (numericColumns.has(key)) {
-      if (value === "" || value === null || value === undefined) continue; // let DB default / keep existing
-      out[key] = typeof value === "string" ? Number(value) : value;
-    } else if (value === null && !nullableColumns.has(key)) {
+    if (value === null && !nullableColumns.has(key)) {
       out[key] = "";
     } else if (value === "") {
       // empty string on nullable non-text columns (dates, numbers, uuids) breaks inserts
