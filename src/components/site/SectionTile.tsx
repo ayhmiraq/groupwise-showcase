@@ -92,14 +92,23 @@ export function SectionTile({
     return () => observer.disconnect();
   }, []);
 
-  const allowHeavy = inView && !lowBandwidth && !heavyFailed;
-  const showVideo = Boolean(tileVideo) && allowHeavy;
-  const showYoutube = Boolean(tileYoutube) && allowHeavy;
-  const stillImage =
-    tileImage ||
-    fallbackImage ||
-    (!showVideo && !showYoutube ? imageUrl || page?.tile_bg_url || page?.bg_url : null);
+  const isImage = (u?: string | null) => Boolean(u) && !/\.(mp4|webm|ogv|mov|m4v)(\?|#|$)/i.test(u!);
+
+  // Poster / still candidates must be real images (never a video file URL).
+  const posterCandidate =
+    [tileImage, fallbackImage, imageUrl, page?.tile_bg_url, page?.bg_url].find((u) => isImage(u)) ?? null;
+
+  // Heavy media is skipped on slow links only when we actually have a still
+  // image to show instead — otherwise the tile would render empty.
+  const allowHeavy = inView && (!lowBandwidth || !posterCandidate);
+  const showVideo = Boolean(tileVideo) && allowHeavy && !heavyFailed;
+  // If the uploaded video cannot play, fall back to a YouTube background when one is set.
+  const youtubeSource = tileYoutube ?? (heavyFailed ? tileYoutubeId : null);
+  const showYoutube = Boolean(youtubeSource) && allowHeavy && !showVideo;
+  const stillImage = posterCandidate;
   const hasMedia = Boolean(stillImage || showVideo || showYoutube);
+
+
   const overlay =
     Math.min(Math.max(tileOverlay ?? page?.tile_overlay ?? page?.overlay ?? 55, 0), 95) / 100;
   const fxOn = page?.fx_enabled ?? true;
@@ -129,17 +138,16 @@ export function SectionTile({
             muted
             loop
             playsInline
-            preload="metadata"
+            preload="auto"
             controls={false}
             disablePictureInPicture
             onError={() => setHeavyFailed(true)}
-            onStalled={() => setHeavyFailed(true)}
           />
         ) : null}
-        {showYoutube && tileYoutube ? (
+        {showYoutube && youtubeSource ? (
           <iframe
             className="pointer-events-none absolute left-1/2 top-1/2 h-[300%] w-[300%] -translate-x-1/2 -translate-y-1/2 border-0"
-            src={`https://www.youtube.com/embed/${tileYoutube}?autoplay=1&mute=1&controls=0&loop=1&playlist=${tileYoutube}&modestbranding=1&playsinline=1&rel=0&showinfo=0`}
+            src={`https://www.youtube.com/embed/${youtubeSource}?autoplay=1&mute=1&controls=0&loop=1&playlist=${youtubeSource}&modestbranding=1&playsinline=1&rel=0&showinfo=0`}
             title=""
             allow="autoplay; encrypted-media"
             loading="lazy"
