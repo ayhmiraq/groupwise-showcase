@@ -276,7 +276,12 @@ function SiteHeader() {
           {settings?.phone ? (
             <div className="px-3 pb-4" style={{ paddingBottom: "calc(1rem + env(safe-area-inset-bottom))" }}>
               <Button asChild className="min-h-12 w-full">
-                <a href={`tel:${settings.phone}`} dir="ltr">
+                <a
+                  href={whatsappUrl(settings.phone) || `tel:${settings.phone}`}
+                  target={whatsappUrl(settings.phone) ? "_blank" : undefined}
+                  rel={whatsappUrl(settings.phone) ? "noreferrer noopener" : undefined}
+                  dir="ltr"
+                >
                   {settings.phone}
                 </a>
               </Button>
