@@ -48,16 +48,29 @@ export function usePageSettings(pageKey: string) {
   return site.pages.find((page) => page.page_key === pageKey);
 }
 
+function whatsappUrl(phone: string | undefined | null) {
+  if (!phone) return null;
+  const digits = phone.replace(/[^\d+]/g, "");
+  const number = digits.startsWith("+") ? digits.slice(1) : digits;
+  return number ? `https://wa.me/${number}` : null;
+}
+
 function TopBar() {
   const { lang, setLang, pick } = useLang();
   const { settings } = useSiteData();
+  const wa = whatsappUrl(settings?.phone);
 
   return (
     <div className="bg-background/90 text-sm backdrop-blur">
       <div className="container mx-auto flex items-center justify-between gap-4 px-4 py-1.5">
         <div className="flex flex-col gap-0.5 text-muted-foreground">
           {settings?.phone ? (
-            <a className="flex items-center gap-1.5 hover:text-primary-glow" href={`tel:${settings.phone}`}>
+            <a
+              className="flex items-center gap-1.5 hover:text-primary-glow"
+              href={wa || `tel:${settings.phone}`}
+              target={wa ? "_blank" : undefined}
+              rel={wa ? "noreferrer noopener" : undefined}
+            >
               <Phone className="size-3.5 shrink-0" />
               <span dir="ltr">{settings.phone}</span>
             </a>
@@ -263,7 +276,12 @@ function SiteHeader() {
           {settings?.phone ? (
             <div className="px-3 pb-4" style={{ paddingBottom: "calc(1rem + env(safe-area-inset-bottom))" }}>
               <Button asChild className="min-h-12 w-full">
-                <a href={`tel:${settings.phone}`} dir="ltr">
+                <a
+                  href={whatsappUrl(settings.phone) || `tel:${settings.phone}`}
+                  target={whatsappUrl(settings.phone) ? "_blank" : undefined}
+                  rel={whatsappUrl(settings.phone) ? "noreferrer noopener" : undefined}
+                  dir="ltr"
+                >
                   {settings.phone}
                 </a>
               </Button>
