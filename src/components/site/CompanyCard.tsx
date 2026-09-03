@@ -58,6 +58,23 @@ export function CompanyCard({ company, title, tagline, dateLabel, actionLabel, c
     "group card-elevated block overflow-hidden transition-colors hover:border-primary-glow";
 
   if (isExternal) {
+    try {
+      const { origin, pathname, search, hash } = new URL(url, window.location.href);
+      if (origin === window.location.origin) {
+        const AnyLink = Link as unknown as FC<{
+          to: string;
+          className?: string;
+          children?: ReactNode;
+        }>;
+        return (
+          <AnyLink to={`${pathname}${search}${hash}`} className={shell}>
+            {body}
+          </AnyLink>
+        );
+      }
+    } catch {
+      // Invalid URL — fall through to external anchor.
+    }
     return (
       <a href={url} target="_blank" rel="noopener noreferrer" className={shell}>
         {body}

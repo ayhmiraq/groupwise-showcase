@@ -184,6 +184,18 @@ export function SectionTile({
   );
 
   if (href) {
+    try {
+      const { origin, pathname, search, hash } = new URL(href, window.location.href);
+      if (origin === window.location.origin) {
+        return (
+          <Link to={`${pathname}${search}${hash}`} className={className}>
+            {content}
+          </Link>
+        );
+      }
+    } catch {
+      // Invalid URL — fall through to external anchor.
+    }
     return (
       <a href={href} target="_blank" rel="noreferrer noopener" className={className}>
         {content}
