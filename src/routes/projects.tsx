@@ -126,7 +126,11 @@ function ProjectsPage() {
                 >
                   <img
                     src={mediaUrl(image.image_url)}
-                    alt={title || caption || "صورة"}
+                    alt={
+                      title ||
+                      caption ||
+                      `${pick(page?.title_ar, page?.title_en) || "المشاريع"} — من أعمال المجموعة`
+                    }
                     className="w-full object-cover transition-transform duration-500 hover:scale-105"
                     loading="lazy"
                   />
