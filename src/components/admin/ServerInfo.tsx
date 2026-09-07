@@ -32,6 +32,31 @@ function formatDate(value: string | null | undefined) {
   });
 }
 
+function formatBytes(bytes: number) {
+  if (!bytes || bytes <= 0) return "0 بايت";
+  const units = ["بايت", "كيلوبايت", "ميغابايت", "غيغابايت", "تيرابايت"];
+  const i = Math.min(Math.floor(Math.log(bytes) / Math.log(1024)), units.length - 1);
+  const value = bytes / 1024 ** i;
+  return `${value.toLocaleString("ar", { maximumFractionDigits: value < 10 ? 2 : 1 })} ${units[i]}`;
+}
+
+function percent(used: number, total: number) {
+  if (!total) return "—";
+  return `${((used / total) * 100).toLocaleString("ar", { maximumFractionDigits: 2 })}%`;
+}
+
+function Meter({ used, total }: { used: number; total: number }) {
+  const ratio = total > 0 ? Math.min(used / total, 1) : 0;
+  return (
+    <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-muted">
+      <div
+        className="h-full rounded-full bg-primary transition-all"
+        style={{ width: `${Math.max(ratio * 100, 1)}%` }}
+      />
+    </div>
+  );
+}
+
 function Row({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex items-center justify-between gap-3 border-b py-2 last:border-b-0">
