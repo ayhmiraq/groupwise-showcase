@@ -6,13 +6,14 @@ import { PageHero } from "@/components/site/PageHero";
 import { SiteLayout, usePageSettings } from "@/components/site/SiteLayout";
 import { buildMeta, headSource } from "@/lib/head";
 import { formatDate, useLang } from "@/lib/i18n";
-import { projectsQuery, siteQuery } from "@/lib/queries";
+import { galleryQuery, projectsQuery, siteQuery } from "@/lib/queries";
 
 export const Route = createFileRoute("/projects")({
   loader: async ({ context }) => {
     const [site] = await Promise.all([
       context.queryClient.ensureQueryData(siteQuery),
       context.queryClient.ensureQueryData(projectsQuery),
+      context.queryClient.ensureQueryData(galleryQuery),
     ]);
     return headSource(site, "projects");
   },
