@@ -6,6 +6,7 @@ import { PageHero } from "@/components/site/PageHero";
 import { SiteLayout, usePageSettings } from "@/components/site/SiteLayout";
 import { buildMeta, headSource } from "@/lib/head";
 import { formatDate, useLang } from "@/lib/i18n";
+import { mediaUrl } from "@/lib/media-url";
 import { galleryQuery, projectsQuery, siteQuery } from "@/lib/queries";
 
 export const Route = createFileRoute("/projects")({
