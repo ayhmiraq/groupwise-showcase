@@ -211,6 +211,53 @@ export type Database = {
         }
         Relationships: []
       }
+      gallery_images: {
+        Row: {
+          caption_ar: string
+          caption_en: string
+          created_at: string
+          id: string
+          image_url: string
+          project_id: string | null
+          published: boolean
+          sort_order: number
+          title_ar: string
+          title_en: string
+        }
+        Insert: {
+          caption_ar?: string
+          caption_en?: string
+          created_at?: string
+          id?: string
+          image_url: string
+          project_id?: string | null
+          published?: boolean
+          sort_order?: number
+          title_ar?: string
+          title_en?: string
+        }
+        Update: {
+          caption_ar?: string
+          caption_en?: string
+          created_at?: string
+          id?: string
+          image_url?: string
+          project_id?: string | null
+          published?: boolean
+          sort_order?: number
+          title_ar?: string
+          title_en?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gallery_images_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       inquiries: {
         Row: {
           created_at: string
