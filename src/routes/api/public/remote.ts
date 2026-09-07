@@ -2,6 +2,22 @@ import { createFileRoute } from "@tanstack/react-router";
 
 const ALLOWED_PREFIXES = ["image/", "video/", "audio/"];
 
+// 1x1 transparent PNG: keeps a bad/missing remote link from turning into a
+// server error (502) that the app reports as a runtime failure.
+const TRANSPARENT_PNG = Uint8Array.from(
+  atob(
+    "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8DwHwAFAAH/q842iQAAAABJRU5ErkJggg==",
+  ),
+  (c) => c.charCodeAt(0),
+);
+
+function placeholder() {
+  return new Response(TRANSPARENT_PNG, {
+    status: 200,
+    headers: { "content-type": "image/png", "cache-control": "public, max-age=60" },
+  });
+}
+
 export const Route = createFileRoute("/api/public/remote")({
   server: {
     handlers: {
@@ -45,16 +61,16 @@ export const Route = createFileRoute("/api/public/remote")({
             redirect: "follow",
           });
         } catch {
-          return new Response("Upstream fetch failed", { status: 502 });
+          return placeholder();
         }
 
         if (!upstream.ok && upstream.status !== 206) {
-          return new Response("Upstream error", { status: 502 });
+          return placeholder();
         }
 
         const contentType = upstream.headers.get("content-type") ?? "application/octet-stream";
         if (!ALLOWED_PREFIXES.some((p) => contentType.toLowerCase().startsWith(p))) {
-          return new Response("Unsupported content type", { status: 415 });
+          return placeholder();
         }
 
         const headers = new Headers({
