@@ -8,7 +8,10 @@ import { adminIsAdmin } from "@/lib/admin.functions";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { CrudSection } from "@/components/admin/CrudSection";
+import { ServerInfo } from "@/components/admin/ServerInfo";
 import { sections } from "@/components/admin/fields";
+
+const SERVER_KEY = "__server__";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({
