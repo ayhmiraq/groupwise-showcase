@@ -12,3 +12,5 @@ Allow: /
 
 User-agent: *
 Allow: /
+
+Sitemap: https://awtadalkhima.cbox.uk/sitemap.xml

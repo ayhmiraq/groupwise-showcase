@@ -119,11 +119,11 @@ export function SectionTile({
 
   const content = (
     <>
-      <div className="absolute inset-0" ref={mediaRef} aria-hidden="true">
+      <div className="absolute inset-0" ref={mediaRef}>
         {stillImage ? (
           <img
             src={mediaUrl(stillImage)}
-            alt=""
+            alt={title}
             className="absolute inset-0 h-full w-full object-cover"
             loading="lazy"
             decoding="async"

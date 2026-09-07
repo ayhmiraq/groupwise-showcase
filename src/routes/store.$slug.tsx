@@ -20,7 +20,15 @@ export const Route = createFileRoute("/store/$slug")({
       context.queryClient.ensureQueryData(productQuery(params.slug)),
     ]);
     if (!product) throw notFound();
-    return { name: product.product.name_ar, description: product.product.description_ar };
+    return {
+      slug: params.slug,
+      name: product.product.name_ar,
+      description: product.product.description_ar,
+      image: product.product.image_url ?? null,
+      price: product.product.price ?? null,
+      currency: product.product.currency ?? null,
+      inStock: product.product.in_stock ?? true,
+    };
   },
   head: ({ loaderData }) => {
     if (!loaderData) {
@@ -30,6 +38,25 @@ export const Route = createFileRoute("/store/$slug")({
     }
     const title = `${loaderData.name} | المتجر — Ufuq Group`;
     const description = (loaderData.description ?? "").slice(0, 155) || "منتج من متجر المجموعة.";
+    const url = `https://awtadalkhima.cbox.uk/store/${encodeURIComponent(loaderData.slug)}`;
+    const jsonLd: Record<string, unknown> = {
+      "@context": "https://schema.org",
+      "@type": "Product",
+      name: loaderData.name,
+      description,
+      url,
+    };
+    if (loaderData.image?.startsWith("http")) jsonLd["image"] = loaderData.image;
+    jsonLd["offers"] = {
+      "@type": "Offer",
+      url,
+      availability: loaderData.inStock
+        ? "https://schema.org/InStock"
+        : "https://schema.org/OutOfStock",
+      ...(loaderData.price != null && loaderData.currency
+        ? { price: String(loaderData.price), priceCurrency: loaderData.currency }
+        : {}),
+    };
     return {
       meta: [
         { title },
@@ -37,8 +64,11 @@ export const Route = createFileRoute("/store/$slug")({
         { property: "og:title", content: title },
         { property: "og:description", content: description },
         { property: "og:type", content: "product" },
+        { property: "og:url", content: url },
         { name: "twitter:card", content: "summary_large_image" },
       ],
+      links: [{ rel: "canonical", href: url }],
+      scripts: [{ type: "application/ld+json", children: JSON.stringify(jsonLd) }],
     };
   },
   component: ProductPage,

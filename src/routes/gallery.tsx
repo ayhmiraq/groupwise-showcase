@@ -91,7 +91,7 @@ function GalleryPage() {
               >
                 <img
                   src={mediaUrl(image.image_url)}
-                  alt={title || caption || "صورة"}
+                  alt={title || caption || "من مكتبة صور أعمال ومشاريع المجموعة"}
                   className="w-full object-cover transition-transform duration-500 hover:scale-105"
                   loading="lazy"
                 />
@@ -130,7 +130,11 @@ function GalleryPage() {
           </button>
           <img
             src={mediaUrl(active.image_url)}
-            alt={pick(active.title_ar, active.title_en) || "صورة"}
+            alt={
+              pick(active.title_ar, active.title_en) ||
+              pick(active.caption_ar, active.caption_en) ||
+              "صورة موسّعة من مكتبة صور المجموعة"
+            }
             className="max-h-[80vh] w-auto max-w-full rounded-xl object-contain"
           />
           {pick(active.title_ar, active.title_en) || pick(active.caption_ar, active.caption_en) ? (

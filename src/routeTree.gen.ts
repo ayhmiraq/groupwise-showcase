@@ -17,6 +17,7 @@ import { Route as GalleryRouteImport } from './routes/gallery'
 import { Route as JourneyRouteImport } from './routes/journey'
 import { Route as ProjectsRouteImport } from './routes/projects'
 import { Route as ServicesRouteImport } from './routes/services'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as CompaniesIndexRouteImport } from './routes/companies.index'
 import { Route as CompaniesSlugRouteImport } from './routes/companies.$slug'
@@ -64,6 +65,11 @@ const ServicesRoute = ServicesRouteImport.update({
   path: '/services',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   id: '/admin',
   path: '/admin',
@@ -108,6 +114,7 @@ export interface FileRoutesByFullPath {
   '/journey': typeof JourneyRoute
   '/projects': typeof ProjectsRoute
   '/services': typeof ServicesRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/companies/$slug': typeof CompaniesSlugRoute
   '/store/$slug': typeof StoreSlugRoute
@@ -124,6 +131,7 @@ export interface FileRoutesByTo {
   '/journey': typeof JourneyRoute
   '/projects': typeof ProjectsRoute
   '/services': typeof ServicesRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/companies/$slug': typeof CompaniesSlugRoute
   '/store/$slug': typeof StoreSlugRoute
@@ -142,6 +150,7 @@ export interface FileRoutesById {
   '/journey': typeof JourneyRoute
   '/projects': typeof ProjectsRoute
   '/services': typeof ServicesRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/companies/$slug': typeof CompaniesSlugRoute
   '/store/$slug': typeof StoreSlugRoute
@@ -160,6 +169,7 @@ export interface FileRouteTypes {
     | '/journey'
     | '/projects'
     | '/services'
+    | '/sitemap.xml'
     | '/admin'
     | '/companies/$slug'
     | '/store/$slug'
@@ -176,6 +186,7 @@ export interface FileRouteTypes {
     | '/journey'
     | '/projects'
     | '/services'
+    | '/sitemap.xml'
     | '/admin'
     | '/companies/$slug'
     | '/store/$slug'
@@ -193,6 +204,7 @@ export interface FileRouteTypes {
     | '/journey'
     | '/projects'
     | '/services'
+    | '/sitemap.xml'
     | '/_authenticated/admin'
     | '/companies/$slug'
     | '/store/$slug'
@@ -211,6 +223,7 @@ export interface RootRouteChildren {
   JourneyRoute: typeof JourneyRoute
   ProjectsRoute: typeof ProjectsRoute
   ServicesRoute: typeof ServicesRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   CompaniesSlugRoute: typeof CompaniesSlugRoute
   StoreSlugRoute: typeof StoreSlugRoute
   CompaniesIndexRoute: typeof CompaniesIndexRoute
@@ -275,6 +288,13 @@ declare module '@tanstack/react-router' {
       path: '/services'
       fullPath: '/services'
       preLoaderRoute: typeof ServicesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/admin': {
@@ -349,6 +369,7 @@ const rootRouteChildren: RootRouteChildren = {
   JourneyRoute: JourneyRoute,
   ProjectsRoute: ProjectsRoute,
   ServicesRoute: ServicesRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   CompaniesSlugRoute: CompaniesSlugRoute,
   StoreSlugRoute: StoreSlugRoute,
   CompaniesIndexRoute: CompaniesIndexRoute,
