@@ -45,16 +45,16 @@ export const Route = createFileRoute("/api/public/remote")({
             redirect: "follow",
           });
         } catch {
-          return new Response("Upstream fetch failed", { status: 502 });
+          return placeholder();
         }
 
         if (!upstream.ok && upstream.status !== 206) {
-          return new Response("Upstream error", { status: 502 });
+          return placeholder();
         }
 
         const contentType = upstream.headers.get("content-type") ?? "application/octet-stream";
         if (!ALLOWED_PREFIXES.some((p) => contentType.toLowerCase().startsWith(p))) {
-          return new Response("Unsupported content type", { status: 415 });
+          return placeholder();
         }
 
         const headers = new Headers({
