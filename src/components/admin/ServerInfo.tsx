@@ -98,6 +98,53 @@ export function ServerInfo() {
             </CardContent>
           </Card>
 
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-base">
+                <HardDrive className="size-4" /> حجم قاعدة البيانات
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Row label="الحجم المستخدم" value={formatBytes(info.data.usage.databaseBytes)} />
+              <Row label="السعة المسموح بها" value={formatBytes(info.data.usage.databaseQuotaBytes)} />
+              <Row
+                label="نسبة الاستخدام"
+                value={percent(info.data.usage.databaseBytes, info.data.usage.databaseQuotaBytes)}
+              />
+              <Meter used={info.data.usage.databaseBytes} total={info.data.usage.databaseQuotaBytes} />
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-base">
+                <ImageIcon className="size-4" /> تخزين الصور والفيديوهات
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Row label="الحجم الكلي المستخدم" value={formatBytes(info.data.usage.storageTotalBytes)} />
+              <Row label="السعة المسموح بها" value={formatBytes(info.data.usage.storageQuotaBytes)} />
+              <Row
+                label="الصور"
+                value={`${formatBytes(info.data.usage.imageBytes)} • ${info.data.usage.imageCount} ملف`}
+              />
+              <Row
+                label="الفيديوهات"
+                value={`${formatBytes(info.data.usage.videoBytes)} • ${info.data.usage.videoCount} ملف`}
+              />
+              <Row label="ملفات أخرى" value={formatBytes(info.data.usage.otherBytes)} />
+              <Row label="عدد الملفات الكلي" value={`${info.data.usage.objectCount} ملف`} />
+              <Row
+                label="أقصى حجم للملف الواحد"
+                value={formatBytes(info.data.usage.fileSizeLimitBytes)}
+              />
+              <Meter
+                used={info.data.usage.storageTotalBytes}
+                total={info.data.usage.storageQuotaBytes}
+              />
+            </CardContent>
+          </Card>
+
           <Card className="md:col-span-2">
             <CardHeader>
               <CardTitle className="text-base">حجم البيانات</CardTitle>
