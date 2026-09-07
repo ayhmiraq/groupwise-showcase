@@ -1,6 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { Database, Loader2, RefreshCw, Server } from "lucide-react";
+import {
+  Database,
+  HardDrive,
+  Image as ImageIcon,
+  Loader2,
+  RefreshCw,
+  Server,
+} from "lucide-react";
 
 import { adminServerInfo } from "@/lib/server-info.functions";
 import { Button } from "@/components/ui/button";
