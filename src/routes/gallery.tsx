@@ -130,7 +130,11 @@ function GalleryPage() {
           </button>
           <img
             src={mediaUrl(active.image_url)}
-            alt={pick(active.title_ar, active.title_en) || "صورة"}
+            alt={
+              pick(active.title_ar, active.title_en) ||
+              pick(active.caption_ar, active.caption_en) ||
+              "صورة موسّعة من مكتبة صور المجموعة"
+            }
             className="max-h-[80vh] w-auto max-w-full rounded-xl object-contain"
           />
           {pick(active.title_ar, active.title_en) || pick(active.caption_ar, active.caption_en) ? (
