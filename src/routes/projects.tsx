@@ -34,10 +34,17 @@ const statuses = ["all", "completed", "ongoing", "planned"] as const;
 function ProjectsPage() {
   const { pick, t, lang } = useLang();
   const projects = useSuspenseQuery(projectsQuery).data;
+  const gallery = useSuspenseQuery(galleryQuery).data;
   const page = usePageSettings("projects");
   const [filter, setFilter] = useState<(typeof statuses)[number]>("all");
+  const [zoom, setZoom] = useState<number | null>(null);
 
   const visible = projects.filter((project) => filter === "all" || project.status === filter);
+  const visibleIds = new Set(visible.map((project) => project.id));
+  const images = gallery.filter(
+    (image) => filter === "all" || !image.project_id || visibleIds.has(image.project_id),
+  );
+  const active = zoom === null ? null : (images[zoom] ?? null);
 
   return (
     <SiteLayout>
