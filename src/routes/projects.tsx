@@ -107,6 +107,71 @@ function ProjectsPage() {
           ) : null}
         </div>
       </section>
+
+      {images.length > 0 ? (
+        <section className="container mx-auto px-4 pb-20">
+          <h2 className="text-2xl font-bold text-foreground">
+            {lang === "en" ? "Photo gallery" : "مكتبة الصور"}
+          </h2>
+          <div className="mt-6 columns-2 gap-4 md:columns-3 lg:columns-4 [&>*]:mb-4">
+            {images.map((image, index) => {
+              const title = pick(image.title_ar, image.title_en);
+              const caption = pick(image.caption_ar, image.caption_en);
+              return (
+                <figure
+                  key={image.id}
+                  className="card-elevated cursor-zoom-in overflow-hidden break-inside-avoid"
+                  onClick={() => setZoom(index)}
+                >
+                  <img
+                    src={mediaUrl(image.image_url)}
+                    alt={title || caption || "صورة"}
+                    className="w-full object-cover transition-transform duration-500 hover:scale-105"
+                    loading="lazy"
+                  />
+                  {title || caption ? (
+                    <figcaption className="p-4">
+                      {title ? (
+                        <p className="text-sm font-bold text-foreground">{title}</p>
+                      ) : null}
+                      {caption ? (
+                        <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                          {caption}
+                        </p>
+                      ) : null}
+                    </figcaption>
+                  ) : null}
+                </figure>
+              );
+            })}
+          </div>
+        </section>
+      ) : null}
+
+      {active ? (
+        <div
+          className="fixed inset-0 z-[100] flex flex-col items-center justify-center gap-4 bg-background/95 p-4 backdrop-blur"
+          onClick={() => setZoom(null)}
+          role="button"
+          tabIndex={-1}
+        >
+          <img
+            src={mediaUrl(active.image_url)}
+            alt={pick(active.title_ar, active.title_en) || "صورة"}
+            className="max-h-[80vh] w-auto max-w-full rounded-xl object-contain"
+          />
+          {pick(active.title_ar, active.title_en) || pick(active.caption_ar, active.caption_en) ? (
+            <div className="max-w-2xl text-center">
+              <p className="font-bold text-foreground">
+                {pick(active.title_ar, active.title_en)}
+              </p>
+              <p className="mt-1 text-sm text-muted-foreground">
+                {pick(active.caption_ar, active.caption_en)}
+              </p>
+            </div>
+          ) : null}
+        </div>
+      ) : null}
     </SiteLayout>
   );
 }
