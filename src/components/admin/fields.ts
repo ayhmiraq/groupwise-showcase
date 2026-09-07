@@ -5,7 +5,7 @@ export type Field = {
   label: string;
   type: FieldType;
   options?: { value: string; label: string }[];
-  optionsFrom?: "companies" | "store_categories" | "products";
+  optionsFrom?: "companies" | "store_categories" | "products" | "projects";
   required?: boolean;
   hidden?: boolean;
 };
@@ -24,6 +24,7 @@ export type SectionConfig = {
     | "store_categories"
     | "products"
     | "product_images"
+    | "gallery_images"
     | "inquiries"
     | "contact_messages";
   keyColumn: string;
@@ -311,6 +312,21 @@ export const sections: SectionConfig[] = [
       { name: "product_id", label: "المنتج", type: "select", optionsFrom: "products", required: true },
       { name: "image_url", label: "الصورة", type: "media", required: true },
       { name: "sort_order", label: "الترتيب", type: "number" },
+    ],
+  },
+  {
+    key: "gallery",
+    label: "مكتبة الصور",
+    table: "gallery_images",
+    keyColumn: "id",
+    titleField: "title_ar",
+    fields: [
+      { name: "image_url", label: "الصورة", type: "media", required: true },
+      { name: "project_id", label: "المشروع (اختياري)", type: "select", optionsFrom: "projects" },
+      ...bilingual("title", "عنوان الصورة (اختياري)"),
+      ...bilingual("caption", "نص مع الصورة (اختياري)", "textarea"),
+      { name: "sort_order", label: "الترتيب", type: "number" },
+      { name: "published", label: "منشور", type: "boolean" },
     ],
   },
   {

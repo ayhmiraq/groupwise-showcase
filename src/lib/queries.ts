@@ -3,6 +3,7 @@ import { queryOptions } from "@tanstack/react-query";
 import {
   getCompanies,
   getCompany,
+  getGallery,
   getHomeData,
   getJourney,
   getProduct,
@@ -48,6 +49,11 @@ export const journeyQuery = queryOptions({
 export const projectsQuery = queryOptions({
   queryKey: ["projects"],
   queryFn: withOfflineCache("projects", () => getProjects()),
+});
+
+export const galleryQuery = queryOptions({
+  queryKey: ["gallery"],
+  queryFn: withOfflineCache("gallery", () => getGallery()),
 });
 
 export const storeQuery = queryOptions({

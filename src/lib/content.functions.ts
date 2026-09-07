@@ -4,6 +4,7 @@ import { z } from "zod";
 import {
   fetchCompanies,
   fetchCompany,
+  fetchGallery,
   fetchHomeData,
   fetchJourney,
   fetchProduct,
@@ -30,6 +31,8 @@ export const getServices = createServerFn({ method: "GET" }).handler(async () =>
 export const getJourney = createServerFn({ method: "GET" }).handler(async () => fetchJourney());
 
 export const getProjects = createServerFn({ method: "GET" }).handler(async () => fetchProjects());
+
+export const getGallery = createServerFn({ method: "GET" }).handler(async () => fetchGallery());
 
 export const getStore = createServerFn({ method: "GET" }).handler(async () => fetchStore());
 

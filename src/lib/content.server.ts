@@ -123,6 +123,16 @@ export async function fetchProjects() {
   return data ?? [];
 }
 
+export async function fetchGallery() {
+  const supabase = publicClient();
+  const { data } = await supabase
+    .from("gallery_images")
+    .select("*")
+    .eq("published", true)
+    .order("sort_order", { ascending: true });
+  return data ?? [];
+}
+
 export async function fetchStore() {
   const supabase = publicClient();
   const [categories, products] = await Promise.all([

@@ -23,6 +23,7 @@ export type AdminTable =
   | "store_categories"
   | "products"
   | "product_images"
+  | "gallery_images"
   | "inquiries"
   | "contact_messages";
 
@@ -48,6 +49,7 @@ const orderBy: Record<string, { column: string; ascending: boolean }> = {
   store_categories: { column: "sort_order", ascending: true },
   products: { column: "sort_order", ascending: true },
   product_images: { column: "sort_order", ascending: true },
+  gallery_images: { column: "sort_order", ascending: true },
   inquiries: { column: "created_at", ascending: false },
   contact_messages: { column: "created_at", ascending: false },
 };
