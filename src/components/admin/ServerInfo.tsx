@@ -1,6 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { Database, Loader2, RefreshCw, Server } from "lucide-react";
+import {
+  Database,
+  HardDrive,
+  Image as ImageIcon,
+  Loader2,
+  RefreshCw,
+  Server,
+} from "lucide-react";
 
 import { adminServerInfo } from "@/lib/server-info.functions";
 import { Button } from "@/components/ui/button";
@@ -23,6 +30,31 @@ function formatDate(value: string | null | undefined) {
     dateStyle: "long",
     timeStyle: "short",
   });
+}
+
+function formatBytes(bytes: number) {
+  if (!bytes || bytes <= 0) return "0 بايت";
+  const units = ["بايت", "كيلوبايت", "ميغابايت", "غيغابايت", "تيرابايت"];
+  const i = Math.min(Math.floor(Math.log(bytes) / Math.log(1024)), units.length - 1);
+  const value = bytes / 1024 ** i;
+  return `${value.toLocaleString("ar", { maximumFractionDigits: value < 10 ? 2 : 1 })} ${units[i]}`;
+}
+
+function percent(used: number, total: number) {
+  if (!total) return "—";
+  return `${((used / total) * 100).toLocaleString("ar", { maximumFractionDigits: 2 })}%`;
+}
+
+function Meter({ used, total }: { used: number; total: number }) {
+  const ratio = total > 0 ? Math.min(used / total, 1) : 0;
+  return (
+    <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-muted">
+      <div
+        className="h-full rounded-full bg-primary transition-all"
+        style={{ width: `${Math.max(ratio * 100, 1)}%` }}
+      />
+    </div>
+  );
 }
 
 function Row({ label, value }: { label: string; value: string }) {
@@ -95,6 +127,53 @@ export function ServerInfo() {
                 <Row key={item.label} label={item.label} value={item.value} />
               ))}
               <Row label="بيئة التشغيل" value={info.data.runtime} />
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-base">
+                <HardDrive className="size-4" /> حجم قاعدة البيانات
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Row label="الحجم المستخدم" value={formatBytes(info.data.usage.databaseBytes)} />
+              <Row label="السعة المسموح بها" value={formatBytes(info.data.usage.databaseQuotaBytes)} />
+              <Row
+                label="نسبة الاستخدام"
+                value={percent(info.data.usage.databaseBytes, info.data.usage.databaseQuotaBytes)}
+              />
+              <Meter used={info.data.usage.databaseBytes} total={info.data.usage.databaseQuotaBytes} />
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-base">
+                <ImageIcon className="size-4" /> تخزين الصور والفيديوهات
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Row label="الحجم الكلي المستخدم" value={formatBytes(info.data.usage.storageTotalBytes)} />
+              <Row label="السعة المسموح بها" value={formatBytes(info.data.usage.storageQuotaBytes)} />
+              <Row
+                label="الصور"
+                value={`${formatBytes(info.data.usage.imageBytes)} • ${info.data.usage.imageCount} ملف`}
+              />
+              <Row
+                label="الفيديوهات"
+                value={`${formatBytes(info.data.usage.videoBytes)} • ${info.data.usage.videoCount} ملف`}
+              />
+              <Row label="ملفات أخرى" value={formatBytes(info.data.usage.otherBytes)} />
+              <Row label="عدد الملفات الكلي" value={`${info.data.usage.objectCount} ملف`} />
+              <Row
+                label="أقصى حجم للملف الواحد"
+                value={formatBytes(info.data.usage.fileSizeLimitBytes)}
+              />
+              <Meter
+                used={info.data.usage.storageTotalBytes}
+                total={info.data.usage.storageQuotaBytes}
+              />
             </CardContent>
           </Card>
 

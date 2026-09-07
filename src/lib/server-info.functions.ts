@@ -25,6 +25,10 @@ const buildStack = [
   { label: "التخزين", value: "حاوية الوسائط media" },
 ];
 
+// السعة الافتراضية لخطة الاستضافة (قابلة للترقية)
+const DB_QUOTA_BYTES = 8 * 1024 ** 3;
+const STORAGE_QUOTA_BYTES = 100 * 1024 ** 3;
+
 export const adminServerInfo = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
@@ -58,12 +62,31 @@ export const adminServerInfo = createServerFn({ method: "GET" })
       lastUpdate = settingsUpdated;
     }
 
+    const { data: usageRaw } = await context.supabase.rpc("admin_usage_stats" as never);
+    const usageData = (usageRaw ?? {}) as Record<string, number | null>;
+    const num = (key: string) => Number(usageData[key] ?? 0);
+
+    const usage = {
+      databaseBytes: num("database_bytes"),
+      databaseQuotaBytes: DB_QUOTA_BYTES,
+      storageTotalBytes: num("storage_total_bytes"),
+      storageQuotaBytes: STORAGE_QUOTA_BYTES,
+      imageBytes: num("image_bytes"),
+      videoBytes: num("video_bytes"),
+      otherBytes: num("other_bytes"),
+      imageCount: num("image_count"),
+      videoCount: num("video_count"),
+      objectCount: num("object_count"),
+      fileSizeLimitBytes: num("file_size_limit"),
+    };
+
     return {
       databaseName: "postgres",
       databaseHost: new URL(process.env["VITE_SUPABASE_URL"] ?? "https://localhost").hostname,
       runtime: `Node ${process.versions?.node ?? "—"}`,
       buildStack,
       counts,
+      usage,
       lastContentUpdate: lastUpdate,
       checkedAt: new Date().toISOString(),
     };
