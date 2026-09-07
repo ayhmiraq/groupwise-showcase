@@ -35,7 +35,6 @@ export const Route = createFileRoute("/api/public/remote")({
 
         let upstream: Response;
         try {
-          // eslint-disable-next-line no-empty
           upstream = await fetch(parsed.toString(), {
             headers: {
               // Some hosts reject requests without a browser-like UA.
