@@ -25,6 +25,10 @@ const buildStack = [
   { label: "التخزين", value: "حاوية الوسائط media" },
 ];
 
+// السعة الافتراضية لخطة الاستضافة (قابلة للترقية)
+const DB_QUOTA_BYTES = 8 * 1024 ** 3;
+const STORAGE_QUOTA_BYTES = 100 * 1024 ** 3;
+
 export const adminServerInfo = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
