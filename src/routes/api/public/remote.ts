@@ -2,6 +2,22 @@ import { createFileRoute } from "@tanstack/react-router";
 
 const ALLOWED_PREFIXES = ["image/", "video/", "audio/"];
 
+// 1x1 transparent PNG: keeps a bad/missing remote link from turning into a
+// server error (502) that the app reports as a runtime failure.
+const TRANSPARENT_PNG = Uint8Array.from(
+  atob(
+    "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8DwHwAFAAH/q842iQAAAABJRU5ErkJggg==",
+  ),
+  (c) => c.charCodeAt(0),
+);
+
+function placeholder() {
+  return new Response(TRANSPARENT_PNG, {
+    status: 200,
+    headers: { "content-type": "image/png", "cache-control": "public, max-age=60" },
+  });
+}
+
 export const Route = createFileRoute("/api/public/remote")({
   server: {
     handlers: {
