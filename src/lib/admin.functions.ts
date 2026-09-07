@@ -22,6 +22,7 @@ const tableSchema = z.enum([
   "store_categories",
   "products",
   "product_images",
+  "gallery_images",
   "inquiries",
   "contact_messages",
 ]);
