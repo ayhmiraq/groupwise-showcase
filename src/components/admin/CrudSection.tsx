@@ -239,13 +239,25 @@ export function CrudSection({ sectionKey }: { sectionKey: string }) {
           {rows.map((row) => (
             <Card key={String(row[config.keyColumn])}>
               <CardContent className="flex flex-wrap items-center justify-between gap-3 py-4">
-                <div className="min-w-0">
-                  <p className="truncate font-semibold">
-                    {String(row[config.titleField] ?? row[config.keyColumn])}
-                  </p>
-                  <p className="truncate text-sm text-muted-foreground">
-                    {String(row["message"] ?? row["slug"] ?? row["event_date"] ?? "")}
-                  </p>
+                <div className="flex min-w-0 items-center gap-3">
+                  {typeof row["image_url"] === "string" && row["image_url"] ? (
+                    <img
+                      src={mediaUrl(String(row["image_url"]))}
+                      alt=""
+                      className="size-12 shrink-0 rounded-md object-cover"
+                    />
+                  ) : null}
+                  <div className="min-w-0">
+                    <p className="truncate font-semibold">
+                      {String(row[config.titleField] ?? "").trim() ||
+                        String(row["title_ar"] ?? row["name_ar"] ?? "").trim() ||
+                        String(row["image_url"] ?? "").split("/").pop() ||
+                        String(row[config.keyColumn])}
+                    </p>
+                    <p className="truncate text-sm text-muted-foreground">
+                      {String(row["message"] ?? row["slug"] ?? row["event_date"] ?? "")}
+                    </p>
+                  </div>
                 </div>
                 <div className="flex gap-2">
                   <Button size="sm" variant="secondary" onClick={() => startEdit(row)}>
