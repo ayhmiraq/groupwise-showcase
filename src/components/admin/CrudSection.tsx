@@ -93,16 +93,22 @@ function FieldControl({
         };
       });
     return (
-      <Select value={String(value ?? "")} onValueChange={onChange}>
+      <Select
+        value={String(value ?? "") || "__none__"}
+        onValueChange={(next) => onChange(next === "__none__" ? "" : next)}
+      >
         <SelectTrigger>
           <SelectValue placeholder="اختر" />
         </SelectTrigger>
         <SelectContent>
-          {items.map((o) => (
-            <SelectItem key={o.value} value={o.value}>
-              {o.label}
-            </SelectItem>
-          ))}
+          {!field.required && <SelectItem value="__none__">بدون</SelectItem>}
+          {items
+            .filter((o) => o.value !== "")
+            .map((o) => (
+              <SelectItem key={o.value} value={o.value}>
+                {o.label}
+              </SelectItem>
+            ))}
         </SelectContent>
       </Select>
     );
