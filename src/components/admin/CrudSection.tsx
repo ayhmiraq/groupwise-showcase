@@ -6,6 +6,7 @@ import { Loader2, Pencil, Plus, Trash2 } from "lucide-react";
 
 import { adminDelete, adminInsert, adminList, adminUpdate } from "@/lib/admin.functions";
 import { broadcastContentUpdate } from "@/lib/content-sync";
+import { mediaUrl } from "@/lib/media-url";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -93,16 +94,22 @@ function FieldControl({
         };
       });
     return (
-      <Select value={String(value ?? "")} onValueChange={onChange}>
+      <Select
+        value={String(value ?? "") || "__none__"}
+        onValueChange={(next) => onChange(next === "__none__" ? "" : next)}
+      >
         <SelectTrigger>
           <SelectValue placeholder="اختر" />
         </SelectTrigger>
         <SelectContent>
-          {items.map((o) => (
-            <SelectItem key={o.value} value={o.value}>
-              {o.label}
-            </SelectItem>
-          ))}
+          {!field.required && <SelectItem value="__none__">بدون</SelectItem>}
+          {items
+            .filter((o) => o.value !== "")
+            .map((o) => (
+              <SelectItem key={o.value} value={o.value}>
+                {o.label}
+              </SelectItem>
+            ))}
         </SelectContent>
       </Select>
     );
@@ -233,13 +240,25 @@ export function CrudSection({ sectionKey }: { sectionKey: string }) {
           {rows.map((row) => (
             <Card key={String(row[config.keyColumn])}>
               <CardContent className="flex flex-wrap items-center justify-between gap-3 py-4">
-                <div className="min-w-0">
-                  <p className="truncate font-semibold">
-                    {String(row[config.titleField] ?? row[config.keyColumn])}
-                  </p>
-                  <p className="truncate text-sm text-muted-foreground">
-                    {String(row["message"] ?? row["slug"] ?? row["event_date"] ?? "")}
-                  </p>
+                <div className="flex min-w-0 items-center gap-3">
+                  {typeof row["image_url"] === "string" && row["image_url"] ? (
+                    <img
+                      src={mediaUrl(String(row["image_url"]))}
+                      alt=""
+                      className="size-12 shrink-0 rounded-md object-cover"
+                    />
+                  ) : null}
+                  <div className="min-w-0">
+                    <p className="truncate font-semibold">
+                      {String(row[config.titleField] ?? "").trim() ||
+                        String(row["title_ar"] ?? row["name_ar"] ?? "").trim() ||
+                        String(row["image_url"] ?? "").split("/").pop() ||
+                        String(row[config.keyColumn])}
+                    </p>
+                    <p className="truncate text-sm text-muted-foreground">
+                      {String(row["message"] ?? row["slug"] ?? row["event_date"] ?? "")}
+                    </p>
+                  </div>
                 </div>
                 <div className="flex gap-2">
                   <Button size="sm" variant="secondary" onClick={() => startEdit(row)}>
