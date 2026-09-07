@@ -5,7 +5,7 @@ export type Field = {
   label: string;
   type: FieldType;
   options?: { value: string; label: string }[];
-  optionsFrom?: "companies" | "store_categories" | "products";
+  optionsFrom?: "companies" | "store_categories" | "products" | "projects";
   required?: boolean;
   hidden?: boolean;
 };
