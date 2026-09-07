@@ -5,6 +5,7 @@ import {
   Facebook,
   HardHat,
   Home,
+  Images,
   Languages,
   Mail,
   MapPin,
@@ -35,6 +36,7 @@ const navItems = [
   { to: "/services", key: "services", icon: Wrench },
   { to: "/journey", key: "journey", icon: Milestone },
   { to: "/projects", key: "projects", icon: HardHat },
+  { to: "/gallery", key: "gallery", icon: Images },
   { to: "/store", key: "store", icon: ShoppingBag },
   { to: "/contact", key: "contact", icon: PhoneCall },
 ] as const;

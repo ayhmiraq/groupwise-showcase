@@ -6,6 +6,7 @@ import { Loader2, Pencil, Plus, Trash2 } from "lucide-react";
 
 import { adminDelete, adminInsert, adminList, adminUpdate } from "@/lib/admin.functions";
 import { broadcastContentUpdate } from "@/lib/content-sync";
+import { mediaUrl } from "@/lib/media-url";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
