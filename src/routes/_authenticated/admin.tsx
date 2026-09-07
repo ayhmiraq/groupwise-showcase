@@ -94,9 +94,23 @@ function AdminPage() {
               {section.label}
             </button>
           ))}
+          <button
+            onClick={() => setActive(SERVER_KEY)}
+            className={`rounded-md px-3 py-2 text-start text-sm font-medium transition-colors ${
+              active === SERVER_KEY
+                ? "bg-primary text-primary-foreground"
+                : "bg-background text-foreground hover:bg-accent"
+            }`}
+          >
+            تفاصيل الخادم
+          </button>
         </nav>
         <main className="flex-1">
-          <CrudSection key={active} sectionKey={active} />
+          {active === SERVER_KEY ? (
+            <ServerInfo />
+          ) : (
+            <CrudSection key={active} sectionKey={active} />
+          )}
         </main>
       </div>
     </div>
