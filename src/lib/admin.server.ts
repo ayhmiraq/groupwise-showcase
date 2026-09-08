@@ -102,18 +102,10 @@ const nullableColumns = new Set([
   "youtube",
   "footer_note_ar",
   "footer_note_en",
+  "caption_ar",
+  "caption_en",
   "updated_at",
 ]);
-
-// Columns nullable only in specific tables (e.g. journey_events captions are
-// nullable, but gallery_images captions are NOT NULL with '' default).
-const tableNullableColumns: Record<string, Set<string>> = {
-  journey_events: new Set(["caption_ar", "caption_en"]),
-};
-
-function isNullableColumn(table: AdminTable, key: string): boolean {
-  return nullableColumns.has(key) || (tableNullableColumns[table]?.has(key) ?? false);
-}
 
 // Numeric columns that are NOT NULL with defaults: an empty value must be
 // omitted entirely so the column default / existing value is kept.
@@ -126,21 +118,18 @@ function isNonTextColumn(key: string): boolean {
   return /(_at|_date|_id|_url)$/.test(key) || isNumericColumn(key);
 }
 
-function sanitizeValues(
-  table: AdminTable,
-  values: Record<string, unknown>,
-): Record<string, unknown> {
+function sanitizeValues(values: Record<string, unknown>): Record<string, unknown> {
   const out: Record<string, unknown> = {};
   for (const [key, value] of Object.entries(values)) {
     const empty = value === "" || value === null || value === undefined;
     if (empty && isNumericColumn(key)) {
       continue; // let the column default / current value stand
     }
-    if (value === null && !isNullableColumn(table, key) && !isNonTextColumn(key)) {
+    if (value === null && !nullableColumns.has(key) && !isNonTextColumn(key)) {
       out[key] = "";
     } else if (value === "") {
       // empty string on non-text columns (dates, numbers, uuids) breaks inserts
-      out[key] = isNullableColumn(table, key) || isNonTextColumn(key) ? null : value;
+      out[key] = nullableColumns.has(key) || isNonTextColumn(key) ? null : value;
     } else {
       out[key] = value;
     }
@@ -154,7 +143,7 @@ export async function insertRow(
   table: AdminTable,
   values: Record<string, unknown>,
 ) {
-  const { error } = await supabase.from(table).insert(sanitizeValues(table, values) as never);
+  const { error } = await supabase.from(table).insert(sanitizeValues(values) as never);
   if (error) throw new Error(error.message);
   return { ok: true };
 }
@@ -168,7 +157,7 @@ export async function updateRow(
 ) {
   const { error } = await supabase
     .from(table)
-    .update(sanitizeValues(table, values) as never)
+    .update(sanitizeValues(values) as never)
     .eq(keyColumn, keyValue as never);
   if (error) throw new Error(error.message);
   return { ok: true };
