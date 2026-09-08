@@ -102,8 +102,6 @@ const nullableColumns = new Set([
   "youtube",
   "footer_note_ar",
   "footer_note_en",
-  "caption_ar",
-  "caption_en",
   "updated_at",
 ]);
 
