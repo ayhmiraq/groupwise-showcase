@@ -126,18 +126,21 @@ function isNonTextColumn(key: string): boolean {
   return /(_at|_date|_id|_url)$/.test(key) || isNumericColumn(key);
 }
 
-function sanitizeValues(values: Record<string, unknown>): Record<string, unknown> {
+function sanitizeValues(
+  table: AdminTable,
+  values: Record<string, unknown>,
+): Record<string, unknown> {
   const out: Record<string, unknown> = {};
   for (const [key, value] of Object.entries(values)) {
     const empty = value === "" || value === null || value === undefined;
     if (empty && isNumericColumn(key)) {
       continue; // let the column default / current value stand
     }
-    if (value === null && !nullableColumns.has(key) && !isNonTextColumn(key)) {
+    if (value === null && !isNullableColumn(table, key) && !isNonTextColumn(key)) {
       out[key] = "";
     } else if (value === "") {
       // empty string on non-text columns (dates, numbers, uuids) breaks inserts
-      out[key] = nullableColumns.has(key) || isNonTextColumn(key) ? null : value;
+      out[key] = isNullableColumn(table, key) || isNonTextColumn(key) ? null : value;
     } else {
       out[key] = value;
     }
