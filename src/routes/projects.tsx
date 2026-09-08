@@ -8,6 +8,7 @@ import { buildMeta, headSource } from "@/lib/head";
 import { formatDate, useLang } from "@/lib/i18n";
 import { mediaUrl } from "@/lib/media-url";
 import { galleryQuery, projectsQuery, siteQuery } from "@/lib/queries";
+import { SITE_URL, galleryJsonLd, projectsJsonLd } from "@/lib/structured-data";
 
 export const Route = createFileRoute("/projects")({
   loader: async ({ context }) => {
