@@ -45,11 +45,15 @@ export const Route = createFileRoute("/api/public/remote")({
             redirect: "follow",
           });
         } catch {
-          return new Response("Upstream fetch failed", { status: 502 });
+          // Unreachable host: report as "not found" so the UI simply falls back
+          // instead of surfacing a server error.
+          return new Response(null, { status: 404 });
         }
 
         if (!upstream.ok && upstream.status !== 206) {
-          return new Response("Upstream error", { status: 502 });
+          // Missing / forbidden remote file — pass a client error through so the
+          // <img>/<video> onError fallback kicks in quietly.
+          return new Response(null, { status: upstream.status >= 400 && upstream.status < 500 ? upstream.status : 404 });
         }
 
         const contentType = upstream.headers.get("content-type") ?? "application/octet-stream";
