@@ -154,7 +154,7 @@ export async function insertRow(
   table: AdminTable,
   values: Record<string, unknown>,
 ) {
-  const { error } = await supabase.from(table).insert(sanitizeValues(values) as never);
+  const { error } = await supabase.from(table).insert(sanitizeValues(table, values) as never);
   if (error) throw new Error(error.message);
   return { ok: true };
 }
@@ -168,7 +168,7 @@ export async function updateRow(
 ) {
   const { error } = await supabase
     .from(table)
-    .update(sanitizeValues(values) as never)
+    .update(sanitizeValues(table, values) as never)
     .eq(keyColumn, keyValue as never);
   if (error) throw new Error(error.message);
   return { ok: true };
