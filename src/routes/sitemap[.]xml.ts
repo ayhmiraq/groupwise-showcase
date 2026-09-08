@@ -5,7 +5,7 @@ import { absoluteMedia } from "@/lib/structured-data";
 
 const BASE_URL = "https://awtadalkhima.cbox.uk";
 
-type SitemapImage = { loc: string; title?: string; caption?: string };
+type SitemapImage = { loc: string; title?: string | undefined; caption?: string | undefined };
 type Entry = {
   path: string;
   changefreq?: string;
