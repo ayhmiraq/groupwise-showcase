@@ -11,12 +11,12 @@ import { galleryQuery, projectsQuery, siteQuery } from "@/lib/queries";
 
 export const Route = createFileRoute("/projects")({
   loader: async ({ context }) => {
-    const [site] = await Promise.all([
+    const [site, projects, gallery] = await Promise.all([
       context.queryClient.ensureQueryData(siteQuery),
       context.queryClient.ensureQueryData(projectsQuery),
       context.queryClient.ensureQueryData(galleryQuery),
     ]);
-    return headSource(site, "projects");
+    return { ...headSource(site, "projects"), projects, gallery };
   },
   head: ({ loaderData }) => ({
     meta: buildMeta({
@@ -26,6 +26,26 @@ export const Route = createFileRoute("/projects")({
       fallbackDescription:
         "مشاريع المجموعة المنجزة وقيد التنفيذ والمخططة عبر قطاعات متعددة.",
     }),
+    links: [{ rel: "canonical", href: `${SITE_URL}/projects` }],
+    scripts: loaderData
+      ? [
+          {
+            type: "application/ld+json",
+            children: JSON.stringify(
+              projectsJsonLd(loaderData.projects ?? [], loaderData.gallery ?? []),
+            ),
+          },
+          {
+            type: "application/ld+json",
+            children: JSON.stringify(
+              galleryJsonLd(
+                (loaderData.gallery ?? []).filter((image) => Boolean(image.project_id)),
+                "/projects",
+              ),
+            ),
+          },
+        ]
+      : [],
   }),
   component: ProjectsPage,
 });
