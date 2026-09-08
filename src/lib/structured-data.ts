@@ -7,6 +7,7 @@
 export const SITE_URL = "https://awtadalkhima.cbox.uk";
 
 export type SdProject = {
+  id?: string | null;
   slug?: string | null;
   title_ar?: string | null;
   title_en?: string | null;
