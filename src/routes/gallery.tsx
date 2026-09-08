@@ -9,15 +9,16 @@ import { buildMeta, headSource } from "@/lib/head";
 import { useLang } from "@/lib/i18n";
 import { mediaUrl } from "@/lib/media-url";
 import { galleryQuery, projectsQuery, siteQuery } from "@/lib/queries";
+import { SITE_URL, galleryJsonLd } from "@/lib/structured-data";
 
 export const Route = createFileRoute("/gallery")({
   loader: async ({ context }) => {
-    const [site] = await Promise.all([
+    const [site, gallery] = await Promise.all([
       context.queryClient.ensureQueryData(siteQuery),
       context.queryClient.ensureQueryData(galleryQuery),
       context.queryClient.ensureQueryData(projectsQuery),
     ]);
-    return headSource(site, "gallery");
+    return { ...headSource(site, "gallery"), gallery };
   },
   head: ({ loaderData }) => ({
     meta: buildMeta({
@@ -26,6 +27,15 @@ export const Route = createFileRoute("/gallery")({
       fallbackTitle: "مكتبة الصور",
       fallbackDescription: "مكتبة صور المجموعة: صور المشاريع والأعمال المنجزة مع نصوص توضيحية.",
     }),
+    links: [{ rel: "canonical", href: `${SITE_URL}/gallery` }],
+    scripts: loaderData
+      ? [
+          {
+            type: "application/ld+json",
+            children: JSON.stringify(galleryJsonLd(loaderData.gallery ?? [])),
+          },
+        ]
+      : [],
   }),
   component: GalleryPage,
 });
