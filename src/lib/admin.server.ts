@@ -102,10 +102,18 @@ const nullableColumns = new Set([
   "youtube",
   "footer_note_ar",
   "footer_note_en",
-  "caption_ar",
-  "caption_en",
   "updated_at",
 ]);
+
+// Columns nullable only in specific tables (e.g. journey_events captions are
+// nullable, but gallery_images captions are NOT NULL with '' default).
+const tableNullableColumns: Record<string, Set<string>> = {
+  journey_events: new Set(["caption_ar", "caption_en"]),
+};
+
+function isNullableColumn(table: AdminTable, key: string): boolean {
+  return nullableColumns.has(key) || (tableNullableColumns[table]?.has(key) ?? false);
+}
 
 // Numeric columns that are NOT NULL with defaults: an empty value must be
 // omitted entirely so the column default / existing value is kept.
