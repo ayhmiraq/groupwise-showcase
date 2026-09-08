@@ -9,6 +9,7 @@ import { buildMeta, headSource } from "@/lib/head";
 import { useLang } from "@/lib/i18n";
 import { mediaUrl } from "@/lib/media-url";
 import { galleryQuery, projectsQuery, siteQuery } from "@/lib/queries";
+import { SITE_URL, galleryJsonLd } from "@/lib/structured-data";
 
 export const Route = createFileRoute("/gallery")({
   loader: async ({ context }) => {
