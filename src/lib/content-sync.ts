@@ -45,21 +45,16 @@ export function useContentSync() {
       if (event.key === KEY) refresh();
     };
     const onCustom = () => refresh();
-    const onVisible = () => {
-      if (document.visibilityState === "visible") refresh();
-    };
 
+    // Refresh on real content changes (this tab / another tab) and when the
+    // connection returns — not on every focus, which slowed down browsing.
     window.addEventListener("storage", onStorage);
     window.addEventListener(EVENT, onCustom);
-    window.addEventListener("focus", onCustom);
     window.addEventListener("online", onCustom);
-    document.addEventListener("visibilitychange", onVisible);
     return () => {
       window.removeEventListener("storage", onStorage);
       window.removeEventListener(EVENT, onCustom);
-      window.removeEventListener("focus", onCustom);
       window.removeEventListener("online", onCustom);
-      document.removeEventListener("visibilitychange", onVisible);
     };
 
   }, [qc, router]);
