@@ -55,6 +55,8 @@ export function PageHero({ page, title, subtitle, compact = false, children }: P
             aria-hidden="true"
             className="h-full w-full object-cover"
             loading="eager"
+            decoding="async"
+            fetchPriority="high"
             onError={() => setMediaFailed(true)}
           />
         ) : null}

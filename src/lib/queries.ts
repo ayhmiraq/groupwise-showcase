@@ -17,7 +17,7 @@ import { withOfflineCache } from "./offline-cache";
 export const siteQuery = queryOptions({
   queryKey: ["site"],
   queryFn: withOfflineCache("site", () => getSiteData()),
-  staleTime: 0,
+  staleTime: 60_000,
 });
 
 export const homeQuery = queryOptions({

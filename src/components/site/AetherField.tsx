@@ -34,16 +34,26 @@ export function AetherField({ options }: { options: AetherOptions }) {
     if (!ctx) return;
 
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    // Smaller screens get a lighter field so scrolling stays smooth.
+    const isSmall = window.innerWidth < 768;
+    const densityScale = isSmall ? 0.45 : 1;
+    const frameInterval = 1000 / (isSmall ? 24 : 30);
     let width = 0;
     let height = 0;
     let dpr = 1;
     let stars: Star[] = [];
     let raf = 0;
     let last = performance.now();
+    let lastFrame = 0;
     let t = 0;
+    let visible = true;
+    let running = false;
 
     function seed() {
-      const count = Math.max(20, Math.min(600, Math.round(optsRef.current.density)));
+      const count = Math.max(
+        14,
+        Math.min(600, Math.round(optsRef.current.density * densityScale)),
+      );
       stars = Array.from({ length: count }, () => ({
         x: Math.random() * width,
         y: Math.random() * height,
@@ -65,6 +75,13 @@ export function AetherField({ options }: { options: AetherOptions }) {
     }
 
     function draw(now: number) {
+      // Frame limiter: the field is decorative, so a lower frame rate keeps the
+      // main thread free for scrolling and image decoding.
+      if (now - lastFrame < frameInterval) {
+        raf = requestAnimationFrame(draw);
+        return;
+      }
+      lastFrame = now;
       const dt = Math.min(0.05, (now - last) / 1000);
       last = now;
       const o = optsRef.current;
@@ -159,14 +176,50 @@ export function AetherField({ options }: { options: AetherOptions }) {
       raf = requestAnimationFrame(draw);
     }
 
+    function start() {
+      if (running) return;
+      running = true;
+      last = performance.now();
+      lastFrame = 0;
+      raf = requestAnimationFrame(draw);
+    }
+
+    function stop() {
+      running = false;
+      cancelAnimationFrame(raf);
+    }
+
+    function sync() {
+      if (visible && document.visibilityState === "visible") start();
+      else stop();
+    }
+
     resize();
     const ro = new ResizeObserver(resize);
     ro.observe(canvas);
-    raf = requestAnimationFrame(draw);
+
+    // Animate only while the canvas is on screen and the tab is active.
+    let io: IntersectionObserver | undefined;
+    if (typeof IntersectionObserver !== "undefined") {
+      io = new IntersectionObserver(
+        (entries) => {
+          visible = entries.some((e) => e.isIntersecting);
+          sync();
+        },
+        { rootMargin: "120px" },
+      );
+      io.observe(canvas);
+    } else {
+      visible = true;
+    }
+    document.addEventListener("visibilitychange", sync);
+    sync();
 
     return () => {
-      cancelAnimationFrame(raf);
+      stop();
       ro.disconnect();
+      io?.disconnect();
+      document.removeEventListener("visibilitychange", sync);
     };
   }, []);
 
