@@ -176,14 +176,50 @@ export function AetherField({ options }: { options: AetherOptions }) {
       raf = requestAnimationFrame(draw);
     }
 
+    function start() {
+      if (running) return;
+      running = true;
+      last = performance.now();
+      lastFrame = 0;
+      raf = requestAnimationFrame(draw);
+    }
+
+    function stop() {
+      running = false;
+      cancelAnimationFrame(raf);
+    }
+
+    function sync() {
+      if (visible && document.visibilityState === "visible") start();
+      else stop();
+    }
+
     resize();
     const ro = new ResizeObserver(resize);
     ro.observe(canvas);
-    raf = requestAnimationFrame(draw);
+
+    // Animate only while the canvas is on screen and the tab is active.
+    let io: IntersectionObserver | undefined;
+    if (typeof IntersectionObserver !== "undefined") {
+      io = new IntersectionObserver(
+        (entries) => {
+          visible = entries.some((e) => e.isIntersecting);
+          sync();
+        },
+        { rootMargin: "120px" },
+      );
+      io.observe(canvas);
+    } else {
+      visible = true;
+    }
+    document.addEventListener("visibilitychange", sync);
+    sync();
 
     return () => {
-      cancelAnimationFrame(raf);
+      stop();
       ro.disconnect();
+      io?.disconnect();
+      document.removeEventListener("visibilitychange", sync);
     };
   }, []);
 
