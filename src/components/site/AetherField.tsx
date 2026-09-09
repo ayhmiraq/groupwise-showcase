@@ -75,6 +75,13 @@ export function AetherField({ options }: { options: AetherOptions }) {
     }
 
     function draw(now: number) {
+      // Frame limiter: the field is decorative, so a lower frame rate keeps the
+      // main thread free for scrolling and image decoding.
+      if (now - lastFrame < frameInterval) {
+        raf = requestAnimationFrame(draw);
+        return;
+      }
+      lastFrame = now;
       const dt = Math.min(0.05, (now - last) / 1000);
       last = now;
       const o = optsRef.current;
