@@ -34,16 +34,26 @@ export function AetherField({ options }: { options: AetherOptions }) {
     if (!ctx) return;
 
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    // Smaller screens get a lighter field so scrolling stays smooth.
+    const isSmall = window.innerWidth < 768;
+    const densityScale = isSmall ? 0.45 : 1;
+    const frameInterval = 1000 / (isSmall ? 24 : 30);
     let width = 0;
     let height = 0;
     let dpr = 1;
     let stars: Star[] = [];
     let raf = 0;
     let last = performance.now();
+    let lastFrame = 0;
     let t = 0;
+    let visible = true;
+    let running = false;
 
     function seed() {
-      const count = Math.max(20, Math.min(600, Math.round(optsRef.current.density)));
+      const count = Math.max(
+        14,
+        Math.min(600, Math.round(optsRef.current.density * densityScale)),
+      );
       stars = Array.from({ length: count }, () => ({
         x: Math.random() * width,
         y: Math.random() * height,
