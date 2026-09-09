@@ -138,7 +138,7 @@ export function SectionTile({
             muted
             loop
             playsInline
-            preload="auto"
+            preload="metadata"
             controls={false}
             disablePictureInPicture
             onError={() => setHeavyFailed(true)}
@@ -156,7 +156,7 @@ export function SectionTile({
         ) : null}
 
         <div className="hero-overlay absolute inset-0" style={{ opacity: hasMedia ? overlay : 1 }} />
-        {fxOn ? (
+        {fxOn && inView ? (
           <AetherField
             options={{
               density: page?.fx_density ?? 90,
