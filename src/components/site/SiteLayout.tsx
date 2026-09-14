@@ -295,6 +295,67 @@ function SiteHeader() {
   );
 }
 
+function SiteFooter() {
+  const { pick } = useLang();
+  const { branches } = useSiteData();
+  const visible = branches.filter((b) => b.published !== false);
+  if (visible.length === 0) return null;
+
+  return (
+    <footer className="border-t border-border bg-surface/60">
+      <div className="container mx-auto px-4 py-6">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {visible.map((branch) => {
+            const name = pick(branch.name_ar, branch.name_en);
+            const address = pick(branch.address_ar, branch.address_en);
+            return (
+              <div
+                key={branch.id}
+                className="flex items-start gap-3 rounded-xl border border-border/60 bg-background/60 p-3"
+              >
+                <MapPin className="mt-0.5 size-4 shrink-0 text-primary-glow" />
+                <div className="min-w-0">
+                  <h3 className="truncate text-sm font-bold text-foreground">
+                    {name}
+                  </h3>
+                  {address ? (
+                    <p className="mt-0.5 text-xs leading-relaxed text-muted-foreground">
+                      {address}
+                    </p>
+                  ) : null}
+                  {branch.phone ? (
+                    <a
+                      href={whatsappUrl(branch.phone) || `tel:${branch.phone}`}
+                      target={whatsappUrl(branch.phone) ? "_blank" : undefined}
+                      rel={whatsappUrl(branch.phone) ? "noreferrer noopener" : undefined}
+                      dir="ltr"
+                      className="mt-1 inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-primary-glow"
+                    >
+                      <Phone className="size-3 shrink-0" />
+                      {branch.phone}
+                    </a>
+                  ) : null}
+                </div>
+                {branch.google_maps_url ? (
+                  <a
+                    href={branch.google_maps_url}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    aria-label="الموقع على الخريطة"
+                    className="mr-auto flex size-7 shrink-0 items-center justify-center rounded-full border border-border/60 text-muted-foreground hover:border-primary-glow hover:text-primary-glow"
+                  >
+                    <MapPin className="size-3.5" />
+                  </a>
+                ) : null}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </footer>
+  );
+}
+
 export function SiteLayout({ children }: { children: ReactNode }) {
   useContentSync();
   return (
@@ -303,7 +364,8 @@ export function SiteLayout({ children }: { children: ReactNode }) {
         <TopBar />
         <SiteHeader />
       </div>
-      <main className="relative z-0 pb-16">{children}</main>
+      <main className="relative z-0">{children}</main>
+      <SiteFooter />
     </div>
   );
 }

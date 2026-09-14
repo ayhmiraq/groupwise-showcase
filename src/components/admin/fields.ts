@@ -25,6 +25,7 @@ export type SectionConfig = {
     | "products"
     | "product_images"
     | "gallery_images"
+    | "branches"
     | "inquiries"
     | "contact_messages";
   keyColumn: string;
@@ -325,6 +326,21 @@ export const sections: SectionConfig[] = [
       { name: "project_id", label: "المشروع (اختياري)", type: "select", optionsFrom: "projects" },
       ...bilingual("title", "عنوان الصورة (اختياري)"),
       ...bilingual("caption", "نص مع الصورة (اختياري)", "textarea"),
+      { name: "sort_order", label: "الترتيب", type: "number" },
+      { name: "published", label: "منشور", type: "boolean" },
+    ],
+  },
+  {
+    key: "branches",
+    label: "فروع الشركة",
+    table: "branches",
+    keyColumn: "id",
+    titleField: "name_ar",
+    fields: [
+      ...bilingual("name", "اسم الفرع"),
+      ...bilingual("address", "عنوان الفرع", "textarea"),
+      { name: "phone", label: "هاتف الفرع", type: "text" },
+      { name: "google_maps_url", label: "رابط خريطة Google Maps", type: "text" },
       { name: "sort_order", label: "الترتيب", type: "number" },
       { name: "published", label: "منشور", type: "boolean" },
     ],

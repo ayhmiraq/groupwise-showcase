@@ -14,6 +14,48 @@ export type Database = {
   }
   public: {
     Tables: {
+      branches: {
+        Row: {
+          address_ar: string
+          address_en: string
+          created_at: string
+          google_maps_url: string | null
+          id: string
+          name_ar: string
+          name_en: string
+          phone: string | null
+          published: boolean
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          address_ar?: string
+          address_en?: string
+          created_at?: string
+          google_maps_url?: string | null
+          id?: string
+          name_ar?: string
+          name_en?: string
+          phone?: string | null
+          published?: boolean
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          address_ar?: string
+          address_en?: string
+          created_at?: string
+          google_maps_url?: string | null
+          id?: string
+          name_ar?: string
+          name_en?: string
+          phone?: string | null
+          published?: boolean
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       companies: {
         Row: {
           created_at: string

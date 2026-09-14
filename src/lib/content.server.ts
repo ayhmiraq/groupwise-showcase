@@ -36,16 +36,32 @@ export type PageSettings = {
   tile_overlay?: number;
 };
 
+export type Branch = {
+  id: string;
+  name_ar: string;
+  name_en: string;
+  address_ar: string;
+  address_en: string;
+  phone: string | null;
+  google_maps_url: string | null;
+  sort_order: number;
+  published: boolean;
+  created_at: string;
+  updated_at: string;
+};
+
 export async function fetchSiteData() {
   const supabase = publicClient();
-  const [settings, pages] = await Promise.all([
+  const [settings, pages, branches] = await Promise.all([
     supabase.from("site_settings").select("*").eq("id", 1).maybeSingle(),
     supabase.from("page_settings").select("*"),
+    supabase.from("branches").select("*").eq("published", true).order("sort_order", { ascending: true }),
   ]);
 
   return {
     settings: settings.data ?? null,
     pages: (pages.data ?? []) as PageSettings[],
+    branches: (branches.data ?? []) as Branch[],
   };
 }
 
