@@ -24,6 +24,7 @@ export type AdminTable =
   | "products"
   | "product_images"
   | "gallery_images"
+  | "branches"
   | "inquiries"
   | "contact_messages";
 
@@ -50,6 +51,7 @@ const orderBy: Record<string, { column: string; ascending: boolean }> = {
   products: { column: "sort_order", ascending: true },
   product_images: { column: "sort_order", ascending: true },
   gallery_images: { column: "sort_order", ascending: true },
+  branches: { column: "sort_order", ascending: true },
   inquiries: { column: "created_at", ascending: false },
   contact_messages: { column: "created_at", ascending: false },
 };
@@ -102,6 +104,7 @@ const nullableColumns = new Set([
   "youtube",
   "footer_note_ar",
   "footer_note_en",
+  "google_maps_url",
   "updated_at",
 ]);
 
