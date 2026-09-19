@@ -25,6 +25,7 @@ export type AdminTable =
   | "product_images"
   | "gallery_images"
   | "branches"
+  | "restaurant_menu_items"
   | "inquiries"
   | "contact_messages";
 
@@ -52,6 +53,7 @@ const orderBy: Record<string, { column: string; ascending: boolean }> = {
   product_images: { column: "sort_order", ascending: true },
   gallery_images: { column: "sort_order", ascending: true },
   branches: { column: "sort_order", ascending: true },
+  restaurant_menu_items: { column: "sort_order", ascending: true },
   inquiries: { column: "created_at", ascending: false },
   contact_messages: { column: "created_at", ascending: false },
 };

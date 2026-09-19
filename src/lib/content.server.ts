@@ -97,7 +97,7 @@ export async function fetchCompany(slug: string) {
     .eq("slug", slug)
     .maybeSingle();
   if (!company) return null;
-  const [timeline, projects] = await Promise.all([
+  const [timeline, projects, menu] = await Promise.all([
     supabase
       .from("company_timeline")
       .select("*")
@@ -108,8 +108,19 @@ export async function fetchCompany(slug: string) {
       .select("*")
       .eq("company_id", company.id)
       .order("sort_order", { ascending: true }),
+    supabase
+      .from("restaurant_menu_items")
+      .select("*")
+      .eq("company_id", company.id)
+      .eq("published", true)
+      .order("sort_order", { ascending: true }),
   ]);
-  return { company, timeline: timeline.data ?? [], projects: projects.data ?? [] };
+  return {
+    company,
+    timeline: timeline.data ?? [],
+    projects: projects.data ?? [],
+    menu: menu.data ?? [],
+  };
 }
 
 export async function fetchServices() {
