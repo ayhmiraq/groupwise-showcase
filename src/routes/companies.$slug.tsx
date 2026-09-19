@@ -76,11 +76,11 @@ function CompanyPage() {
     title_en: "",
     subtitle_ar: "",
     subtitle_en: "",
-    bg_type:
-      isRestaurant && (!c.page_bg_type || (c.page_bg_type === "color" && !c.page_bg_url))
-        ? "image"
-        : c.page_bg_type || "color",
-    bg_url: c.page_bg_url ?? (isRestaurant ? "/restaurant/bebon-hero.jpg" : company.image_url) ?? null,
+    bg_type: c.page_bg_type || (isRestaurant ? "image" : "color"),
+    bg_url:
+      c.page_bg_url ||
+      (isRestaurant && !c.page_bg_type ? "/restaurant/bebon-hero.jpg" : company.image_url) ||
+      null,
     youtube_id: c.page_youtube_id ?? null,
     overlay: c.page_overlay ?? 65,
     enabled: true,
@@ -341,9 +341,9 @@ function RestaurantCompanyPage({ page, title, subtitle, details, menu, pick, t }
 
   return (
     <SiteLayout>
-      <div className="bg-restaurant-canvas text-restaurant-ink">
+      <div className="bg-background text-foreground">
         <PageHero page={page} title={title} subtitle={subtitle || pick("ملتقى الأصالة الشرقية والإبداع الغربي في قلب واحد", "Where Eastern heritage meets Western creativity")}>
-          <Button asChild className="bg-restaurant-gold text-restaurant-ink hover:bg-restaurant-gold/90">
+          <Button asChild>
             <Link to="/contact">
               <CalendarDays className="size-4" /> {pick("احجز طاولتك", "Book a table")}
             </Link>
@@ -358,7 +358,7 @@ function RestaurantCompanyPage({ page, title, subtitle, details, menu, pick, t }
         <main id="restaurant-menu" className="mx-auto max-w-6xl px-4 py-12 sm:py-16 lg:px-8">
           {details ? (
             <Reveal>
-              <p className="mx-auto max-w-3xl whitespace-pre-line text-center text-base leading-8 text-restaurant-muted sm:text-lg">
+               <p className="mx-auto max-w-3xl whitespace-pre-line text-center text-base leading-8 text-muted-foreground sm:text-lg">
                 {details}
               </p>
             </Reveal>
@@ -371,18 +371,18 @@ function RestaurantCompanyPage({ page, title, subtitle, details, menu, pick, t }
               return (
                 <section key={section.key} aria-labelledby={`menu-${section.key}`}>
                   <div className="mb-7 flex items-center gap-4">
-                    <span className="h-px flex-1 bg-restaurant-line" />
-                    <h2 id={`menu-${section.key}`} className="text-3xl font-bold text-restaurant-ink">
+                     <span className="h-px flex-1 bg-border" />
+                     <h2 id={`menu-${section.key}`} className="text-3xl font-bold text-foreground">
                       {section.title}
                     </h2>
-                    <span className="h-px flex-1 bg-restaurant-line" />
+                     <span className="h-px flex-1 bg-border" />
                   </div>
                   <div className="space-y-7">
                     {items.map((item, index) => (
                       <Reveal key={item.id} delay={(sectionIndex * 2 + index) * 60}>
-                        <article className="group border-b border-restaurant-line/70 pb-7 last:border-0">
+                         <article className="group border-b border-border/70 pb-7 last:border-0">
                           {item.image_url ? (
-                            <div className="mb-4 aspect-[3/2] overflow-hidden rounded-lg bg-restaurant-line/40">
+                             <div className="mb-4 aspect-[3/2] overflow-hidden rounded-lg bg-surface">
                               <img
                                 src={mediaUrl(item.image_url)}
                                 alt={pick(item.name_ar, item.name_en)}
@@ -393,10 +393,10 @@ function RestaurantCompanyPage({ page, title, subtitle, details, menu, pick, t }
                               />
                             </div>
                           ) : null}
-                          <h3 className="text-xl font-bold text-restaurant-ink">
+                           <h3 className="text-xl font-bold text-foreground">
                             {pick(item.name_ar, item.name_en)}
                           </h3>
-                          <p className="mt-2 text-sm leading-7 text-restaurant-muted">
+                           <p className="mt-2 text-sm leading-7 text-muted-foreground">
                             {pick(item.description_ar, item.description_en)}
                           </p>
                         </article>
@@ -410,7 +410,7 @@ function RestaurantCompanyPage({ page, title, subtitle, details, menu, pick, t }
 
           {drinks.length > 0 ? (
             <Reveal>
-              <section className="mt-14 overflow-hidden rounded-lg bg-restaurant-ink text-restaurant-paper sm:mt-20" aria-labelledby="menu-drinks">
+               <section className="mt-14 overflow-hidden rounded-lg border border-border bg-surface text-surface-foreground sm:mt-20" aria-labelledby="menu-drinks">
                 <div className="grid md:grid-cols-2">
                   {drinks[0]?.image_url ? (
                     <img
@@ -423,13 +423,13 @@ function RestaurantCompanyPage({ page, title, subtitle, details, menu, pick, t }
                     />
                   ) : null}
                   <div className="flex flex-col justify-center p-7 sm:p-10">
-                    <GlassWater className="size-8 text-restaurant-gold" />
-                    <p className="mt-5 text-sm font-semibold text-restaurant-gold">{pick("من البار", "From the bar")}</p>
+                     <GlassWater className="size-8 text-primary-glow" />
+                     <p className="mt-5 text-sm font-semibold text-primary-glow">{pick("من البار", "From the bar")}</p>
                     <h2 id="menu-drinks" className="mt-2 text-3xl font-bold">{pick("المشروبات", "Drinks")}</h2>
                     {drinks.map((item) => (
-                      <article key={item.id} className="mt-6 border-t border-restaurant-paper/15 pt-5">
+                       <article key={item.id} className="mt-6 border-t border-border pt-5">
                         <h3 className="text-lg font-bold">{pick(item.name_ar, item.name_en)}</h3>
-                        <p className="mt-2 text-sm leading-7 text-restaurant-paper/70">{pick(item.description_ar, item.description_en)}</p>
+                         <p className="mt-2 text-sm leading-7 text-muted-foreground">{pick(item.description_ar, item.description_en)}</p>
                       </article>
                     ))}
                   </div>
@@ -439,7 +439,7 @@ function RestaurantCompanyPage({ page, title, subtitle, details, menu, pick, t }
           ) : null}
 
           <div className="mt-12 text-center">
-            <Link to="/companies" className="text-sm font-semibold text-restaurant-muted hover:text-restaurant-ink">
+             <Link to="/companies" className="text-sm font-semibold text-muted-foreground hover:text-primary-glow">
               ← {t("companies")}
             </Link>
           </div>

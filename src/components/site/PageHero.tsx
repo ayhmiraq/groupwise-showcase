@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 
 import type { PageSettings } from "@/lib/content.server";
 import { mediaUrl } from "@/lib/media-url";
@@ -37,6 +37,10 @@ export function PageHero({ page, title, subtitle, compact = false, children }: P
   const fxOn = page?.enabled !== false && (bgType === "aether" || page?.fx_enabled === true);
   const isMedia =
     bgType === "image" || bgType === "video" || bgType === "youtube" || bgType === "aether";
+
+  useEffect(() => {
+    setMediaFailed(false);
+  }, [page?.bg_type, page?.bg_url, page?.youtube_id]);
 
 
   return (
