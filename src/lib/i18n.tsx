@@ -158,7 +158,7 @@ export function formatDate(value?: string | null, lang: Lang = "ar") {
     month: "long",
     day: "numeric",
     timeZone: "UTC",
-  });
+  }).format(date);
 }
 
 export function formatPrice(
