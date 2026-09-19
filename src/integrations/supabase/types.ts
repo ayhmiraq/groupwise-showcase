@@ -632,6 +632,59 @@ export type Database = {
           },
         ]
       }
+      restaurant_menu_items: {
+        Row: {
+          category: string
+          company_id: string
+          created_at: string
+          description_ar: string
+          description_en: string
+          id: string
+          image_url: string | null
+          name_ar: string
+          name_en: string
+          published: boolean
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          category: string
+          company_id: string
+          created_at?: string
+          description_ar?: string
+          description_en?: string
+          id?: string
+          image_url?: string | null
+          name_ar?: string
+          name_en?: string
+          published?: boolean
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          company_id?: string
+          created_at?: string
+          description_ar?: string
+          description_en?: string
+          id?: string
+          image_url?: string | null
+          name_ar?: string
+          name_en?: string
+          published?: boolean
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "restaurant_menu_items_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       services: {
         Row: {
           created_at: string

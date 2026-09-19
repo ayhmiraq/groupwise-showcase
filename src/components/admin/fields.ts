@@ -26,6 +26,7 @@ export type SectionConfig = {
     | "product_images"
     | "gallery_images"
     | "branches"
+    | "restaurant_menu_items"
     | "inquiries"
     | "contact_messages";
   keyColumn: string;
@@ -326,6 +327,32 @@ export const sections: SectionConfig[] = [
       { name: "project_id", label: "المشروع (اختياري)", type: "select", optionsFrom: "projects" },
       ...bilingual("title", "عنوان الصورة (اختياري)"),
       ...bilingual("caption", "نص مع الصورة (اختياري)", "textarea"),
+      { name: "sort_order", label: "الترتيب", type: "number" },
+      { name: "published", label: "منشور", type: "boolean" },
+    ],
+  },
+  {
+    key: "restaurant_menu",
+    label: "قائمة المطعم",
+    table: "restaurant_menu_items",
+    keyColumn: "id",
+    titleField: "name_ar",
+    fields: [
+      { name: "company_id", label: "الشركة", type: "select", optionsFrom: "companies", required: true },
+      {
+        name: "category",
+        label: "القسم",
+        type: "select",
+        required: true,
+        options: [
+          { value: "oriental", label: "المطبخ الشرقي" },
+          { value: "western", label: "المطبخ الغربي" },
+          { value: "drinks", label: "المشروبات" },
+        ],
+      },
+      ...bilingual("name", "اسم الطبق/المشروب"),
+      ...bilingual("description", "التفاصيل", "textarea"),
+      { name: "image_url", label: "الصورة", type: "media" },
       { name: "sort_order", label: "الترتيب", type: "number" },
       { name: "published", label: "منشور", type: "boolean" },
     ],

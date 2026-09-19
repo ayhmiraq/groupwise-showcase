@@ -1,9 +1,11 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Link, createFileRoute, notFound } from "@tanstack/react-router";
+import { ArrowDown, CalendarDays, GlassWater } from "lucide-react";
 
 import { PageHero } from "@/components/site/PageHero";
 import { Reveal } from "@/components/site/Reveal";
 import { SiteLayout } from "@/components/site/SiteLayout";
+import { Button } from "@/components/ui/button";
 import { mediaUrl } from "@/lib/media-url";
 import type { PageSettings } from "@/lib/content.server";
 import { formatDate, useLang } from "@/lib/i18n";
@@ -46,7 +48,7 @@ function CompanyPage() {
   const { pick, t, lang } = useLang();
   const data = useSuspenseQuery(companyQuery(slug)).data;
   if (!data) return null;
-  const { company, timeline, projects } = data;
+  const { company, timeline, projects, menu } = data;
 
   const c = company as typeof company & {
     page_bg_type?: string;
@@ -67,14 +69,18 @@ function CompanyPage() {
     timeline_style?: string | null;
   };
 
+  const isRestaurant = menu.length > 0;
   const page: PageSettings = {
     page_key: `company-${company.slug}`,
     title_ar: "",
     title_en: "",
     subtitle_ar: "",
     subtitle_en: "",
-    bg_type: c.page_bg_type || "color",
-    bg_url: c.page_bg_url ?? company.image_url ?? null,
+    bg_type:
+      isRestaurant && (!c.page_bg_type || (c.page_bg_type === "color" && !c.page_bg_url))
+        ? "image"
+        : c.page_bg_type || "color",
+    bg_url: c.page_bg_url ?? (isRestaurant ? "/restaurant/bebon-hero.jpg" : company.image_url) ?? null,
     youtube_id: c.page_youtube_id ?? null,
     overlay: c.page_overlay ?? 65,
     enabled: true,
@@ -93,6 +99,21 @@ function CompanyPage() {
   const pageImage = c.page_image_url || "";
   const layout = c.page_layout || "classic";
   const timelineStyle = c.timeline_style || "line";
+
+  if (isRestaurant) {
+    return (
+      <RestaurantCompanyPage
+        company={company}
+        page={page}
+        title={heroTitle}
+        subtitle={heroSubtitle}
+        details={details}
+        menu={menu}
+        pick={pick}
+        t={t}
+      />
+    );
+  }
 
   return (
     <SiteLayout>
@@ -286,6 +307,144 @@ function CompanyPage() {
           </>
         ) : null}
       </section>
+    </SiteLayout>
+  );
+}
+
+type RestaurantItem = {
+  id: string;
+  category: string;
+  name_ar: string;
+  name_en: string;
+  description_ar: string;
+  description_en: string;
+  image_url: string | null;
+};
+
+type RestaurantCompanyProps = {
+  company: { founded_date: string | null };
+  page: PageSettings;
+  title: string;
+  subtitle: string;
+  details: string;
+  menu: RestaurantItem[];
+  pick: (ar: string | null | undefined, en: string | null | undefined) => string;
+  t: (key: string) => string;
+};
+
+function RestaurantCompanyPage({ page, title, subtitle, details, menu, pick, t }: RestaurantCompanyProps) {
+  const sections = [
+    { key: "oriental", title: pick("ركن الشرق", "Oriental kitchen") },
+    { key: "western", title: pick("ركن الغرب", "Western kitchen") },
+  ];
+  const drinks = menu.filter((item) => item.category === "drinks");
+
+  return (
+    <SiteLayout>
+      <div className="bg-restaurant-canvas text-restaurant-ink">
+        <PageHero page={page} title={title} subtitle={subtitle || pick("ملتقى الأصالة الشرقية والإبداع الغربي في قلب واحد", "Where Eastern heritage meets Western creativity")}>
+          <Button asChild className="bg-restaurant-gold text-restaurant-ink hover:bg-restaurant-gold/90">
+            <Link to="/contact">
+              <CalendarDays className="size-4" /> {pick("احجز طاولتك", "Book a table")}
+            </Link>
+          </Button>
+          <Button asChild variant="outline" className="border-foreground/40 bg-background/20 text-foreground backdrop-blur hover:bg-background/30">
+            <a href="#restaurant-menu">
+              <ArrowDown className="size-4" /> {pick("تصفح القائمة", "Explore the menu")}
+            </a>
+          </Button>
+        </PageHero>
+
+        <main id="restaurant-menu" className="mx-auto max-w-6xl px-4 py-12 sm:py-16 lg:px-8">
+          {details ? (
+            <Reveal>
+              <p className="mx-auto max-w-3xl whitespace-pre-line text-center text-base leading-8 text-restaurant-muted sm:text-lg">
+                {details}
+              </p>
+            </Reveal>
+          ) : null}
+
+          <div className="mt-12 grid gap-12 md:grid-cols-2 md:gap-10 lg:mt-16">
+            {sections.map((section, sectionIndex) => {
+              const items = menu.filter((item) => item.category === section.key);
+              if (items.length === 0) return null;
+              return (
+                <section key={section.key} aria-labelledby={`menu-${section.key}`}>
+                  <div className="mb-7 flex items-center gap-4">
+                    <span className="h-px flex-1 bg-restaurant-line" />
+                    <h2 id={`menu-${section.key}`} className="text-3xl font-bold text-restaurant-ink">
+                      {section.title}
+                    </h2>
+                    <span className="h-px flex-1 bg-restaurant-line" />
+                  </div>
+                  <div className="space-y-7">
+                    {items.map((item, index) => (
+                      <Reveal key={item.id} delay={(sectionIndex * 2 + index) * 60}>
+                        <article className="group border-b border-restaurant-line/70 pb-7 last:border-0">
+                          {item.image_url ? (
+                            <div className="mb-4 aspect-[3/2] overflow-hidden rounded-lg bg-restaurant-line/40">
+                              <img
+                                src={mediaUrl(item.image_url)}
+                                alt={pick(item.name_ar, item.name_en)}
+                                width={1200}
+                                height={800}
+                                loading="lazy"
+                                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105 motion-reduce:transition-none"
+                              />
+                            </div>
+                          ) : null}
+                          <h3 className="text-xl font-bold text-restaurant-ink">
+                            {pick(item.name_ar, item.name_en)}
+                          </h3>
+                          <p className="mt-2 text-sm leading-7 text-restaurant-muted">
+                            {pick(item.description_ar, item.description_en)}
+                          </p>
+                        </article>
+                      </Reveal>
+                    ))}
+                  </div>
+                </section>
+              );
+            })}
+          </div>
+
+          {drinks.length > 0 ? (
+            <Reveal>
+              <section className="mt-14 overflow-hidden rounded-lg bg-restaurant-ink text-restaurant-paper sm:mt-20" aria-labelledby="menu-drinks">
+                <div className="grid md:grid-cols-2">
+                  {drinks[0]?.image_url ? (
+                    <img
+                      src={mediaUrl(drinks[0].image_url)}
+                      alt={pick(drinks[0].name_ar, drinks[0].name_en)}
+                      width={1200}
+                      height={800}
+                      loading="lazy"
+                      className="aspect-[4/3] h-full w-full object-cover"
+                    />
+                  ) : null}
+                  <div className="flex flex-col justify-center p-7 sm:p-10">
+                    <GlassWater className="size-8 text-restaurant-gold" />
+                    <p className="mt-5 text-sm font-semibold text-restaurant-gold">{pick("من البار", "From the bar")}</p>
+                    <h2 id="menu-drinks" className="mt-2 text-3xl font-bold">{pick("المشروبات", "Drinks")}</h2>
+                    {drinks.map((item) => (
+                      <article key={item.id} className="mt-6 border-t border-restaurant-paper/15 pt-5">
+                        <h3 className="text-lg font-bold">{pick(item.name_ar, item.name_en)}</h3>
+                        <p className="mt-2 text-sm leading-7 text-restaurant-paper/70">{pick(item.description_ar, item.description_en)}</p>
+                      </article>
+                    ))}
+                  </div>
+                </div>
+              </section>
+            </Reveal>
+          ) : null}
+
+          <div className="mt-12 text-center">
+            <Link to="/companies" className="text-sm font-semibold text-restaurant-muted hover:text-restaurant-ink">
+              ← {t("companies")}
+            </Link>
+          </div>
+        </main>
+      </div>
     </SiteLayout>
   );
 }

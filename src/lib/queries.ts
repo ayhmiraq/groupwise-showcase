@@ -32,8 +32,8 @@ export const companiesQuery = queryOptions({
 
 export const companyQuery = (slug: string) =>
   queryOptions({
-    queryKey: ["company", slug],
-    queryFn: withOfflineCache(`company:${slug}`, () => getCompany({ data: { slug } })),
+    queryKey: ["company", "restaurant-menu-v1", slug],
+    queryFn: withOfflineCache(`company:restaurant-menu-v1:${slug}`, () => getCompany({ data: { slug } })),
   });
 
 export const servicesQuery = queryOptions({
