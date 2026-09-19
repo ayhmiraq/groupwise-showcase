@@ -151,12 +151,13 @@ export function useLang() {
 
 export function formatDate(value?: string | null, lang: Lang = "ar") {
   if (!value) return "";
-  const date = new Date(value);
+  const date = new Date(`${value.slice(0, 10)}T12:00:00Z`);
   if (Number.isNaN(date.getTime())) return value;
-  return date.toLocaleDateString(localeMap[lang], {
+  return new Intl.DateTimeFormat(localeMap[lang], {
     year: "numeric",
     month: "long",
     day: "numeric",
+    timeZone: "UTC",
   });
 }
 

@@ -98,7 +98,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "preconnect", href: "https://www.youtube.com" },
       { rel: "preconnect", href: "https://i.ytimg.com" },
       { rel: "dns-prefetch", href: "https://www.youtube-nocookie.com" },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      { rel: "icon", href: "/favicon.png", type: "image/png" },
     ],
   }),
   shellComponent: RootShell,
