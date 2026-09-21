@@ -364,41 +364,42 @@ function RestaurantCompanyPage({ page, title, subtitle, details, menu, pick, t }
             </Reveal>
           ) : null}
 
-          <div className="mt-10 grid gap-14 md:grid-cols-2 md:gap-8 lg:mt-16 lg:gap-10">
+          <div className="mt-10 space-y-14 lg:mt-16 lg:space-y-16">
             {sections.map((section, sectionIndex) => {
               const items = menu.filter((item) => item.category === section.key);
               if (items.length === 0) return null;
               return (
                 <section key={section.key} aria-labelledby={`menu-${section.key}`}>
-                  <div className="mb-6 grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-4 sm:mb-7">
+                  <div className="mb-6 grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-3 sm:mb-7 sm:gap-4">
                      <span className="h-px bg-border" />
-                     <h2 id={`menu-${section.key}`} className="whitespace-nowrap text-2xl font-bold text-foreground sm:text-3xl">
+                     <h2 id={`menu-${section.key}`} className="whitespace-nowrap text-xl font-bold text-foreground sm:text-3xl">
                       {section.title}
                     </h2>
                       <span className="h-px bg-border" />
                   </div>
-                   <div className="grid gap-5 sm:grid-cols-2 md:grid-cols-1">
+                   <div className="grid grid-cols-3 gap-x-2 gap-y-5 sm:gap-5 lg:grid-cols-4">
                     {items.map((item, index) => (
                        <Reveal key={item.id} delay={(sectionIndex * 2 + index) * 60} className="h-full">
-                          <article className="group h-full overflow-hidden rounded-lg border border-border bg-surface shadow-lg shadow-background/30">
+                          <article className="group flex h-full min-w-0 flex-col">
                           {item.image_url ? (
-                              <div className="aspect-[16/10] overflow-hidden bg-muted sm:aspect-[3/2]">
+                              <div className="aspect-square overflow-hidden rounded-lg border border-border/70 bg-muted shadow-sm">
                               <img
                                 src={mediaUrl(item.image_url)}
                                 alt={pick(item.name_ar, item.name_en)}
-                                width={1200}
-                                height={800}
+                                width={600}
+                                height={600}
                                 loading="lazy"
-                                 className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03] motion-reduce:transition-none"
+                                 className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.04] motion-reduce:transition-none"
                               />
                             </div>
-                          ) : null}
-                            <div className="p-5 sm:p-6">
-                              <span className="mb-3 block h-0.5 w-10 rounded-full bg-primary-glow" aria-hidden="true" />
-                              <h3 className="text-xl font-bold leading-snug text-foreground">
+                          ) : (
+                            <div className="aspect-square rounded-lg border border-border/70 bg-muted" />
+                          )}
+                            <div className="min-w-0 px-0.5 pt-2 text-center sm:px-1 sm:pt-3">
+                              <h3 className="line-clamp-2 text-[11px] font-bold leading-[1.35] text-foreground sm:text-base sm:leading-snug">
                                 {pick(item.name_ar, item.name_en)}
                               </h3>
-                              <p className="mt-2 text-sm leading-7 text-muted-foreground sm:text-[15px]">
+                              <p className="mt-1 line-clamp-2 text-[9px] leading-[1.45] text-muted-foreground sm:mt-1.5 sm:text-sm sm:leading-6">
                                 {pick(item.description_ar, item.description_en)}
                               </p>
                             </div>
