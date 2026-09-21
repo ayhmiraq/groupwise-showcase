@@ -364,41 +364,44 @@ function RestaurantCompanyPage({ page, title, subtitle, details, menu, pick, t }
             </Reveal>
           ) : null}
 
-          <div className="mt-12 grid gap-12 md:grid-cols-2 md:gap-10 lg:mt-16">
+          <div className="mt-10 grid gap-14 md:grid-cols-2 md:gap-8 lg:mt-16 lg:gap-10">
             {sections.map((section, sectionIndex) => {
               const items = menu.filter((item) => item.category === section.key);
               if (items.length === 0) return null;
               return (
                 <section key={section.key} aria-labelledby={`menu-${section.key}`}>
-                  <div className="mb-7 flex items-center gap-4">
-                     <span className="h-px flex-1 bg-border" />
-                     <h2 id={`menu-${section.key}`} className="text-3xl font-bold text-foreground">
+                  <div className="mb-6 grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-4 sm:mb-7">
+                     <span className="h-px bg-border" />
+                     <h2 id={`menu-${section.key}`} className="whitespace-nowrap text-2xl font-bold text-foreground sm:text-3xl">
                       {section.title}
                     </h2>
-                     <span className="h-px flex-1 bg-border" />
+                      <span className="h-px bg-border" />
                   </div>
-                  <div className="space-y-7">
+                   <div className="grid gap-5 sm:grid-cols-2 md:grid-cols-1">
                     {items.map((item, index) => (
-                      <Reveal key={item.id} delay={(sectionIndex * 2 + index) * 60}>
-                         <article className="group border-b border-border/70 pb-7 last:border-0">
+                       <Reveal key={item.id} delay={(sectionIndex * 2 + index) * 60} className="h-full">
+                          <article className="group h-full overflow-hidden rounded-lg border border-border bg-surface shadow-lg shadow-background/30">
                           {item.image_url ? (
-                             <div className="mb-4 aspect-[3/2] overflow-hidden rounded-lg bg-surface">
+                              <div className="aspect-[16/10] overflow-hidden bg-muted sm:aspect-[3/2]">
                               <img
                                 src={mediaUrl(item.image_url)}
                                 alt={pick(item.name_ar, item.name_en)}
                                 width={1200}
                                 height={800}
                                 loading="lazy"
-                                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105 motion-reduce:transition-none"
+                                 className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03] motion-reduce:transition-none"
                               />
                             </div>
                           ) : null}
-                           <h3 className="text-xl font-bold text-foreground">
-                            {pick(item.name_ar, item.name_en)}
-                          </h3>
-                           <p className="mt-2 text-sm leading-7 text-muted-foreground">
-                            {pick(item.description_ar, item.description_en)}
-                          </p>
+                            <div className="p-5 sm:p-6">
+                              <span className="mb-3 block h-0.5 w-10 rounded-full bg-primary-glow" aria-hidden="true" />
+                              <h3 className="text-xl font-bold leading-snug text-foreground">
+                                {pick(item.name_ar, item.name_en)}
+                              </h3>
+                              <p className="mt-2 text-sm leading-7 text-muted-foreground sm:text-[15px]">
+                                {pick(item.description_ar, item.description_en)}
+                              </p>
+                            </div>
                         </article>
                       </Reveal>
                     ))}

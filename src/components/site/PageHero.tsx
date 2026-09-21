@@ -45,7 +45,7 @@ export function PageHero({ page, title, subtitle, compact = false, children }: P
 
   return (
     <section
-      className={`relative overflow-hidden ${compact ? "py-20" : "py-28 md:py-36"}`}
+      className={`relative isolate overflow-hidden ${compact ? "py-20" : "py-28 md:py-36"}`}
       aria-labelledby="page-hero-title"
     >
       <div className="absolute inset-0 -z-20 overflow-hidden bg-background" aria-hidden="true">
