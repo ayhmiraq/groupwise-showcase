@@ -440,7 +440,7 @@ function RestaurantCompanyPage({ page, title, subtitle, details, menu, pick, t }
             })}
           </div>
 
-          {drinks.length > 0 ? (
+          {drinks.length > 0 && (activeTab === "all" || activeTab === "drinks") ? (
             <Reveal>
                <section className="mt-14 overflow-hidden rounded-lg border border-border bg-surface text-surface-foreground sm:mt-20" aria-labelledby="menu-drinks">
                 <div className="grid md:grid-cols-2">
