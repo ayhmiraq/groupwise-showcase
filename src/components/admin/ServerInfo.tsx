@@ -73,6 +73,32 @@ function Row({ label, value }: { label: string; value: string }) {
 export function ServerInfo() {
   const fetchInfo = useServerFn(adminServerInfo);
   const info = useQuery({ queryKey: ["server-info"], queryFn: () => fetchInfo() });
+  const runBackup = useServerFn(adminDatabaseBackup);
+  const [backingUp, setBackingUp] = useState(false);
+  const [lastBackup, setLastBackup] = useState<{ filename: string; bytes: number } | null>(null);
+
+  const handleBackup = async () => {
+    setBackingUp(true);
+    try {
+      const result = await runBackup();
+      const blob = new Blob([result.sql], { type: "application/sql;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = result.filename;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+      setLastBackup({ filename: result.filename, bytes: result.bytes });
+      toast.success("تم إنشاء النسخة الاحتياطية وتنزيلها");
+    } catch {
+      toast.error("تعذر إنشاء النسخة الاحتياطية، حاول مرة أخرى");
+    } finally {
+      setBackingUp(false);
+    }
+  };
+
 
   return (
     <div className="space-y-4">
