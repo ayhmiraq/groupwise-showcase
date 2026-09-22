@@ -221,6 +221,38 @@ export function ServerInfo() {
               ))}
             </CardContent>
           </Card>
+
+          <Card className="md:col-span-2">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-base">
+                <Download className="size-4" /> النسخ الاحتياطي لقاعدة البيانات
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <p className="text-sm text-muted-foreground">
+                ينشئ ملف SQL يحتوي على بنية كل الجداول وجميع البيانات المحفوظة، جاهز للاستيراد في أي
+                قاعدة بيانات PostgreSQL أو نسخة Supabase مستقلة (Self-Hosted).
+              </p>
+              <Button onClick={() => void handleBackup()} disabled={backingUp}>
+                {backingUp ? (
+                  <Loader2 className="size-4 animate-spin" />
+                ) : (
+                  <Download className="size-4" />
+                )}
+                تنزيل نسخة احتياطية الآن
+              </Button>
+              {lastBackup && (
+                <div className="rounded-md border p-3 text-sm">
+                  <Row label="اسم الملف" value={lastBackup.filename} />
+                  <Row label="حجم الملف" value={formatBytes(lastBackup.bytes)} />
+                </div>
+              )}
+              <p className="text-xs text-muted-foreground">
+                للاستيراد لاحقاً: <code className="rounded bg-muted px-1">psql -f backup.sql</code>
+              </p>
+            </CardContent>
+          </Card>
+
         </div>
       )}
     </div>
