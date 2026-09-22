@@ -1,17 +1,21 @@
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import {
   Database,
+  Download,
   HardDrive,
   Image as ImageIcon,
   Loader2,
   RefreshCw,
   Server,
 } from "lucide-react";
+import { toast } from "sonner";
 
-import { adminServerInfo } from "@/lib/server-info.functions";
+import { adminDatabaseBackup, adminServerInfo } from "@/lib/server-info.functions";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
 
 const tableLabels: Record<string, string> = {
   companies: "الشركات",
@@ -69,6 +73,32 @@ function Row({ label, value }: { label: string; value: string }) {
 export function ServerInfo() {
   const fetchInfo = useServerFn(adminServerInfo);
   const info = useQuery({ queryKey: ["server-info"], queryFn: () => fetchInfo() });
+  const runBackup = useServerFn(adminDatabaseBackup);
+  const [backingUp, setBackingUp] = useState(false);
+  const [lastBackup, setLastBackup] = useState<{ filename: string; bytes: number } | null>(null);
+
+  const handleBackup = async () => {
+    setBackingUp(true);
+    try {
+      const result = await runBackup();
+      const blob = new Blob([result.sql], { type: "application/sql;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = result.filename;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+      setLastBackup({ filename: result.filename, bytes: result.bytes });
+      toast.success("تم إنشاء النسخة الاحتياطية وتنزيلها");
+    } catch {
+      toast.error("تعذر إنشاء النسخة الاحتياطية، حاول مرة أخرى");
+    } finally {
+      setBackingUp(false);
+    }
+  };
+
 
   return (
     <div className="space-y-4">
@@ -191,6 +221,38 @@ export function ServerInfo() {
               ))}
             </CardContent>
           </Card>
+
+          <Card className="md:col-span-2">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-base">
+                <Download className="size-4" /> النسخ الاحتياطي لقاعدة البيانات
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <p className="text-sm text-muted-foreground">
+                ينشئ ملف SQL يحتوي على بنية كل الجداول وجميع البيانات المحفوظة، جاهز للاستيراد في أي
+                قاعدة بيانات PostgreSQL أو نسخة Supabase مستقلة (Self-Hosted).
+              </p>
+              <Button onClick={() => void handleBackup()} disabled={backingUp}>
+                {backingUp ? (
+                  <Loader2 className="size-4 animate-spin" />
+                ) : (
+                  <Download className="size-4" />
+                )}
+                تنزيل نسخة احتياطية الآن
+              </Button>
+              {lastBackup && (
+                <div className="rounded-md border p-3 text-sm">
+                  <Row label="اسم الملف" value={lastBackup.filename} />
+                  <Row label="حجم الملف" value={formatBytes(lastBackup.bytes)} />
+                </div>
+              )}
+              <p className="text-xs text-muted-foreground">
+                للاستيراد لاحقاً: <code className="rounded bg-muted px-1">psql -f backup.sql</code>
+              </p>
+            </CardContent>
+          </Card>
+
         </div>
       )}
     </div>
