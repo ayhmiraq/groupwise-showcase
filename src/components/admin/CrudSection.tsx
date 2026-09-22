@@ -139,17 +139,19 @@ export function CrudSection({ sectionKey }: { sectionKey: string }) {
   const [open, setOpen] = useState(false);
   const editorRef = useRef<HTMLDivElement | null>(null);
 
-  const form = forms[0] ?? initialForm(config);
-  const setForm = (
-    updater:
-      | Record<string, unknown>
-      | ((prev: Record<string, unknown>) => Record<string, unknown>),
-  ) =>
-    setForms((prev) => {
-      const base = prev[0] ?? initialForm(config);
-      const next = typeof updater === "function" ? updater(base) : updater;
-      return [next, ...prev.slice(1)];
-    });
+  function nextBlankForm(prev: Record<string, unknown>[]) {
+    const blank = initialForm(config);
+    const last = prev[prev.length - 1];
+    if (last) {
+      // keep shared context (القسم، الشركة، النشر) لتسريع الإضافة المتعددة
+      for (const f of config.fields) {
+        if (f.type === "select" || f.type === "boolean") blank[f.name] = last[f.name];
+      }
+    }
+    return blank;
+  }
+
+
 
   const rowsQuery = useQuery({
     queryKey: ["admin-rows", config.table],
