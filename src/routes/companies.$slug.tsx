@@ -373,8 +373,27 @@ function RestaurantCompanyPage({ page, title, subtitle, details, menu, pick, t }
             </Reveal>
           ) : null}
 
-          <div className="mt-10 space-y-14 lg:mt-16 lg:space-y-16">
+          {/* Menu category tabs */}
+          <div className="mt-10 mb-8 flex gap-2 overflow-x-auto pb-2 sm:mb-10 sm:justify-center sm:gap-3 lg:mt-16">
+            {tabs.map((tab) => (
+              <button
+                key={tab.key}
+                type="button"
+                onClick={() => setActiveTab(tab.key)}
+                className={`shrink-0 rounded-full px-3 py-1.5 text-xs font-semibold transition-colors sm:px-5 sm:py-2 sm:text-sm ${
+                  activeTab === tab.key
+                    ? "bg-primary text-primary-foreground"
+                    : "border border-border/70 bg-surface text-muted-foreground hover:bg-muted hover:text-foreground"
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+
+          <div className="space-y-14 lg:space-y-16">
             {sections.map((section, sectionIndex) => {
+              if (activeTab !== "all" && activeTab !== section.key) return null;
               const items = menu.filter((item) => item.category === section.key);
               if (items.length === 0) return null;
               return (
