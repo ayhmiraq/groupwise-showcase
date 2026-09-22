@@ -305,12 +305,7 @@ export function CrudSection({ sectionKey }: { sectionKey: string }) {
             {multiMode && (
               <Button
                 variant="secondary"
-                onClick={() =>
-                  setForms((prev) => [
-                    ...prev,
-                    initialForm(config, (prev[prev.length - 1] ?? {}) as Row),
-                  ])
-                }
+                onClick={() => setForms((prev) => [...prev, nextBlankForm(prev)])}
               >
                 <Plus className="size-4" /> إضافة عنصر آخر
               </Button>
