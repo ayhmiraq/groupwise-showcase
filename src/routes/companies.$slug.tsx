@@ -1,6 +1,7 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Link, createFileRoute, notFound } from "@tanstack/react-router";
 import { ArrowDown, CalendarDays, GlassWater } from "lucide-react";
+import { useState } from "react";
 
 import { PageHero } from "@/components/site/PageHero";
 import { Reveal } from "@/components/site/Reveal";
@@ -333,11 +334,19 @@ type RestaurantCompanyProps = {
 };
 
 function RestaurantCompanyPage({ page, title, subtitle, details, menu, pick, t }: RestaurantCompanyProps) {
+  const [activeTab, setActiveTab] = useState<"all" | "oriental" | "western" | "drinks">("all");
   const sections = [
     { key: "oriental", title: pick("ركن الشرق", "Oriental kitchen") },
     { key: "western", title: pick("ركن الغرب", "Western kitchen") },
   ];
   const drinks = menu.filter((item) => item.category === "drinks");
+
+  const tabs = [
+    { key: "all" as const, label: pick("الكل", "All") },
+    { key: "oriental" as const, label: pick("ركن الشرق", "Oriental") },
+    { key: "western" as const, label: pick("ركن الغرب", "Western") },
+    { key: "drinks" as const, label: pick("المشروبات", "Drinks") },
+  ];
 
   return (
     <SiteLayout>
