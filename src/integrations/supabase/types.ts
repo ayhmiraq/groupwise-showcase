@@ -889,6 +889,7 @@ export type Database = {
     }
     Functions: {
       admin_export_database: { Args: never; Returns: string }
+      admin_storage_manifest: { Args: never; Returns: Json }
       admin_usage_stats: { Args: never; Returns: Json }
       has_role: {
         Args: {
