@@ -350,44 +350,48 @@ function RestaurantCompanyPage({ page, title, subtitle, details, menu, pick, t }
 
   return (
     <SiteLayout>
-      <div className="bg-background text-foreground">
-        <PageHero page={page} title={title} subtitle={subtitle || pick("ملتقى الأصالة الشرقية والإبداع الغربي في قلب واحد", "Where Eastern heritage meets Western creativity")}>
-          <Button asChild>
+      <div className="restaurant-page bg-background text-foreground">
+        <div className="restaurant-hero-shell">
+          <PageHero page={page} title={title} subtitle={subtitle || pick("ملتقى الأصالة الشرقية والإبداع الغربي في قلب واحد", "Where Eastern heritage meets Western creativity")}>
+          <Button asChild className="restaurant-primary-action">
             <Link to="/contact">
               <CalendarDays className="size-4" /> {pick("احجز طاولتك", "Book a table")}
             </Link>
           </Button>
-          <Button asChild variant="outline" className="border-foreground/40 bg-background/20 text-foreground backdrop-blur hover:bg-background/30">
+          <Button asChild variant="outline" className="restaurant-secondary-action border-foreground/40 bg-background/20 text-foreground backdrop-blur hover:bg-background/30">
             <a href="#restaurant-menu">
               <ArrowDown className="size-4" /> {pick("تصفح القائمة", "Explore the menu")}
             </a>
           </Button>
-        </PageHero>
+          </PageHero>
+        </div>
 
-        <main id="restaurant-menu" className="mx-auto max-w-6xl px-4 py-12 sm:py-16 lg:px-8">
+        <main id="restaurant-menu" className="restaurant-menu relative mx-auto max-w-6xl px-4 py-12 sm:py-16 lg:px-8">
           {details ? (
             <Reveal>
-               <p className="mx-auto max-w-3xl whitespace-pre-line text-center text-base leading-8 text-muted-foreground sm:text-lg">
+               <p className="restaurant-intro mx-auto max-w-3xl whitespace-pre-line text-center text-base leading-8 text-muted-foreground sm:text-lg">
                 {details}
               </p>
             </Reveal>
           ) : null}
 
           {/* Menu category tabs */}
-          <div className="mt-10 mb-8 flex gap-2 overflow-x-auto pb-2 sm:mb-10 sm:justify-center sm:gap-3 lg:mt-16">
+          <div className="restaurant-tabs mt-10 mb-8 flex gap-2 overflow-x-auto p-1.5 sm:mb-10 sm:mx-auto sm:w-fit sm:justify-center sm:gap-3 lg:mt-16">
             {tabs.map((tab) => (
-              <button
+              <Button
                 key={tab.key}
                 type="button"
+                variant="ghost"
+                size="sm"
                 onClick={() => setActiveTab(tab.key)}
-                className={`shrink-0 rounded-full px-3 py-1.5 text-xs font-semibold transition-colors sm:px-5 sm:py-2 sm:text-sm ${
+                className={`restaurant-tab shrink-0 rounded-full px-3 text-xs font-semibold sm:px-5 sm:text-sm ${
                   activeTab === tab.key
-                    ? "bg-primary text-primary-foreground"
-                    : "border border-border/70 bg-surface text-muted-foreground hover:bg-muted hover:text-foreground"
+                    ? "restaurant-tab-active text-primary-foreground"
+                    : "text-muted-foreground hover:text-foreground"
                 }`}
               >
                 {tab.label}
-              </button>
+              </Button>
             ))}
           </div>
 
@@ -398,32 +402,32 @@ function RestaurantCompanyPage({ page, title, subtitle, details, menu, pick, t }
               if (items.length === 0) return null;
               return (
                 <section key={section.key} aria-labelledby={`menu-${section.key}`}>
-                  <div className="mb-6 grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-3 sm:mb-7 sm:gap-4">
-                     <span className="h-px bg-border" />
+                  <div className="restaurant-section-heading mb-7 grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-3 sm:mb-9 sm:gap-4">
+                     <span className="restaurant-heading-line h-px" />
                      <h2 id={`menu-${section.key}`} className="whitespace-nowrap text-xl font-bold text-foreground sm:text-3xl">
                       {section.title}
                     </h2>
-                      <span className="h-px bg-border" />
+                      <span className="restaurant-heading-line h-px" />
                   </div>
                    <div className="grid grid-cols-3 gap-x-2 gap-y-5 sm:gap-5 lg:grid-cols-4">
                     {items.map((item, index) => (
                        <Reveal key={item.id} delay={(sectionIndex * 2 + index) * 60} className="h-full">
-                          <article className="group flex h-full min-w-0 flex-col">
+                          <article className="restaurant-dish-card group flex h-full min-w-0 flex-col">
                           {item.image_url ? (
-                              <div className="aspect-square overflow-hidden rounded-lg border border-border/70 bg-muted shadow-sm">
+                              <div className="restaurant-dish-image aspect-square overflow-hidden rounded-lg border border-border/70 bg-muted">
                               <img
                                 src={mediaUrl(item.image_url)}
                                 alt={pick(item.name_ar, item.name_en)}
                                 width={600}
                                 height={600}
                                 loading="lazy"
-                                 className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.04] motion-reduce:transition-none"
+                                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.08] motion-reduce:transition-none"
                               />
                             </div>
                           ) : (
                             <div className="aspect-square rounded-lg border border-border/70 bg-muted" />
                           )}
-                            <div className="min-w-0 px-0.5 pt-2 text-center sm:px-1 sm:pt-3">
+                            <div className="restaurant-dish-copy min-w-0 px-1.5 pb-2.5 pt-2 text-center sm:px-3 sm:pb-4 sm:pt-3">
                               <h3 className="line-clamp-2 text-[11px] font-bold leading-[1.35] text-foreground sm:text-base sm:leading-snug">
                                 {pick(item.name_ar, item.name_en)}
                               </h3>
@@ -442,7 +446,7 @@ function RestaurantCompanyPage({ page, title, subtitle, details, menu, pick, t }
 
           {drinks.length > 0 && (activeTab === "all" || activeTab === "drinks") ? (
             <Reveal>
-               <section className="mt-14 overflow-hidden rounded-lg border border-border bg-surface text-surface-foreground sm:mt-20" aria-labelledby="menu-drinks">
+               <section className="restaurant-drinks mt-14 overflow-hidden rounded-lg border border-border bg-surface text-surface-foreground sm:mt-20" aria-labelledby="menu-drinks">
                 <div className="grid md:grid-cols-2">
                   {drinks[0]?.image_url ? (
                     <img
