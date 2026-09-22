@@ -19,6 +19,7 @@ import { Route as ProjectsRouteImport } from './routes/projects'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
+import { Route as AuthenticatedInstalldbRouteImport } from './routes/_authenticated/installdb'
 import { Route as CompaniesIndexRouteImport } from './routes/companies.index'
 import { Route as CompaniesSlugRouteImport } from './routes/companies.$slug'
 import { Route as StoreIndexRouteImport } from './routes/store.index'
@@ -75,6 +76,11 @@ const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedInstalldbRoute = AuthenticatedInstalldbRouteImport.update({
+  id: '/installdb',
+  path: '/installdb',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const CompaniesIndexRoute = CompaniesIndexRouteImport.update({
   id: '/companies/',
   path: '/companies/',
@@ -116,6 +122,7 @@ export interface FileRoutesByFullPath {
   '/services': typeof ServicesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin': typeof AuthenticatedAdminRoute
+  '/installdb': typeof AuthenticatedInstalldbRoute
   '/companies/$slug': typeof CompaniesSlugRoute
   '/store/$slug': typeof StoreSlugRoute
   '/companies/': typeof CompaniesIndexRoute
@@ -133,6 +140,7 @@ export interface FileRoutesByTo {
   '/services': typeof ServicesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin': typeof AuthenticatedAdminRoute
+  '/installdb': typeof AuthenticatedInstalldbRoute
   '/companies/$slug': typeof CompaniesSlugRoute
   '/store/$slug': typeof StoreSlugRoute
   '/companies': typeof CompaniesIndexRoute
@@ -152,6 +160,7 @@ export interface FileRoutesById {
   '/services': typeof ServicesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
+  '/_authenticated/installdb': typeof AuthenticatedInstalldbRoute
   '/companies/$slug': typeof CompaniesSlugRoute
   '/store/$slug': typeof StoreSlugRoute
   '/companies/': typeof CompaniesIndexRoute
@@ -171,6 +180,7 @@ export interface FileRouteTypes {
     | '/services'
     | '/sitemap.xml'
     | '/admin'
+    | '/installdb'
     | '/companies/$slug'
     | '/store/$slug'
     | '/companies/'
@@ -188,6 +198,7 @@ export interface FileRouteTypes {
     | '/services'
     | '/sitemap.xml'
     | '/admin'
+    | '/installdb'
     | '/companies/$slug'
     | '/store/$slug'
     | '/companies'
@@ -206,6 +217,7 @@ export interface FileRouteTypes {
     | '/services'
     | '/sitemap.xml'
     | '/_authenticated/admin'
+    | '/_authenticated/installdb'
     | '/companies/$slug'
     | '/store/$slug'
     | '/companies/'
@@ -304,6 +316,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/installdb': {
+      id: '/_authenticated/installdb'
+      path: '/installdb'
+      fullPath: '/installdb'
+      preLoaderRoute: typeof AuthenticatedInstalldbRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/companies/': {
       id: '/companies/'
       path: '/companies'
@@ -351,10 +370,12 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
+  AuthenticatedInstalldbRoute: typeof AuthenticatedInstalldbRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRoute: AuthenticatedAdminRoute,
+  AuthenticatedInstalldbRoute: AuthenticatedInstalldbRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =

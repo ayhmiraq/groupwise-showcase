@@ -250,6 +250,9 @@ export function ServerInfo() {
               <p className="text-xs text-muted-foreground">
                 للاستيراد لاحقاً: <code className="rounded bg-muted px-1">psql -f backup.sql</code>
               </p>
+              <Button variant="secondary" asChild>
+                <Link to="/installdb">تثبيت قاعدة بيانات بديلة</Link>
+              </Button>
             </CardContent>
           </Card>
 
