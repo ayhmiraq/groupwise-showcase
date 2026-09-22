@@ -104,6 +104,11 @@ function InstallDbPage() {
   const [saving, setSaving] = useState(false);
   const [busyId, setBusyId] = useState<string | null>(null);
   const [downloading, setDownloading] = useState(false);
+  const [exportingFull, setExportingFull] = useState(false);
+  const [exportingStorage, setExportingStorage] = useState(false);
+  const [storageInfo, setStorageInfo] = useState<
+    { files: number; buckets: number; totalBytes: number } | null
+  >(null);
   const [testResult, setTestResult] = useState<
     { id: string; ok: boolean; message: string; tablesReady: number; missing: string[] } | null
   >(null);
