@@ -135,8 +135,21 @@ export function CrudSection({ sectionKey }: { sectionKey: string }) {
   const remove = useServerFn(adminDelete);
 
   const [editing, setEditing] = useState<Row | null>(null);
-  const [form, setForm] = useState<Record<string, unknown>>(() => initialForm(config));
+  const [forms, setForms] = useState<Record<string, unknown>[]>(() => [initialForm(config)]);
   const [open, setOpen] = useState(false);
+  const editorRef = useRef<HTMLDivElement | null>(null);
+
+  const form = forms[0] ?? initialForm(config);
+  const setForm = (
+    updater:
+      | Record<string, unknown>
+      | ((prev: Record<string, unknown>) => Record<string, unknown>),
+  ) =>
+    setForms((prev) => {
+      const base = prev[0] ?? initialForm(config);
+      const next = typeof updater === "function" ? updater(base) : updater;
+      return [next, ...prev.slice(1)];
+    });
 
   const rowsQuery = useQuery({
     queryKey: ["admin-rows", config.table],
@@ -151,42 +164,53 @@ export function CrudSection({ sectionKey }: { sectionKey: string }) {
     if (!config.singleRow || !singleRow) return;
     if (hydrated.current === config.key) return;
     hydrated.current = config.key;
-    setForm(initialForm(config, singleRow));
+    setForms([initialForm(config, singleRow)]);
   }, [config, singleRow]);
 
   function startEdit(row: Row | null) {
     setEditing(row);
-    setForm(initialForm(config, row ?? undefined));
+    setForms([initialForm(config, row ?? undefined)]);
     setOpen(true);
+    requestAnimationFrame(() => {
+      editorRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
   }
 
   const save = useMutation({
     mutationFn: async () => {
-      const missing = config.fields.filter(
-        (f) => f.required && !String(form[f.name] ?? "").trim(),
-      );
-      if (missing.length > 0) {
-        throw new Error(`حقول مطلوبة فارغة: ${missing.map((f) => f.label).join("، ")}`);
-      }
-      const values = toPayload(config, form);
       const target = config.singleRow ? singleRow : editing;
+      const active = target ? [forms[0] ?? {}] : forms;
+      active.forEach((entry, index) => {
+        const missing = config.fields.filter(
+          (f) => f.required && !String(entry[f.name] ?? "").trim(),
+        );
+        if (missing.length > 0) {
+          const prefix = active.length > 1 ? `العنصر ${index + 1}: ` : "";
+          throw new Error(
+            `${prefix}حقول مطلوبة فارغة: ${missing.map((f) => f.label).join("، ")}`,
+          );
+        }
+      });
       if (target) {
         await update({
           data: {
             table: config.table,
             keyColumn: config.keyColumn,
             keyValue: String(target[config.keyColumn]),
-            values,
+            values: toPayload(config, active[0]!),
           },
         });
       } else {
-        await insert({ data: { table: config.table, values } });
+        for (const entry of active) {
+          await insert({ data: { table: config.table, values: toPayload(config, entry) } });
+        }
       }
     },
     onSuccess: () => {
       toast.success("تم الحفظ");
       setOpen(false);
       setEditing(null);
+      setForms([initialForm(config)]);
       hydrated.current = null;
       void qc.invalidateQueries();
       broadcastContentUpdate();
@@ -213,6 +237,7 @@ export function CrudSection({ sectionKey }: { sectionKey: string }) {
   });
 
   const editorOpen = config.singleRow || open;
+  const multiMode = !config.singleRow && !editing;
 
   return (
     <div className="space-y-4">
@@ -227,6 +252,81 @@ export function CrudSection({ sectionKey }: { sectionKey: string }) {
 
       {tilePageKeyBySection[config.key] && (
         <TileBackground pageKey={tilePageKeyBySection[config.key]!} />
+      )}
+
+      {editorOpen && (
+        <div ref={editorRef} className="space-y-3 scroll-mt-24">
+          {(multiMode ? forms : [forms[0] ?? initialForm(config)]).map((entry, index) => (
+            <Card key={index}>
+              <CardHeader className="flex flex-row items-center justify-between gap-2">
+                <CardTitle className="text-base">
+                  {config.singleRow
+                    ? "تعديل الإعدادات"
+                    : editing
+                      ? "تعديل عنصر"
+                      : `عنصر جديد ${multiMode && forms.length > 1 ? `#${index + 1}` : ""}`}
+                </CardTitle>
+                {multiMode && forms.length > 1 && (
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => setForms((prev) => prev.filter((_, i) => i !== index))}
+                  >
+                    <Trash2 className="size-4" />
+                  </Button>
+                )}
+              </CardHeader>
+              <CardContent className="grid gap-4 md:grid-cols-2">
+                {config.fields.map((field) => (
+                  <div key={field.name} className="space-y-2">
+                    <Label>{field.label}</Label>
+                    <FieldControl
+                      field={field}
+                      value={entry[field.name]}
+                      onChange={(next) =>
+                        setForms((prev) =>
+                          prev.map((f, i) => (i === index ? { ...f, [field.name]: next } : f)),
+                        )
+                      }
+                    />
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+          ))}
+
+          <div className="flex flex-wrap gap-2">
+            <Button onClick={() => save.mutate()} disabled={save.isPending}>
+              {save.isPending && <Loader2 className="size-4 animate-spin" />}
+              {multiMode && forms.length > 1 ? `حفظ ${forms.length} عناصر` : "حفظ"}
+            </Button>
+            {multiMode && (
+              <Button
+                variant="secondary"
+                onClick={() =>
+                  setForms((prev) => [
+                    ...prev,
+                    initialForm(config, (prev[prev.length - 1] ?? {}) as Row),
+                  ])
+                }
+              >
+                <Plus className="size-4" /> إضافة عنصر آخر
+              </Button>
+            )}
+            {!config.singleRow && (
+              <Button
+                variant="ghost"
+                onClick={() => {
+                  setOpen(false);
+                  setEditing(null);
+                  setForms([initialForm(config)]);
+                }}
+              >
+                إلغاء
+              </Button>
+            )}
+          </div>
+        </div>
       )}
 
       {rowsQuery.isLoading && (
@@ -280,38 +380,6 @@ export function CrudSection({ sectionKey }: { sectionKey: string }) {
             <p className="text-sm text-muted-foreground">لا توجد بيانات بعد.</p>
           )}
         </div>
-      )}
-
-      {editorOpen && (
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base">
-              {config.singleRow ? "تعديل الإعدادات" : editing ? "تعديل عنصر" : "عنصر جديد"}
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="grid gap-4 md:grid-cols-2">
-            {config.fields.map((field) => (
-              <div key={field.name} className="space-y-2">
-                <Label>{field.label}</Label>
-                <FieldControl
-                  field={field}
-                  value={form[field.name]}
-                  onChange={(next) => setForm((prev) => ({ ...prev, [field.name]: next }))}
-                />
-              </div>
-            ))}
-            <div className="flex gap-2 md:col-span-2">
-              <Button onClick={() => save.mutate()} disabled={save.isPending}>
-                {save.isPending && <Loader2 className="size-4 animate-spin" />} حفظ
-              </Button>
-              {!config.singleRow && (
-                <Button variant="ghost" onClick={() => setOpen(false)}>
-                  إلغاء
-                </Button>
-              )}
-            </div>
-          </CardContent>
-        </Card>
       )}
     </div>
   );
