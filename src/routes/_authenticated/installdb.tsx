@@ -16,6 +16,7 @@ import {
 import { toast } from "sonner";
 
 import { adminIsAdmin } from "@/lib/admin.functions";
+import { adminDatabaseBackup, adminStorageExport } from "@/lib/server-info.functions";
 import {
   installdbCopyData,
   installdbDeleteTarget,
