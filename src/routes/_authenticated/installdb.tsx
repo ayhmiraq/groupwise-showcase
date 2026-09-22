@@ -85,6 +85,8 @@ function InstallDbPage() {
   const testTarget = useServerFn(installdbTestTarget);
   const copyData = useServerFn(installdbCopyData);
   const schemaSql = useServerFn(installdbSchemaSql);
+  const fullBackup = useServerFn(adminDatabaseBackup);
+  const storageExport = useServerFn(adminStorageExport);
 
   const enabled = roleQuery.data?.isAdmin === true;
   const targets = useQuery({
