@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
+import { Link } from "@tanstack/react-router";
 import {
   Database,
   Download,
@@ -250,6 +251,9 @@ export function ServerInfo() {
               <p className="text-xs text-muted-foreground">
                 للاستيراد لاحقاً: <code className="rounded bg-muted px-1">psql -f backup.sql</code>
               </p>
+              <Button variant="secondary" asChild>
+                <Link to="/installdb">تثبيت قاعدة بيانات بديلة</Link>
+              </Button>
             </CardContent>
           </Card>
 

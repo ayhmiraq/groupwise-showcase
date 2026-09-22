@@ -253,6 +253,51 @@ export type Database = {
         }
         Relationships: []
       }
+      db_targets: {
+        Row: {
+          anon_key: string | null
+          created_at: string
+          id: string
+          is_active: boolean
+          label: string
+          last_copy_at: string | null
+          last_status: string | null
+          last_tested_at: string | null
+          notes: string | null
+          service_key: string
+          supabase_url: string
+          updated_at: string
+        }
+        Insert: {
+          anon_key?: string | null
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          label?: string
+          last_copy_at?: string | null
+          last_status?: string | null
+          last_tested_at?: string | null
+          notes?: string | null
+          service_key?: string
+          supabase_url?: string
+          updated_at?: string
+        }
+        Update: {
+          anon_key?: string | null
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          label?: string
+          last_copy_at?: string | null
+          last_status?: string | null
+          last_tested_at?: string | null
+          notes?: string | null
+          service_key?: string
+          supabase_url?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       gallery_images: {
         Row: {
           caption_ar: string
