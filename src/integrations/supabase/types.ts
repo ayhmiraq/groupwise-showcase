@@ -843,6 +843,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      admin_export_database: { Args: never; Returns: string }
       admin_usage_stats: { Args: never; Returns: Json }
       has_role: {
         Args: {
