@@ -365,6 +365,77 @@ function InstallDbPage() {
 
         <Card>
           <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-base">
+              <Download className="size-4" /> النقل الكامل إلى Supabase Self-Hosted
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4 text-sm">
+            <div className="space-y-2">
+              <p className="font-medium">1) ملف SQL شامل</p>
+              <p className="text-muted-foreground">
+                يحتوي: الامتدادات، الأنواع، الجداول والبيانات، القيود والفهارس، الصلاحيات
+                (GRANT)، تشغيل الحماية على الصفوف وكل سياساتها، الدوال والمشغلات، وجدول المستخدمين
+                وهوياتهم بكلمات المرور المشفّرة حتى يستمر تسجيل الدخول، وإعدادات حاويات التخزين
+                وسجلات الملفات.
+              </p>
+              <Button onClick={() => void handleFullExport()} disabled={exportingFull}>
+                {exportingFull ? (
+                  <Loader2 className="size-4 animate-spin" />
+                ) : (
+                  <Download className="size-4" />
+                )}
+                تنزيل النسخة الشاملة (SQL)
+              </Button>
+            </div>
+
+            <div className="space-y-2 border-t pt-4">
+              <p className="font-medium">2) سكربت نقل ملفات التخزين (حاوية media)</p>
+              <p className="text-muted-foreground">
+                سكربت Bash يحتوي روابط تنزيل مؤقتة (صالحة 7 أيام) لكل ملف، وأوامر إنشاء الحاويات
+                ورفع الملفات إلى القاعدة الجديدة. عدّل الرابط ومفتاح الخدمة في أول السكربت ثم
+                نفّذه: <code className="rounded bg-muted px-1">bash storage-migrate.sh</code>
+              </p>
+              <Button
+                variant="secondary"
+                onClick={() => void handleStorageExport()}
+                disabled={exportingStorage}
+              >
+                {exportingStorage ? (
+                  <Loader2 className="size-4 animate-spin" />
+                ) : (
+                  <Download className="size-4" />
+                )}
+                تنزيل سكربت نقل الملفات
+              </Button>
+              {storageInfo && (
+                <p className="text-muted-foreground">
+                  الحاويات: {storageInfo.buckets} • الملفات: {storageInfo.files} • الحجم:{" "}
+                  {(storageInfo.totalBytes / 1024 ** 2).toFixed(1)} ميجابايت
+                </p>
+              )}
+            </div>
+
+            <div className="space-y-1 border-t pt-4 text-muted-foreground">
+              <p className="font-medium text-foreground">3) ما لا يمكن تصديره تلقائياً</p>
+              <p>
+                • إعدادات المصادقة (تأكيد البريد، مزوّدو الدخول، قوالب الرسائل، مدة الجلسة) تُضبط
+                يدوياً في لوحة الاستضافة الجديدة أو ملف إعدادات GoTrue.
+              </p>
+              <p>
+                • أسرار المشروع (مفاتيح الخدمة، مفاتيح الخدمات الخارجية) تُنشأ من جديد في الاستضافة
+                الجديدة وتُضاف كمتغيرات بيئة.
+              </p>
+              <p>
+                • بعد الاستيراد، حدّث رابط القاعدة والمفتاح العام في إعدادات الموقع لتشير إلى الخادم
+                الجديد، وشغّل الأمر أولاً على قاعدة Supabase حديثة حتى تكون مخططات auth وstorage
+                جاهزة.
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
             <CardTitle className="text-base">
               {form.id ? "تعديل قاعدة بيانات" : "إضافة قاعدة بيانات جديدة"}
             </CardTitle>
