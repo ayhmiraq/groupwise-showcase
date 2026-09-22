@@ -91,3 +91,16 @@ export const adminServerInfo = createServerFn({ method: "GET" })
       checkedAt: new Date().toISOString(),
     };
   });
+
+export const adminDatabaseBackup = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    await assertAdmin(context.supabase, context.userId);
+
+    const { data, error } = await context.supabase.rpc("admin_export_database" as never);
+    if (error) throw new Error(error.message);
+
+    const sql = (data as unknown as string) ?? "";
+    const stamp = new Date().toISOString().slice(0, 19).replace(/[:T]/g, "-");
+    return { sql, filename: `backup-${stamp}.sql`, bytes: sql.length };
+  });
