@@ -105,13 +105,13 @@
   );
   --gradient-primary: linear-gradient(120deg, var(--primary), var(--primary-glow));
   --shadow-elevated: 0 24px 60px -28px oklch(0.12 0.04 258 / 0.85);
-  --restaurant-gold: oklch(0.76 0.13 78);
-  --restaurant-gold-soft: oklch(0.68 0.1 68);
-  --restaurant-ink: oklch(0.145 0.018 55);
-  --restaurant-panel: oklch(0.205 0.022 58);
-  --restaurant-panel-high: oklch(0.255 0.026 62);
-  --restaurant-line: oklch(0.76 0.13 78 / 0.34);
-  --restaurant-shadow: 0 22px 42px -22px oklch(0.04 0.015 55 / 0.92), 0 8px 18px -12px oklch(0.76 0.13 78 / 0.24);
+  --restaurant-gold: var(--primary-glow);
+  --restaurant-gold-soft: var(--primary);
+  --restaurant-ink: var(--background);
+  --restaurant-panel: var(--surface);
+  --restaurant-panel-high: var(--muted);
+  --restaurant-line: oklch(0.79 0.069 236 / 0.34);
+  --restaurant-shadow: 0 22px 42px -22px oklch(0.12 0.04 258 / 0.92), 0 8px 18px -12px oklch(0.79 0.069 236 / 0.2);
 }
 
 .dark {
@@ -196,13 +196,7 @@
 
 /* Bebon — tactile dark restaurant surfaces with restrained 3D depth. */
 .restaurant-page {
-  --background: var(--restaurant-ink);
-  --surface: var(--restaurant-panel);
-  --muted: var(--restaurant-panel-high);
-  --primary: var(--restaurant-gold-soft);
-  --primary-glow: var(--restaurant-gold);
-  --border: oklch(0.76 0.13 78 / 0.2);
-  background-image: linear-gradient(180deg, var(--restaurant-ink), oklch(0.17 0.022 48));
+  background-image: linear-gradient(180deg, var(--background), oklch(0.175 0.04 258));
 }
 
 .restaurant-hero-shell {
@@ -227,20 +221,20 @@
   min-height: min(68vh, 46rem);
   border: 1px solid var(--restaurant-line);
   border-radius: 1rem;
-  box-shadow: 0 28px 62px -26px oklch(0.03 0.012 55 / 0.98), inset 0 1px 0 oklch(0.98 0.02 85 / 0.1);
+  box-shadow: 0 28px 62px -26px oklch(0.1 0.035 258 / 0.98), inset 0 1px 0 oklch(0.98 0.01 240 / 0.1);
   transform: translateZ(0);
 }
 
 .restaurant-hero-shell h1 {
-  text-shadow: 0 3px 18px oklch(0.03 0.012 55 / 0.95);
+  text-shadow: 0 3px 18px oklch(0.1 0.035 258 / 0.95);
 }
 
 .restaurant-primary-action {
-  box-shadow: 0 12px 24px -12px var(--restaurant-gold), inset 0 1px 0 oklch(0.98 0.02 85 / 0.35);
+  box-shadow: 0 12px 24px -12px var(--restaurant-gold), inset 0 1px 0 oklch(0.98 0.01 240 / 0.35);
 }
 
 .restaurant-secondary-action {
-  box-shadow: 0 10px 24px -16px oklch(0.03 0.012 55 / 0.95), inset 0 1px 0 oklch(0.98 0.02 85 / 0.14);
+  box-shadow: 0 10px 24px -16px oklch(0.1 0.035 258 / 0.95), inset 0 1px 0 oklch(0.98 0.01 240 / 0.14);
 }
 
 .restaurant-menu::before {
@@ -253,14 +247,14 @@
 }
 
 .restaurant-intro {
-  text-shadow: 0 2px 18px oklch(0.04 0.015 55 / 0.72);
+  text-shadow: 0 2px 18px oklch(0.1 0.035 258 / 0.72);
 }
 
 .restaurant-tabs {
   border: 1px solid var(--restaurant-line);
   border-radius: 999px;
-  background: oklch(0.18 0.02 55 / 0.86);
-  box-shadow: inset 0 2px 8px oklch(0.04 0.015 55 / 0.62), 0 14px 32px -22px oklch(0.03 0.012 55 / 0.95);
+  background: oklch(0.235 0.046 259 / 0.86);
+  box-shadow: inset 0 2px 8px oklch(0.1 0.035 258 / 0.62), 0 14px 32px -22px oklch(0.1 0.035 258 / 0.95);
   backdrop-filter: blur(16px) saturate(130%);
 }
 
@@ -270,7 +264,7 @@
 
 .restaurant-tab-active {
   background: linear-gradient(145deg, var(--restaurant-gold), var(--restaurant-gold-soft));
-  box-shadow: 0 9px 18px -10px var(--restaurant-gold), inset 0 1px 0 oklch(0.98 0.02 85 / 0.45);
+  box-shadow: 0 9px 18px -10px var(--restaurant-gold), inset 0 1px 0 oklch(0.98 0.01 240 / 0.45);
   transform: translateY(-1px);
 }
 
@@ -283,7 +277,7 @@
 }
 
 .restaurant-section-heading h2 {
-  text-shadow: 0 6px 18px oklch(0.03 0.012 55 / 0.85);
+  text-shadow: 0 6px 18px oklch(0.1 0.035 258 / 0.85);
 }
 
 .restaurant-dish-card {
@@ -291,7 +285,7 @@
   border: 1px solid var(--restaurant-line);
   border-radius: 0.65rem;
   background: linear-gradient(155deg, var(--restaurant-panel-high), var(--restaurant-panel));
-  box-shadow: var(--restaurant-shadow), inset 0 1px 0 oklch(0.98 0.02 85 / 0.07);
+  box-shadow: var(--restaurant-shadow), inset 0 1px 0 oklch(0.98 0.01 240 / 0.07);
   transform: perspective(700px) rotateX(0) translateY(0);
   transform-style: preserve-3d;
   transition: transform 300ms ease, box-shadow 300ms ease, border-color 300ms ease;
@@ -304,13 +298,13 @@
   height: 0.7rem;
   content: "";
   border-radius: 999px;
-  background: oklch(0.03 0.012 55 / 0.8);
+  background: oklch(0.1 0.035 258 / 0.8);
   filter: blur(6px);
 }
 
 .restaurant-dish-image {
   border-color: var(--restaurant-line);
-  box-shadow: 0 14px 24px -15px oklch(0.03 0.012 55 / 0.96), inset 0 1px 0 oklch(0.98 0.02 85 / 0.13);
+  box-shadow: 0 14px 24px -15px oklch(0.1 0.035 258 / 0.96), inset 0 1px 0 oklch(0.98 0.01 240 / 0.13);
   transform: translateZ(18px);
 }
 
@@ -321,13 +315,13 @@
 .restaurant-drinks {
   border-color: var(--restaurant-line);
   background: linear-gradient(145deg, var(--restaurant-panel-high), var(--restaurant-panel));
-  box-shadow: 0 30px 58px -30px oklch(0.03 0.012 55 / 0.98), inset 0 1px 0 oklch(0.98 0.02 85 / 0.08);
+  box-shadow: 0 30px 58px -30px oklch(0.1 0.035 258 / 0.98), inset 0 1px 0 oklch(0.98 0.01 240 / 0.08);
 }
 
 @media (hover: hover) and (pointer: fine) {
   .restaurant-dish-card:hover {
-    border-color: oklch(0.76 0.13 78 / 0.48);
-    box-shadow: 0 30px 50px -23px oklch(0.03 0.012 55 / 0.98), 0 12px 25px -18px var(--restaurant-gold);
+    border-color: oklch(0.79 0.069 236 / 0.48);
+    box-shadow: 0 30px 50px -23px oklch(0.1 0.035 258 / 0.98), 0 12px 25px -18px var(--restaurant-gold);
     transform: perspective(700px) rotateX(2deg) translateY(-7px);
   }
 }
