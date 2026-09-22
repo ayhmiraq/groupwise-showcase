@@ -213,24 +213,59 @@ function InstallDbPage() {
     }
   };
 
+  const downloadText = (content: string, filename: string, type: string) => {
+    const blob = new Blob([content], { type });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+  };
+
   const handleSchema = async () => {
     setDownloading(true);
     try {
       const result = await schemaSql();
-      const blob = new Blob([result.sql], { type: "application/sql;charset=utf-8" });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = result.filename;
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-      URL.revokeObjectURL(url);
+      downloadText(result.sql, result.filename, "application/sql;charset=utf-8");
       toast.success("تم تنزيل ملف التثبيت");
     } catch {
       toast.error("تعذر إنشاء ملف التثبيت");
     } finally {
       setDownloading(false);
+    }
+  };
+
+  const handleFullExport = async () => {
+    setExportingFull(true);
+    try {
+      const result = await fullBackup();
+      downloadText(result.sql, result.filename, "application/sql;charset=utf-8");
+      toast.success("تم تنزيل النسخة الشاملة");
+    } catch {
+      toast.error("تعذر إنشاء النسخة الشاملة");
+    } finally {
+      setExportingFull(false);
+    }
+  };
+
+  const handleStorageExport = async () => {
+    setExportingStorage(true);
+    try {
+      const result = await storageExport();
+      downloadText(result.script, result.filename, "text/x-shellscript;charset=utf-8");
+      setStorageInfo({
+        files: result.files,
+        buckets: result.buckets,
+        totalBytes: result.totalBytes,
+      });
+      toast.success(`تم إنشاء سكربت نقل ${result.files} ملفاً`);
+    } catch {
+      toast.error("تعذر إنشاء سكربت نقل الملفات");
+    } finally {
+      setExportingStorage(false);
     }
   };
 
