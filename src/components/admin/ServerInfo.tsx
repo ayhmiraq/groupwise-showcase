@@ -303,6 +303,41 @@ export function ServerInfo() {
             </CardContent>
           </Card>
 
+          <Card className="md:col-span-2">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-base">
+                <ImageIcon className="size-4" /> نقل الصور والفيديوهات (التخزين)
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <p className="text-sm text-muted-foreground">
+                ينشئ سكربت Bash ينزّل كل ملفات حاوية media عبر روابط موقعة صالحة أسبوعاً، ثم يرفعها إلى
+                خادمك بعد تعديل الرابط ومفتاح الخدمة في أول السكربت.
+              </p>
+              <Button onClick={() => void handleStorageExport()} disabled={exportingStorage}>
+                {exportingStorage ? (
+                  <Loader2 className="size-4 animate-spin" />
+                ) : (
+                  <Download className="size-4" />
+                )}
+                تنزيل سكربت نقل الملفات
+              </Button>
+              {storageInfo && (
+                <div className="rounded-md border p-3 text-sm">
+                  <Row label="اسم الملف" value={storageInfo.filename} />
+                  <Row label="عدد الحاويات" value={`${storageInfo.buckets}`} />
+                  <Row label="عدد الملفات" value={`${storageInfo.files}`} />
+                  <Row label="روابط جاهزة للتنزيل" value={`${storageInfo.signed}`} />
+                  <Row label="الحجم الكلي" value={formatBytes(storageInfo.totalBytes)} />
+                </div>
+              )}
+              <p className="text-xs text-muted-foreground">
+                للتشغيل: <code className="rounded bg-muted px-1">bash storage-migrate.sh</code>
+              </p>
+            </CardContent>
+          </Card>
+
+
         </div>
       )}
     </div>
