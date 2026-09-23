@@ -276,8 +276,9 @@ export function ServerInfo() {
             </CardHeader>
             <CardContent className="space-y-3">
               <p className="text-sm text-muted-foreground">
-                ينشئ ملف SQL يحتوي على بنية كل الجداول وجميع البيانات المحفوظة، جاهز للاستيراد في أي
-                قاعدة بيانات PostgreSQL أو نسخة Supabase مستقلة (Self-Hosted).
+                ملف SQL شامل: الامتدادات والأنواع وكل الجداول وبياناتها، القيود والفهارس والصلاحيات،
+                حماية الصفوف وسياساتها، الدوال والمشغلات، وحسابات المستخدمين بكلمات مرورها المشفّرة —
+                جاهز للاستيراد في أي قاعدة PostgreSQL أو نسخة Supabase مستقلة (Self-Hosted).
               </p>
               <Button onClick={() => void handleBackup()} disabled={backingUp}>
                 {backingUp ? (
