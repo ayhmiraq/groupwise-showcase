@@ -13,7 +13,11 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 
-import { adminDatabaseBackup, adminServerInfo } from "@/lib/server-info.functions";
+import {
+  adminDatabaseBackup,
+  adminServerInfo,
+  adminStorageExport,
+} from "@/lib/server-info.functions";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -75,8 +79,49 @@ export function ServerInfo() {
   const fetchInfo = useServerFn(adminServerInfo);
   const info = useQuery({ queryKey: ["server-info"], queryFn: () => fetchInfo() });
   const runBackup = useServerFn(adminDatabaseBackup);
+  const runStorageExport = useServerFn(adminStorageExport);
   const [backingUp, setBackingUp] = useState(false);
   const [lastBackup, setLastBackup] = useState<{ filename: string; bytes: number } | null>(null);
+  const [exportingStorage, setExportingStorage] = useState(false);
+  const [storageInfo, setStorageInfo] = useState<{
+    filename: string;
+    buckets: number;
+    files: number;
+    signed: number;
+    totalBytes: number;
+  } | null>(null);
+
+  const download = (content: string, filename: string, mime: string) => {
+    const blob = new Blob([content], { type: mime });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+  };
+
+  const handleStorageExport = async () => {
+    setExportingStorage(true);
+    try {
+      const result = await runStorageExport();
+      download(result.script, result.filename, "application/x-sh;charset=utf-8");
+      setStorageInfo({
+        filename: result.filename,
+        buckets: result.buckets,
+        files: result.files,
+        signed: result.signed,
+        totalBytes: result.totalBytes,
+      });
+      toast.success("تم إنشاء سكربت نقل الملفات وتنزيله");
+    } catch {
+      toast.error("تعذر إنشاء سكربت نقل الملفات، حاول مرة أخرى");
+    } finally {
+      setExportingStorage(false);
+    }
+  };
 
   const handleBackup = async () => {
     setBackingUp(true);
