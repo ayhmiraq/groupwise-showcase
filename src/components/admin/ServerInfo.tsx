@@ -13,7 +13,11 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 
-import { adminDatabaseBackup, adminServerInfo } from "@/lib/server-info.functions";
+import {
+  adminDatabaseBackup,
+  adminServerInfo,
+  adminStorageExport,
+} from "@/lib/server-info.functions";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -75,8 +79,49 @@ export function ServerInfo() {
   const fetchInfo = useServerFn(adminServerInfo);
   const info = useQuery({ queryKey: ["server-info"], queryFn: () => fetchInfo() });
   const runBackup = useServerFn(adminDatabaseBackup);
+  const runStorageExport = useServerFn(adminStorageExport);
   const [backingUp, setBackingUp] = useState(false);
   const [lastBackup, setLastBackup] = useState<{ filename: string; bytes: number } | null>(null);
+  const [exportingStorage, setExportingStorage] = useState(false);
+  const [storageInfo, setStorageInfo] = useState<{
+    filename: string;
+    buckets: number;
+    files: number;
+    signed: number;
+    totalBytes: number;
+  } | null>(null);
+
+  const download = (content: string, filename: string, mime: string) => {
+    const blob = new Blob([content], { type: mime });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+  };
+
+  const handleStorageExport = async () => {
+    setExportingStorage(true);
+    try {
+      const result = await runStorageExport();
+      download(result.script, result.filename, "application/x-sh;charset=utf-8");
+      setStorageInfo({
+        filename: result.filename,
+        buckets: result.buckets,
+        files: result.files,
+        signed: result.signed,
+        totalBytes: result.totalBytes,
+      });
+      toast.success("تم إنشاء سكربت نقل الملفات وتنزيله");
+    } catch {
+      toast.error("تعذر إنشاء سكربت نقل الملفات، حاول مرة أخرى");
+    } finally {
+      setExportingStorage(false);
+    }
+  };
 
   const handleBackup = async () => {
     setBackingUp(true);
@@ -231,8 +276,9 @@ export function ServerInfo() {
             </CardHeader>
             <CardContent className="space-y-3">
               <p className="text-sm text-muted-foreground">
-                ينشئ ملف SQL يحتوي على بنية كل الجداول وجميع البيانات المحفوظة، جاهز للاستيراد في أي
-                قاعدة بيانات PostgreSQL أو نسخة Supabase مستقلة (Self-Hosted).
+                ملف SQL شامل: الامتدادات والأنواع وكل الجداول وبياناتها، القيود والفهارس والصلاحيات،
+                حماية الصفوف وسياساتها، الدوال والمشغلات، وحسابات المستخدمين بكلمات مرورها المشفّرة —
+                جاهز للاستيراد في أي قاعدة PostgreSQL أو نسخة Supabase مستقلة (Self-Hosted).
               </p>
               <Button onClick={() => void handleBackup()} disabled={backingUp}>
                 {backingUp ? (
@@ -256,6 +302,41 @@ export function ServerInfo() {
               </Button>
             </CardContent>
           </Card>
+
+          <Card className="md:col-span-2">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-base">
+                <ImageIcon className="size-4" /> نقل الصور والفيديوهات (التخزين)
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <p className="text-sm text-muted-foreground">
+                ينشئ سكربت Bash ينزّل كل ملفات حاوية media عبر روابط موقعة صالحة أسبوعاً، ثم يرفعها إلى
+                خادمك بعد تعديل الرابط ومفتاح الخدمة في أول السكربت.
+              </p>
+              <Button onClick={() => void handleStorageExport()} disabled={exportingStorage}>
+                {exportingStorage ? (
+                  <Loader2 className="size-4 animate-spin" />
+                ) : (
+                  <Download className="size-4" />
+                )}
+                تنزيل سكربت نقل الملفات
+              </Button>
+              {storageInfo && (
+                <div className="rounded-md border p-3 text-sm">
+                  <Row label="اسم الملف" value={storageInfo.filename} />
+                  <Row label="عدد الحاويات" value={`${storageInfo.buckets}`} />
+                  <Row label="عدد الملفات" value={`${storageInfo.files}`} />
+                  <Row label="روابط جاهزة للتنزيل" value={`${storageInfo.signed}`} />
+                  <Row label="الحجم الكلي" value={formatBytes(storageInfo.totalBytes)} />
+                </div>
+              )}
+              <p className="text-xs text-muted-foreground">
+                للتشغيل: <code className="rounded bg-muted px-1">bash storage-migrate.sh</code>
+              </p>
+            </CardContent>
+          </Card>
+
 
         </div>
       )}
